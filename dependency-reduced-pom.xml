@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.kelsier.bookserver</groupId>
-  <artifactId>meta-books</artifactId>
+  <groupId>net.kelsier.bookshelf</groupId>
+  <artifactId>metabooks</artifactId>
   <name>MetaBooks</name>
   <version>1.0-SNAPSHOT</version>
+  <organization>
+    <name>Kelsier</name>
+    <url>https://github.com/KelsierLuthadel/meta-books</url>
+  </organization>
   <build>
     <plugins>
       <plugin>
@@ -47,6 +51,16 @@
               <addClasspath>true</addClasspath>
               <mainClass>${mainClass}</mainClass>
             </manifest>
+            <manifestEntries>
+              <Kelsier-Title>${project.name}</Kelsier-Title>
+              <Org>${project.organization.name}</Org>
+              <Url>${project.organization.url}</Url>
+              <Version>${project.version}</Version>
+              <Build-Java>${java.version}</Build-Java>
+              <Build-Label>${project.version}</Build-Label>
+              <Build-Time>${maven.build.timestamp}</Build-Time>
+              <Build-OS>${os.name}</Build-OS>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
@@ -86,6 +100,13 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>9</source>
+          <target>9</target>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>
@@ -96,6 +117,80 @@
       </properties>
     </profile>
   </profiles>
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-platform-engine</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>opentest4j</artifactId>
+          <groupId>org.opentest4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-platform-commons</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.7.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-platform-engine</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.12.4</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>byte-buddy</artifactId>
+          <groupId>net.bytebuddy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>byte-buddy-agent</artifactId>
+          <groupId>net.bytebuddy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>objenesis</artifactId>
+          <groupId>org.objenesis</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
   <reporting>
     <plugins>
       <plugin>
@@ -124,9 +219,17 @@
     </dependencies>
   </dependencyManagement>
   <properties>
-    <dropwizard.version>2.1.5</dropwizard.version>
-    <mainClass>net.kelsier.bookserver.MetaBooks</mainClass>
+    <dropwizard.pac4j.version>5.0.0</dropwizard.pac4j.version>
+    <mainClass>net.kelsier.bookshelf.MetaBooks</mainClass>
+    <pac4j.version>4.5.7</pac4j.version>
+    <junit.platform.version>5.4.0</junit.platform.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <postgres-jdbc.version>42.5.4</postgres-jdbc.version>
+    <swagger.version>2.2.8</swagger.version>
+    <dropwizard.version>2.1.5</dropwizard.version>
+    <jasypt.version>1.9.3</jasypt.version>
+    <jersey.pac4j.version>4.0.0</jersey.pac4j.version>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <jersey.multipart.version>2.32</jersey.multipart.version>
   </properties>
 </project>

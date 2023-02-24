@@ -1,0 +1,16 @@
+# Whether the filter is enabled or not
+enableFilter: false
+# the maximum number of requests from a connection per second. Requests in excess of this are first delayed, then throttled.
+maxRequestsPerSec: 500
+# how long to allow this request to run.
+maxRequestMs: 180000
+# how long to blocking wait for the throttle semaphore.
+maxWaitMs: 50
+# the number of requests over the rate limit able to be considered at once.
+throttledRequests: 50
+# the delay given to all requests over the rate limit, before they are considered at all.
+# -1 means just reject request, 0 means no delay, otherwise it is the delay.
+delayMs: 100
+statusCode: 503
+ipWhitelist: 127.0.0.1,192.168.0.9
+
