@@ -1,0 +1,4 @@
+testInteger: 5
+testString: 'str'
+testInner:
+  testString: 'str'
