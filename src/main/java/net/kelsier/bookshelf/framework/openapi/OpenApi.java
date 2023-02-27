@@ -32,7 +32,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import net.kelsier.bookshelf.framework.Helper;
-import net.kelsier.bookshelf.api.resource.UserAdministration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +79,6 @@ public class OpenApi {
                     .prettyPrint(true)
                     .resourcePackages(resources);
 
-            environment.jersey().register(new UserAdministration());
             environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             environment.jersey().register(new OpenApiResource().openApiConfiguration(oasConfig));
     }

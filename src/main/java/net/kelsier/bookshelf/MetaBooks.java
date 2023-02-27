@@ -2,8 +2,13 @@ package net.kelsier.bookshelf;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.okta.jwt.JwtHelper;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
@@ -19,12 +24,18 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import net.kelsier.bookshelf.api.resource.Bookshelf;
+import net.kelsier.bookshelf.api.resource.Login;
+import net.kelsier.bookshelf.api.resource.RoleAdministration;
 import net.kelsier.bookshelf.api.resource.UserAdministration;
 import net.kelsier.bookshelf.framework.MetaBooksInfo;
+import net.kelsier.bookshelf.framework.auth.*;
 import net.kelsier.bookshelf.framework.config.DenialOfServiceConfiguration;
 import net.kelsier.bookshelf.framework.config.MetaBooksConfiguration;
+import net.kelsier.bookshelf.framework.config.OAuthConfiguration;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
+import net.kelsier.bookshelf.framework.db.dao.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.JasyptCipher;
 import net.kelsier.bookshelf.framework.environment.ResourceRegistrar;
 import net.kelsier.bookshelf.framework.error.exception.JsonProcessingExceptionMapper;
@@ -41,9 +52,11 @@ import net.kelsier.bookshelf.framework.loaders.ConfigLoader;
 import net.kelsier.bookshelf.framework.loaders.YamlConfigLoader;
 import net.kelsier.bookshelf.framework.log.LogColour;
 import net.kelsier.bookshelf.framework.openapi.OpenApi;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.servlets.DoSFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
 import org.pac4j.dropwizard.Pac4jBundle;
 import org.pac4j.dropwizard.Pac4jFactory;
@@ -69,6 +82,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     private ResourceRegistrar resourceRegistrar;
 
     private final ClassLoader classLoader;
+
+    private Jdbi databaseConnection;
 
     @Valid
     private final Pac4jBundle<MetaBooksConfiguration> pac4j = new Pac4jBundle<>() {
@@ -152,6 +167,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
 
         // Add Swagger as a resource
         bootstrap.addBundle(new AssetsBundle("/swagger3/", "/swagger", "index.html", "swagger"));
+        bootstrap.addBundle(new AssetsBundle("/assets/", "/", "index.html"));
     }
 
     /**
@@ -186,16 +202,21 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
 
         // Load JWK from the Identity provider
         //configureJWT with configLoader, environment
+        //configureOAuth(configLoader.loadConfiguration(OAuthConfiguration.class), environment);
+        configureBasicAuth(environment);
 
+        databaseConnection = getJdbiFactory(configuration, environment);
         // Register resources
         registerOpenAPI(environment);
-        registerRestResources();
+        registerRestResources(configuration, environment);
+
+
 
         // Create a DAO
-        //final RoleDAO roleDAO = getUserDAO(configuration, environment); //todo: implement this
+//        final RoleDAO roleDAO = getRoleDao(configuration, environment);
 
         // Register health checks
-        // registerHealthChecks(environment, roleDAO);//todo: implement this
+      //  registerHealthChecks(environment, roleDAO);
 
         MetaBooksInfo info = new MetaBooksInfo(classLoader);
 
@@ -221,13 +242,20 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         return null;
     }
 
-    private RoleDAO getUserDAO(MetaBooksConfiguration configuration, Environment environment) {
+    private Jdbi getJdbiFactory(MetaBooksConfiguration configuration, Environment environment) {
         final JdbiFactory factory = new JdbiFactory();
-        final Jdbi jdbi = factory.build(
-            environment,
-            configuration.getDataSourceFactory(),
-            "postgresql");
-        return jdbi.onDemand(RoleDAO.class);
+        return factory.build(
+                environment,
+                configuration.getDataSourceFactory(),
+                "postgresql");
+    }
+
+    private RoleDAO getRoleDao() {
+        return databaseConnection.onDemand(RoleDAO.class);
+    }
+
+    private UserDAO getUserDao() {
+        return databaseConnection.onDemand(UserDAO.class);
     }
 
     private void registerExceptionMappers() {
@@ -270,7 +298,10 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
                 .name("Apache 2.0")
                 .url("http://www.apache.org/licenses/LICENSE-2.0.html"));
 
+
         oas.info(info);
+//        oasConfig.addSecurityDefinition(SWAGGER_AUTHORIZATION, new io.swagger.models.auth.ApiKeyAuthDefinition("Authorization", SecurityScheme.In.HEADER));
+
         final List<Server> servers = new ArrayList<>();
         servers.add(new Server().url("/api"));
         oas.servers(servers);
@@ -281,12 +312,17 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
                 .collect(Collectors.toSet()));
 
         environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+
         resourceRegistrar.registerResource(new OpenApiResource().openApiConfiguration(oasConfig));
         environment.jersey().register(new OpenApiResource().openApiConfiguration(oasConfig));
     }
 
-    private void registerRestResources() {
-     resourceRegistrar.registerResource(new UserAdministration());
+    private void registerRestResources(final MetaBooksConfiguration configuration, final Environment environment) {
+     resourceRegistrar.registerResource(new Login(getUserDao(),getRoleDao()));
+     resourceRegistrar.registerResource(new UserAdministration(getUserDao(),getRoleDao()));
+     resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
+     resourceRegistrar.registerResource(new Bookshelf());
     }
 
     private void registerHealthChecks(final Environment environment, final RoleDAO roleDAO) {
@@ -349,5 +385,45 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         cors.setInitParameter("allowedMethods", configuration.getAllowedMethods());
         cors.setInitParameter("exposedHeaders", configuration.getExposedHeaders());
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+    }
+
+
+    private void configureOAuth(final OAuthConfiguration configuration, final Environment environment) {
+        try {
+            // Configure the JWT Validator, it will validate Okta's JWT access tokens
+            JwtHelper helper = new JwtHelper()
+                    .setIssuerUrl(configuration.getIssuer())
+                    .setClientId(configuration.getClientId());
+
+            // set the audience only if set, otherwise the default is: api://default
+            String audience = configuration.getAudience();
+            if (StringUtils.isNotEmpty(audience)) {
+                helper.setAudience(audience);
+            }
+
+            // register the OktaOAuthAuthenticator
+            environment.jersey().register(new AuthDynamicFeature(
+                    new OAuthCredentialAuthFilter.Builder<AccessTokenPrincipal>()
+                            .setAuthenticator(new OAuthAuthenticator(helper.build()))
+                            .setPrefix("Bearer")
+                            .buildAuthFilter()));
+
+            // Bind our custom principal to the @Auth annotation
+            environment.jersey().register(new AuthValueFactoryProvider.Binder<>(AccessTokenPrincipal.class));
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to configure JwtVerifier", e);
+        }
+    }
+
+    private void configureBasicAuth(final Environment environment) {
+        environment.jersey().register(new AuthDynamicFeature(
+                new BasicCredentialAuthFilter.Builder<UserAuth>()
+                        .setAuthenticator(new BasicAuthenticator())
+                        .setAuthorizer(new BasicAuthorizer())
+                        .setRealm("realm")
+                        .buildAuthFilter()));
+        environment.jersey().register(RolesAllowedDynamicFeature.class);
+        //If you want to use @Auth to inject a custom Principal type into your resource
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserAuth.class));
     }
 }

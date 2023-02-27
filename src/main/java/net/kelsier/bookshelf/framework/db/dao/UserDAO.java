@@ -22,8 +22,8 @@
 
 package net.kelsier.bookshelf.framework.db.dao;
 
-import net.kelsier.bookshelf.framework.db.map.RoleMapper;
-import net.kelsier.bookshelf.framework.db.UserRole;
+import net.kelsier.bookshelf.framework.db.User;
+import net.kelsier.bookshelf.framework.db.map.UserMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -33,53 +33,60 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.util.List;
 
 /**
- * DAO for user roles in a database
+ * DAO for users in a database
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
 @SuppressWarnings({"UnusedReturnValue", "unused"})
-@RegisterRowMapper(RoleMapper.class)
-public interface RoleDAO {
+@RegisterRowMapper(UserMapper.class)
+public interface UserDAO {
 
     /**
      *
      * @return A list of user roles
      */
-    @SqlQuery("select * from ROLES")
-    List<UserRole> getAll();
+    @SqlQuery("select * from USERS")
+    List<User> getAll();
+
+    @SqlQuery("select * from USERS WHERE ID = :id")
+    User get(@Bind("id") Integer id);
 
     /**
-     * Return a user role using the id
+     * Return a user using the id
      *
-     * @param id the id of the user role
+     * @param id the id of the users
      *
-     * @return A user role object
+     * @return A user object
      */
-    @SqlQuery("select * from ROLES where ID = :id")
-    UserRole findById(@Bind("id") int id);
+    @SqlQuery("select * from USERS where ID = :id")
+    User findById(@Bind("id") int id);
+
+    @SqlQuery("select * from USERS where USERNAME = :username AND PASSWORD = :password")
+    User find(@Bind("username") String username, @Bind("password") String password);
 
     /**
-     * Delete a user role
+     * Delete a user
      *
-     * @param id the id of the user role
+     * @param id the id of the user
      */
-    @SqlUpdate("delete from ROLES where ID = :id")
+    @SqlUpdate("delete from USERS where ID = :id")
     void deleteById(@Bind("id") int id);
 
     /**
-     * Update user roles
+     * Update user
      *
-     * @param userRole the user role to replace
+     * @param user the user to update
      */
-    @SqlUpdate("update ROLES set ROLE = :role, DESCRIPTION = :description where ID = :id")
-    void update(@BindBean UserRole userRole);
+    @SqlUpdate("update USERS set USERNAME = :username, FIRSTNAME = :firstname, LASTNAME = :lastname, EMAIL = :email, " +
+            "ENABLED = :enabled, PASSWORD = :password, ROLES = :roles  where ID = :id")
+    void update(@BindBean User user);
 
     /**
-     * Add a new role
+     * Add a new user
      *
-     * @param user the user role to add
+     * @param user the user  to add
      */
-    @SqlUpdate("insert into ROLES (ROLE, DESCRIPTION) values (:role, :description)")
-    void insert(@BindBean UserRole user);
+    @SqlUpdate("insert into USERS (USERNAME, FIRSTNAME, LASTNAME, EMAIL, ENABLED, PASSWORD, ROLES) values (:username, :firstName, :lastName, :email, :enabled, :password, :roles)")
+    void insert(@BindBean User user);
 }

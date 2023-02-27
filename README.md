@@ -11,3 +11,10 @@ Health Check
 ---
 
 To see your applications health enter url `http://localhost:8081/healthcheck`
+
+drop database bookshelf
+UPDATE databasechangelog SET MD5SUM = NULL;
+create database bookshelf
+\c bookshelf
+GRANT ALL ON SCHEMA public TO bookshelf;
+
