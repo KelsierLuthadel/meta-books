@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import net.kelsier.bookshelf.framework.auth.AccessTokenPrincipal;
+//import net.kelsier.bookshelf.framework.auth.AccessTokenPrincipal;
 import net.kelsier.bookshelf.framework.error.exception.ResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class Bookshelf {
             @ApiResponse(responseCode = "200")
         })
 
-    public Response books(@Auth AccessTokenPrincipal tokenPrincipal) throws ResponseException {
+    public Response books(/*@Auth AccessTokenPrincipal tokenPrincipal*/) throws ResponseException {
         return Response.ok().build();
     }
 

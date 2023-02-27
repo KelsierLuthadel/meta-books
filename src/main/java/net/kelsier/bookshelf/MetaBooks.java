@@ -197,6 +197,9 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         // Create CORS and DOS Filter
         setupFilters(configuration, environment, configLoader);
 
+
+        databaseConnection = getJdbiFactory(configuration, environment);
+
         // Add tasks to the environment
         addToEnvironment();
 
@@ -205,7 +208,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         //configureOAuth(configLoader.loadConfiguration(OAuthConfiguration.class), environment);
         configureBasicAuth(environment);
 
-        databaseConnection = getJdbiFactory(configuration, environment);
+
         // Register resources
         registerOpenAPI(environment);
         registerRestResources(configuration, environment);
@@ -387,43 +390,14 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 
-
-    private void configureOAuth(final OAuthConfiguration configuration, final Environment environment) {
-        try {
-            // Configure the JWT Validator, it will validate Okta's JWT access tokens
-            JwtHelper helper = new JwtHelper()
-                    .setIssuerUrl(configuration.getIssuer())
-                    .setClientId(configuration.getClientId());
-
-            // set the audience only if set, otherwise the default is: api://default
-            String audience = configuration.getAudience();
-            if (StringUtils.isNotEmpty(audience)) {
-                helper.setAudience(audience);
-            }
-
-            // register the OktaOAuthAuthenticator
-            environment.jersey().register(new AuthDynamicFeature(
-                    new OAuthCredentialAuthFilter.Builder<AccessTokenPrincipal>()
-                            .setAuthenticator(new OAuthAuthenticator(helper.build()))
-                            .setPrefix("Bearer")
-                            .buildAuthFilter()));
-
-            // Bind our custom principal to the @Auth annotation
-            environment.jersey().register(new AuthValueFactoryProvider.Binder<>(AccessTokenPrincipal.class));
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to configure JwtVerifier", e);
-        }
-    }
-
     private void configureBasicAuth(final Environment environment) {
         environment.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<UserAuth>()
                         .setAuthenticator(new BasicAuthenticator(getUserDao()))
-                        .setAuthorizer(new BasicAuthorizer())
+                        .setAuthorizer(new BasicAuthorizer(getUserDao(), getRoleDao()))
                         .setRealm("realm")
                         .buildAuthFilter()));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
-        //If you want to use @Auth to inject a custom Principal type into your resource
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserAuth.class));
     }
 }

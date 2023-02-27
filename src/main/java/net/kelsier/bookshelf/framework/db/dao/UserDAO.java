@@ -65,6 +65,9 @@ public interface UserDAO {
     @SqlQuery("select * from USERS where USERNAME = :username AND PASSWORD = :password")
     User find(@Bind("username") String username, @Bind("password") String password);
 
+    @SqlQuery("select id from USERS where USERNAME = :username")
+    User getUserId(@Bind("username") String username);
+
     /**
      * Delete a user
      *
@@ -78,7 +81,7 @@ public interface UserDAO {
      *
      * @param user the user to update
      */
-    @SqlUpdate("update USERS set USERNAME = :username, FIRSTNAME = :firstname, LASTNAME = :lastname, EMAIL = :email, " +
+    @SqlUpdate("update USERS set USERNAME = :username, FIRSTNAME = :firstName, LASTNAME = :lastName, EMAIL = :email, " +
             "ENABLED = :enabled, PASSWORD = :password, ROLES = :roles  where ID = :id")
     void update(@BindBean User user);
 
@@ -87,6 +90,7 @@ public interface UserDAO {
      *
      * @param user the user  to add
      */
-    @SqlUpdate("insert into USERS (USERNAME, FIRSTNAME, LASTNAME, EMAIL, ENABLED, PASSWORD, ROLES) values (:username, :firstName, :lastName, :email, :enabled, :password, :roles)")
+    @SqlUpdate("insert into USERS (USERNAME, FIRSTNAME, LASTNAME, EMAIL, ENABLED, PASSWORD, ROLES) " +
+            "values (:username, :firstName, :lastName, :email, :enabled, :password, :roles)")
     void insert(@BindBean User user);
 }
