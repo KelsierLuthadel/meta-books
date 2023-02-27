@@ -1,4 +1,0 @@
-baseUrl: "https://okta-devok12.okta.com/"
-issuer: "https://okta-devok12.okta.com//oauth2/default"
-clientId: "0oa8h5ndybFhTTNv05d7"
-audience: "api://default"

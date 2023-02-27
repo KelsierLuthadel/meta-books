@@ -8,7 +8,6 @@ import net.kelsier.bookshelf.framework.db.dao.UserDAO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class BasicAuthorizer implements Authorizer<UserAuth> {
     private final UserDAO userDAO;

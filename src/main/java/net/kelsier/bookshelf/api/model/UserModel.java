@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -94,8 +94,13 @@ public class UserModel {
     /**
      * Constructor
      *
-     * @param id User id
-     * @param password User's password
+     * @param id - User id associated with the user in the Users table
+     * @param username - Unique username
+     * @param firstName - User's first name
+     * @param lastName - User's last name
+     * @param email - Users associated email address
+     * @param enabled - Enabled flag
+     * @param roles - List of associated security roles
      */
     public UserModel(@JsonProperty("id") final int id,
                      @JsonProperty("username") final String username,
@@ -129,24 +134,40 @@ public class UserModel {
         return username;
     }
 
+    /**
+     *
+     * @return A string containing the user's first name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     *
+     * @return A string containing the user's last name
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     *
+     * @return A string containing the user's email address
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     *
+     * @return A flag determining if the user's account is enabled
+     */
     public Boolean getEnabled() {
         return enabled;
     }
 
     /**
-     * @return The users role id
+     * @return A list of security roles associated with the user
      */
     public List<Integer> getRoles() {
         return roles;

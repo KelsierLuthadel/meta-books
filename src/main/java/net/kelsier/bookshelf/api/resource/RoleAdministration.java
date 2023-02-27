@@ -3,11 +3,8 @@ package net.kelsier.bookshelf.api.resource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import net.kelsier.bookshelf.framework.db.User;
 import net.kelsier.bookshelf.framework.db.UserRole;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
-import net.kelsier.bookshelf.framework.db.dao.UserDAO;
-import net.kelsier.bookshelf.framework.error.exception.ResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +33,7 @@ public class RoleAdministration {
             @ApiResponse(responseCode = "200")
         })
 
-    public Response getRoles() throws ResponseException {
+    public Response getRoles()  {
         return Response.ok(roleDAO.getAll()).build();
     }
 
@@ -51,7 +48,7 @@ public class RoleAdministration {
             })
 
     public Response addRole(@Parameter(name = "role", required = true) @QueryParam("role") final String role,
-                          @Parameter(name = "description", required = true)  @QueryParam("description") final String description) throws ResponseException {
+                          @Parameter(name = "description", required = true)  @QueryParam("description") final String description) {
 
         //todo: check exists
         roleDAO.insert(new UserRole(0,role, description));

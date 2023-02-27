@@ -10,9 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.UserModel;
 import net.kelsier.bookshelf.framework.db.User;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
-import net.kelsier.bookshelf.framework.error.exception.ResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,12 +36,9 @@ import java.util.List;
 public class UserAdministration {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserAdministration.class);
     private final UserDAO userDAO;
-    private final RoleDAO roleDAO;
 
-
-    public UserAdministration(final UserDAO userDAO, final RoleDAO roleDAO) {
+    public UserAdministration(final UserDAO userDAO) {
         this.userDAO = userDAO;
-        this.roleDAO = roleDAO;
     }
 
     @RolesAllowed({"admin:r"})
@@ -57,7 +52,7 @@ public class UserAdministration {
                     @ApiResponse(responseCode = "200")
             })
 
-    public Response users() throws ResponseException {
+    public Response users() {
         final List<User> users = userDAO.getAll();
         final List<UserModel> userModels = new ArrayList<>();
 
@@ -80,7 +75,7 @@ public class UserAdministration {
                     @ApiResponse(responseCode = "200")
             })
 
-    public Response getUser(@Parameter(name = "id", required = true) @PathParam("id") final Integer id) throws ResponseException {
+    public Response getUser(@Parameter(name = "id", required = true) @PathParam("id") final Integer id) {
         final User user = userDAO.get(id);
 
         if (null == user) {
@@ -108,7 +103,7 @@ public class UserAdministration {
                             @Parameter(name = "email") @QueryParam("email") final String email,
                             @Parameter(name = "enabled", required = true) @QueryParam("enabled") final boolean enabled,
                             @Parameter(name = "password", required = true)  @QueryParam("password") final String password,
-                            @Parameter(name = "roles", required = true) @QueryParam("roles") @NotEmpty final List<Integer> roles) throws ResponseException {
+                            @Parameter(name = "roles", required = true) @QueryParam("roles") @NotEmpty final List<Integer> roles) {
 
         if ( null == userDAO.find(username, password) ) {
             // todo: check role
@@ -139,7 +134,7 @@ public class UserAdministration {
                                @Parameter(name = "email") @QueryParam("email") final String email,
                                @Parameter(name = "enabled") @QueryParam("enabled") final Boolean enabled,
                                @Parameter(name = "password")  @QueryParam("password") final String password,
-                               @Parameter(name = "roles") @QueryParam("roles") final List<Integer> roles) throws ResponseException {
+                               @Parameter(name = "roles") @QueryParam("roles") final List<Integer> roles) {
         final User user = userDAO.get(id);
 
         if (null == user) {
@@ -177,14 +172,14 @@ public class UserAdministration {
                     @ApiResponse(responseCode = "200")
             })
 
-    public Response deleteUser(@Parameter(name = "id", required = true) @PathParam("id") final Integer id) throws ResponseException {
+    public Response deleteUser(@Parameter(name = "id", required = true) @PathParam("id") final Integer id) {
         final User user = userDAO.get(id);
 
         if (null == user) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        userDAO.deleteById(id);;
+        userDAO.deleteById(id);
 
         return Response.ok().build();
     }

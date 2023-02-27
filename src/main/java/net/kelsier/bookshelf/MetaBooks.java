@@ -2,13 +2,11 @@ package net.kelsier.bookshelf;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.jwt.JwtHelper;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
-import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
@@ -32,7 +30,6 @@ import net.kelsier.bookshelf.framework.MetaBooksInfo;
 import net.kelsier.bookshelf.framework.auth.*;
 import net.kelsier.bookshelf.framework.config.DenialOfServiceConfiguration;
 import net.kelsier.bookshelf.framework.config.MetaBooksConfiguration;
-import net.kelsier.bookshelf.framework.config.OAuthConfiguration;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
@@ -52,7 +49,6 @@ import net.kelsier.bookshelf.framework.loaders.ConfigLoader;
 import net.kelsier.bookshelf.framework.loaders.YamlConfigLoader;
 import net.kelsier.bookshelf.framework.log.LogColour;
 import net.kelsier.bookshelf.framework.openapi.OpenApi;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.servlets.DoSFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -203,23 +199,15 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         // Add tasks to the environment
         addToEnvironment();
 
-        // Load JWK from the Identity provider
-        //configureJWT with configLoader, environment
-        //configureOAuth(configLoader.loadConfiguration(OAuthConfiguration.class), environment);
+        // Configure basic authentication
         configureBasicAuth(environment);
-
 
         // Register resources
         registerOpenAPI(environment);
-        registerRestResources(configuration, environment);
-
-
-
-        // Create a DAO
-//        final RoleDAO roleDAO = getRoleDao(configuration, environment);
+        registerRestResources();
 
         // Register health checks
-      //  registerHealthChecks(environment, roleDAO);
+        registerHealthChecks(environment, getRoleDao());
 
         MetaBooksInfo info = new MetaBooksInfo(classLoader);
 
@@ -303,7 +291,6 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
 
 
         oas.info(info);
-//        oasConfig.addSecurityDefinition(SWAGGER_AUTHORIZATION, new io.swagger.models.auth.ApiKeyAuthDefinition("Authorization", SecurityScheme.In.HEADER));
 
         final List<Server> servers = new ArrayList<>();
         servers.add(new Server().url("/api"));
@@ -321,9 +308,9 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         environment.jersey().register(new OpenApiResource().openApiConfiguration(oasConfig));
     }
 
-    private void registerRestResources(final MetaBooksConfiguration configuration, final Environment environment) {
-     resourceRegistrar.registerResource(new Login(getUserDao(),getRoleDao()));
-     resourceRegistrar.registerResource(new UserAdministration(getUserDao(),getRoleDao()));
+    private void registerRestResources() {
+     resourceRegistrar.registerResource(new Login(getUserDao()));
+     resourceRegistrar.registerResource(new UserAdministration(getUserDao()));
      resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
      resourceRegistrar.registerResource(new Bookshelf());
     }
