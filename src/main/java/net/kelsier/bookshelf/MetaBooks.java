@@ -418,7 +418,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     private void configureBasicAuth(final Environment environment) {
         environment.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<UserAuth>()
-                        .setAuthenticator(new BasicAuthenticator())
+                        .setAuthenticator(new BasicAuthenticator(getUserDao()))
                         .setAuthorizer(new BasicAuthorizer())
                         .setRealm("realm")
                         .buildAuthFilter()));
