@@ -27,16 +27,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
+
+import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.*;
 
 /**
  * User details
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
-@SuppressWarnings("unused")
 @Schema(description = "User Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"id", "username", "firstname", "lastname", "email", "enabled", "password", "roles"})
@@ -46,42 +51,45 @@ public class User {
      */
     @NotNull
     @JsonProperty("id")
+    @Min(1)
     private final Integer id;
 
     /**
      * User's username
      */
     @NotNull
+    @NotBlank
     @JsonProperty("username")
-    private final String username;
+    @Size(max = 20)
+    private String username;
 
     /**
      * User's first name
      */
-    @NotNull
     @JsonProperty("firstName")
-    private final String firstName;
+    @Size(max = 20)
+    private String firstName;
 
     /**
      * User's last name
      */
-    @NotNull
     @JsonProperty("lastName")
-    private final String lastName;
+    @Size(max = 20)
+    private String lastName;
 
     /**
      * User's email
      */
-    @NotNull
     @JsonProperty("email")
-    private final String email;
+    @Pattern(regexp = EMAIL_REGEX, message = "Invalid email format")
+    private String email;
 
     /**
      * Enabled
      */
     @NotNull
     @JsonProperty("enabled")
-    private final Boolean enabled;
+    private Boolean enabled;
 
 
     /**
@@ -89,14 +97,16 @@ public class User {
      */
     @NotNull
     @JsonProperty("password")
-    private final String password;
+    @Size(max = 30)
+    @Pattern(regexp = PASSWORD_REGEX)
+    private String password;
 
     /**
      * roles
      */
     @NotNull
     @JsonProperty("roles")
-    private final List<Integer> roles;
+    private List<Integer> roles;
 
 
     /**
@@ -168,5 +178,33 @@ public class User {
      */
     public List<Integer> getRoles() {
         return roles;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRoles(List<Integer> roles) {
+        this.roles = roles;
     }
 }

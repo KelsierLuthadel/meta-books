@@ -35,7 +35,6 @@ import javax.validation.constraints.NotNull;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
 @Schema(description = "Role Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"id", "role", "description"})

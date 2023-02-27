@@ -24,6 +24,7 @@ package net.kelsier.bookshelf.framework.error.exception;
 
 import net.kelsier.bookshelf.framework.error.response.ExceptionToResponse;
 
+import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -44,7 +45,7 @@ public class ResponseErrorExceptionMapper implements ExceptionMapper<ResponseExc
      * @return HTTP Response
      */
     @Override
-    public final Response toResponse(final ResponseException exception) {
+    public final Response toResponse(@Valid final ResponseException exception) {
         return ExceptionToResponse.makeResponse(
             exception.getStatus(),
             UUID.randomUUID().toString(),

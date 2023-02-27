@@ -84,7 +84,7 @@ public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonProces
      * @param exception the thrown exception
      * @return The message as a string
      */
-    private String getMessage(final String prefix, final JsonProcessingException exception) {
+    private static String getMessage(final String prefix, final JsonProcessingException exception) {
         final StringBuilder message = new StringBuilder(prefix);
 
         if (exception.getLocation() != null) {

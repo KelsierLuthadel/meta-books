@@ -77,43 +77,42 @@ import javax.validation.constraints.NotNull;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("UnusedAssignment")
 public final class DenialOfServiceConfiguration {
     @NotNull
     @JsonSetter(value = "enableFilter", nulls = Nulls.SKIP)
-    private Boolean enableFilter = false;
+    private final Boolean enableFilter;
 
     @NotNull
     @Min(1)
     @JsonSetter(value = "maxRequestsPerSec", nulls = Nulls.SKIP)
-    private Long maxRequestsPerSec = 25L;
+    private final Long maxRequestsPerSec;
 
     @NotNull
     @Min(1)
     @JsonSetter(value = "maxRequestMs", nulls = Nulls.SKIP)
-    private Long maxRequestMs = 30000L;
+    private final Long maxRequestMs;
 
     @NotNull
     @Min(1)
     @JsonSetter(value = "maxWaitMs", nulls = Nulls.SKIP)
-    private Long maxWaitMs = 50L;
+    private final Long maxWaitMs;
 
     @NotNull
     @Min(1)
     @JsonSetter(value = "throttledRequests", nulls = Nulls.SKIP)
-    private Long throttledRequests = 5L;
+    private final Long throttledRequests;
 
     @NotNull
     @JsonSetter(value = "delayMs", nulls = Nulls.SKIP)
-    private Long delayMs = 100L;
+    private final Long delayMs;
 
     @NotNull
     @JsonSetter(value = "ipWhitelist", nulls = Nulls.SKIP)
-    private String ipWhitelist = "127.0.0.1";
+    private final String ipWhitelist;
 
     @NotNull
     @JsonSetter(value = "statusCode", nulls = Nulls.SKIP)
-    private String statusCode = "492";
+    private final String statusCode;
 
 
     /**

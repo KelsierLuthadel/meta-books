@@ -1,6 +1,6 @@
 server:
   type: user-control-server
-  registerDefaultExceptionMappers: false
+#  registerDefaultExceptionMappers: false
   rootPath: /api/
   requestLog:
     type: classic
@@ -61,8 +61,6 @@ exposedHeaders: "Content-Disposition"
 
 # Path to service configuration files. Each of these are mapped to a corresponding POJO
 configPath: ./config
-
-auth: basic
 
 database:
   # the name of your JDBC driver

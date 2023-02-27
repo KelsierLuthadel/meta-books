@@ -28,7 +28,6 @@ package net.kelsier.bookshelf.framework.log;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
 public enum LogColour {
     /**
      *  Ansi reset value

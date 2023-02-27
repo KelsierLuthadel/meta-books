@@ -25,6 +25,7 @@ package net.kelsier.bookshelf.framework.validator;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.text.MessageFormat;
 import java.util.Set;
 
@@ -50,7 +51,6 @@ public final class ObjectValidator {
      * @return validated object
      * @throws ValidationException - Thrown if the object is not valid
      */
-    @SuppressWarnings("UnusedReturnValue")
     public static <T> T validateMapping(final T obj) throws ValidationException {
         Validator validator = Validation.byDefaultProvider()
                 .configure()
@@ -71,4 +71,6 @@ public final class ObjectValidator {
 
         throw new ValidationException(stringBuilder.toString(), violations);
     }
+
+
 }

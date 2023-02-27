@@ -28,7 +28,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
+
+import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.EMAIL_REGEX;
 
 /**
  * User details
@@ -36,7 +39,6 @@ import java.util.List;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
 @Schema(description = "User Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"id", "username", "firstName", "lastName", "email", "roles", "enabled"})
@@ -74,6 +76,7 @@ public class UserModel {
      */
     @NotNull
     @JsonProperty("email")
+    @Pattern(regexp = EMAIL_REGEX, message = "Invalid email format")
     private final String email;
 
     /**

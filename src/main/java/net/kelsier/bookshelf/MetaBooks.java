@@ -27,7 +27,10 @@ import net.kelsier.bookshelf.api.resource.Login;
 import net.kelsier.bookshelf.api.resource.RoleAdministration;
 import net.kelsier.bookshelf.api.resource.UserAdministration;
 import net.kelsier.bookshelf.framework.MetaBooksInfo;
-import net.kelsier.bookshelf.framework.auth.*;
+import net.kelsier.bookshelf.framework.auth.BasicAuthenticator;
+import net.kelsier.bookshelf.framework.auth.BasicAuthorizer;
+import net.kelsier.bookshelf.framework.auth.UserAuth;
+import net.kelsier.bookshelf.framework.config.AuthConfiguration;
 import net.kelsier.bookshelf.framework.config.DenialOfServiceConfiguration;
 import net.kelsier.bookshelf.framework.config.MetaBooksConfiguration;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
@@ -200,7 +203,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         addToEnvironment();
 
         // Configure basic authentication
-        configureBasicAuth(environment);
+        configureBasicAuth(configLoader.loadConfiguration(AuthConfiguration.class), environment);
 
         // Register resources
         registerOpenAPI(environment);
@@ -233,7 +236,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         return null;
     }
 
-    private Jdbi getJdbiFactory(MetaBooksConfiguration configuration, Environment environment) {
+    private static Jdbi getJdbiFactory(MetaBooksConfiguration configuration, Environment environment) {
         final JdbiFactory factory = new JdbiFactory();
         return factory.build(
                 environment,
@@ -310,12 +313,12 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
 
     private void registerRestResources() {
      resourceRegistrar.registerResource(new Login(getUserDao()));
-     resourceRegistrar.registerResource(new UserAdministration(getUserDao()));
+     resourceRegistrar.registerResource(new UserAdministration(getUserDao(), getRoleDao()));
      resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
      resourceRegistrar.registerResource(new Bookshelf());
     }
 
-    private void registerHealthChecks(final Environment environment, final RoleDAO roleDAO) {
+    private static void registerHealthChecks(final Environment environment, final RoleDAO roleDAO) {
         environment.healthChecks().register(
             MetaBooks.class.getCanonicalName() + "database.connection",
             new DatabaseHealth(roleDAO));
@@ -377,12 +380,12 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 
-    private void configureBasicAuth(final Environment environment) {
+    private void configureBasicAuth(final AuthConfiguration configuration, final Environment environment) {
         environment.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<UserAuth>()
                         .setAuthenticator(new BasicAuthenticator(getUserDao()))
                         .setAuthorizer(new BasicAuthorizer(getUserDao(), getRoleDao()))
-                        .setRealm("realm")
+                        .setRealm(configuration.getRealm())
                         .buildAuthFilter()));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserAuth.class));

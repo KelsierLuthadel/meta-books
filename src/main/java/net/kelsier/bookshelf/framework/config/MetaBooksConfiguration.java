@@ -9,10 +9,21 @@ import io.dropwizard.db.DataSourceFactory;
 import org.pac4j.dropwizard.Pac4jFactory;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 
 public class MetaBooksConfiguration extends Configuration {
+    @Valid
     private final Pac4jFactory pac4jFactory = new Pac4jFactory();
+
+    /**
+     * Create a datasource
+     * Database factory
+     */
+    @Valid
+    @NotNull
+    @JsonProperty("database")
+    private final DataSourceFactory database = new DataSourceFactory();
+
     @JsonSetter(value = "allowedOrigins", nulls = Nulls.SKIP)
     private final String allowedOrigins;
 
@@ -28,30 +39,24 @@ public class MetaBooksConfiguration extends Configuration {
     @JsonSetter(value = "configPath", nulls = Nulls.SKIP)
     private final String configPath;
 
-    @JsonSetter(value = "auth", nulls = Nulls.SKIP)
-    private final String auth;
-
     /**
      * @param allowedOrigins                    CORS allowed origins
      * @param allowedHeaders                    CORS allowed headers
      * @param allowedMethods                    CORS allowed methods
      * @param exposedHeaders                    CORS exposed headers
      * @param configPath                        path for configuration files
-     * @param auth                              auth type
      */
     @JsonCreator
     public MetaBooksConfiguration(@JsonProperty("allowedOrigins") final String allowedOrigins,
                                   @JsonProperty("allowedHeaders") final String allowedHeaders,
                                   @JsonProperty("allowedMethods") final String allowedMethods,
                                   @JsonProperty("exposedHeaders") final String exposedHeaders,
-                                  @JsonProperty("configPath") final String configPath,
-                                  @JsonProperty("auth") final String auth) {
+                                  @JsonProperty("configPath") final String configPath) {
         this.allowedOrigins = allowedOrigins;
         this.allowedHeaders = allowedHeaders;
         this.allowedMethods = allowedMethods;
         this.exposedHeaders = exposedHeaders;
         this.configPath = configPath;
-        this.auth = auth;
     }
 
     /**
@@ -64,14 +69,7 @@ public class MetaBooksConfiguration extends Configuration {
         return pac4jFactory;
     }
 
-    /**
-     * Create a datasource
-     * Database factory
-     */
-    @Valid
-    @NotNull
-    @JsonProperty("database")
-    private final DataSourceFactory database = new DataSourceFactory();
+
 
     /**
      * Get the datasource
@@ -116,11 +114,4 @@ public class MetaBooksConfiguration extends Configuration {
      * @return path for configuration files
      */
     public String getConfigPath() { return configPath; }
-
-    /**
-     *  Return the auth type for resources
-     *
-     * @return auth type for resources
-     */
-    public String getAuth() { return auth; }
 }

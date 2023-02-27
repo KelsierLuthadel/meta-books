@@ -104,18 +104,8 @@ public final class ResponseException extends Exception {
     }
 
     /**
-     * Creates a deep copy of a list of ResponseErrors.
-     * 
-     * @param errors - The list of errors to copy
-     * @return - A deep copy of the passed list of ResponseErrors
-     */
-    private List<APIResponseError> copyErrors(final List<APIResponseError> errors) {
-        return errors.stream().map(APIResponseError::new).collect(Collectors.toList());
-    }
-
-    /**
      * Constructor
-     * 
+     *
      * @param status    - HTTP response code
      * @param message   - The reason for the error
      * @param errorCode - An optional error code
@@ -138,6 +128,16 @@ public final class ResponseException extends Exception {
         } else {
             this.errors = copyErrors(errors);
         }
+    }
+
+    /**
+     * Creates a deep copy of a list of ResponseErrors.
+     * 
+     * @param errors - The list of errors to copy
+     * @return - A deep copy of the passed list of ResponseErrors
+     */
+    private static List<APIResponseError> copyErrors(final List<APIResponseError> errors) {
+        return errors.stream().map(APIResponseError::new).collect(Collectors.toList());
     }
 
     /**

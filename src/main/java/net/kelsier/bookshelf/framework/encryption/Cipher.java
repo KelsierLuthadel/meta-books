@@ -49,6 +49,5 @@ public interface Cipher {
      *
      * @throws CipherException when the encryption fails
      */
-    @SuppressWarnings("RedundantThrows")
     String encrypt(String input) throws CipherException;
 }

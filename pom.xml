@@ -201,6 +201,12 @@
             <type>maven-plugin</type>
         </dependency>
 
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-testing</artifactId>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

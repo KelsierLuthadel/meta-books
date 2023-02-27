@@ -43,7 +43,6 @@ import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.UUID_
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
 public final class ResponseErrorFormat {
     /**
      * an HTTP response code

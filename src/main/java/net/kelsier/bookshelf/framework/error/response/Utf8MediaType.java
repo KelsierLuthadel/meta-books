@@ -30,7 +30,6 @@ import javax.ws.rs.core.MediaType;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
 public final class Utf8MediaType {
     private static final String CHARSET = ";charset=utf-8";
 

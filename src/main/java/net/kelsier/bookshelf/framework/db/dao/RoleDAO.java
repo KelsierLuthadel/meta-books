@@ -38,7 +38,6 @@ import java.util.List;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings({"UnusedReturnValue", "unused"})
 @RegisterRowMapper(RoleMapper.class)
 public interface RoleDAO {
 
@@ -57,7 +56,7 @@ public interface RoleDAO {
      * @return A user role object
      */
     @SqlQuery("select * from ROLES where ID = :id")
-    UserRole findById(@Bind("id") int id);
+    UserRole findById(@Bind("id") Integer id);
 
     /**
      * Delete a user role
@@ -65,7 +64,7 @@ public interface RoleDAO {
      * @param id the id of the user role
      */
     @SqlUpdate("delete from ROLES where ID = :id")
-    void deleteById(@Bind("id") int id);
+    void deleteById(@Bind("id") Integer id);
 
     /**
      * Update user roles

@@ -59,7 +59,7 @@ public final class EncryptedModule extends SimpleModule {
     /**
      * This class is a custom deserializer which is able to deserialize encrypted values
      */
-    class EncryptedDeserializer extends JsonDeserializer {
+    final class EncryptedDeserializer extends JsonDeserializer {
         private final Class<?> rawType;
 
         /**

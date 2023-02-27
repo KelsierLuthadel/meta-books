@@ -43,7 +43,7 @@ import java.util.Set;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class OpenApi {
+public final class OpenApi {
 
     private OpenApi() {
         throw new IllegalStateException("Utility class. Should not be instantiated.");

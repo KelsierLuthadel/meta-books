@@ -37,7 +37,6 @@ import java.util.jar.Manifest;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
 public class MetaBooksInfo {
     private static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaBooksInfo.class);

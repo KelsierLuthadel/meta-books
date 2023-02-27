@@ -27,6 +27,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
 import net.kelsier.bookshelf.framework.encryption.Cipher;
 import net.kelsier.bookshelf.framework.encryption.EncryptedModule;
+import net.kelsier.bookshelf.framework.validator.CheckedValidationException;
 import net.kelsier.bookshelf.framework.validator.ObjectValidator;
 import net.kelsier.bookshelf.framework.validator.ValidationException;
 
@@ -102,7 +103,7 @@ public final class YamlConfigLoader implements ConfigLoader {
             return config;
         } catch (final ValidationException | IOException e) {
             final String message = MessageFormat.format("{0} failed due to: {1}", configClass.getSimpleName(), e.getMessage());
-            throw new ConfigurationException(message);
+            throw new ConfigurationException(message, e);
         }
     }
 }

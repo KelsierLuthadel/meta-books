@@ -32,9 +32,7 @@ import java.util.Set;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings({"rawtypes", "unused"})
-
-public final class ValidationException extends Exception {
+public final class ValidationException extends RuntimeException {
     private final transient HashSet<ConstraintViolation> constraintViolations;
 
     /**
@@ -46,7 +44,11 @@ public final class ValidationException extends Exception {
     ValidationException(final String message,
                         final Set<? extends ConstraintViolation> constraintViolations) {
         super(message);
-        this.constraintViolations = (constraintViolations == null) ? new HashSet<>() : new HashSet<>(constraintViolations);
+        if (null == constraintViolations) {
+            this.constraintViolations = new HashSet<>();
+        } else {
+            this.constraintViolations = new HashSet<>(constraintViolations);
+        }
     }
 
     /**

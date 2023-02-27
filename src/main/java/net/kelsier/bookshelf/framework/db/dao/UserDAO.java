@@ -38,7 +38,6 @@ import java.util.List;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings({"UnusedReturnValue", "unused"})
 @RegisterRowMapper(UserMapper.class)
 public interface UserDAO {
 

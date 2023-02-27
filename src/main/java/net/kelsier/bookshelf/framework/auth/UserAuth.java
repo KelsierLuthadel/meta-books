@@ -7,8 +7,9 @@ import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-
-
+/**
+ * User authentication principal
+ */
 public class UserAuth implements Principal, Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
@@ -98,7 +99,7 @@ public class UserAuth implements Principal, Serializable {
      */
     @Override
     public String getName() {
-        return username;
+        return getUsername();
     }
 
 }

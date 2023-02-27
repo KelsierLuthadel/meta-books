@@ -6,9 +6,14 @@ import net.kelsier.bookshelf.framework.db.UserRole;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Authorizer
+ *
+ */
 public class BasicAuthorizer implements Authorizer<UserAuth> {
     private final UserDAO userDAO;
     private final RoleDAO roleDAO;
@@ -19,22 +24,22 @@ public class BasicAuthorizer implements Authorizer<UserAuth> {
 
     }
     @Override
-    public boolean authorize(UserAuth user, String role) {
+    public boolean authorize(@Valid final UserAuth user, final String role) {
         final User authUser = userDAO.find(user.getUsername(),user.getPassword());
 
-        if (null != authUser) {
-            final List<String> userRoles = new ArrayList<>();
-
-            authUser.getRoles().forEach(roleId -> {
-                final UserRole userRole = roleDAO.findById(roleId);
-                if (null != userRole) {
-                    userRoles.add(userRole.getRole());
-                }
-            });
-
-            return userRoles.contains(role);
+        if (null == authUser) {
+            return false;
         }
 
-        return false;
+        final List<String> userRoles = new ArrayList<>();
+
+        authUser.getRoles().forEach((Integer roleId) -> {
+            final UserRole userRole = roleDAO.findById(roleId);
+            if (null != userRole) {
+                userRoles.add(userRole.getRole());
+            }
+        });
+
+        return userRoles.contains(role);
     }
 }

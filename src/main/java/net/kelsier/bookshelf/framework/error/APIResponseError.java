@@ -31,7 +31,6 @@ import java.io.Serializable;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
 public final class APIResponseError implements Serializable {
     private static final long serialVersionUID = -4876738904546026913L;
 

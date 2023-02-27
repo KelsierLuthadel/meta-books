@@ -31,14 +31,7 @@ public class YamlConfigLoaderTest {
 
     @Test
     public void testInvalidReadConfiguration() {
-        assertThrows(ConfigurationException.class,
-            () -> {
-                try {
-                    loadTestConfiguration(InvalidRead.class);
-                } catch (final RuntimeException e) {
-                    throw e.getCause();
-                }
-            });
+        assertThrows(ConfigurationException.class, () -> loadTestConfiguration(InvalidRead.class));
     }
 
     @Test

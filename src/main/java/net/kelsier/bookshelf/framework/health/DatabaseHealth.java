@@ -24,6 +24,8 @@ package net.kelsier.bookshelf.framework.health;
 
 import com.codahale.metrics.health.HealthCheck;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Database health check for Dropwizard
@@ -32,11 +34,11 @@ import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
  * @version 1.0.2
  */
 public class DatabaseHealth extends HealthCheck {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealth.class);
     /**
      * An instance of a DAO
      */
-    final RoleDAO roleDAO;
+    private final RoleDAO roleDAO;
 
     /**
      * Constructor
@@ -58,6 +60,7 @@ public class DatabaseHealth extends HealthCheck {
             roleDAO.getAll();
             return Result.healthy();
         } catch (final Exception e) {
+            LOGGER.error("Database connection failed", e);
             return Result.unhealthy("Database connection failed");
         }
     }
