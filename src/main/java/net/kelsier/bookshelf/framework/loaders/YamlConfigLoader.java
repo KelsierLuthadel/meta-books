@@ -27,7 +27,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
 import net.kelsier.bookshelf.framework.encryption.Cipher;
 import net.kelsier.bookshelf.framework.encryption.EncryptedModule;
-import net.kelsier.bookshelf.framework.validator.CheckedValidationException;
 import net.kelsier.bookshelf.framework.validator.ObjectValidator;
 import net.kelsier.bookshelf.framework.validator.ValidationException;
 

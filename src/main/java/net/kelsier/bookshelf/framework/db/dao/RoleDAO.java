@@ -27,6 +27,7 @@ import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -58,6 +59,9 @@ public interface RoleDAO {
     @SqlQuery("select * from ROLES where ID = :id")
     DatabaseUserRole findById(@Bind("id") Integer id);
 
+    @SqlQuery("select * from ROLES where ROLE = :role")
+    DatabaseUserRole findByName(@Bind("id") String role);
+
     /**
      * Delete a user role
      *
@@ -80,5 +84,6 @@ public interface RoleDAO {
      * @param user the user role to add
      */
     @SqlUpdate("insert into ROLES (ROLE, DESCRIPTION) values (:role, :description)")
-    void insert(@BindBean DatabaseUserRole user);
+    @GetGeneratedKeys
+    long insert(@BindBean DatabaseUserRole user);
 }
