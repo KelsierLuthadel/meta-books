@@ -47,12 +47,12 @@ import net.kelsier.bookshelf.framework.error.exception.ValidationExceptionMapper
 import net.kelsier.bookshelf.framework.error.exception.WebApplicationExceptionMapper;
 import net.kelsier.bookshelf.framework.error.exception.WebApplicationSilentExceptionMapper;
 import net.kelsier.bookshelf.framework.filter.CacheControlFilter;
+import net.kelsier.bookshelf.framework.filter.CsrfFilter;
 import net.kelsier.bookshelf.framework.health.DatabaseHealth;
 import net.kelsier.bookshelf.framework.loaders.ConfigLoader;
 import net.kelsier.bookshelf.framework.loaders.YamlConfigLoader;
 import net.kelsier.bookshelf.framework.log.LogColour;
 import net.kelsier.bookshelf.framework.openapi.OpenApi;
-import net.kelsier.bookshelf.framework.validator.JerseyViolationMapper;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.servlets.DoSFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -190,10 +190,12 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
 
         // Register custom Exception Mappers
         registerExceptionMappers();
-        registerMappers(environment);
 
         // Disable caching
         setCacheHeaders(environment);
+
+        // Anti CSRF Filtering
+        setAntiCSRFFilter(environment);
 
         // Create CORS and DOS Filter
         setupFilters(configuration, environment, configLoader);
@@ -313,10 +315,6 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         environment.jersey().register(new OpenApiResource().openApiConfiguration(oasConfig));
     }
 
-    private void registerMappers(final Environment environment) {
-      //  environment.jersey().register(new JerseyViolationMapper());
-    }
-
     private void registerRestResources() {
      resourceRegistrar.registerResource(new Login(getUserDao()));
      resourceRegistrar.registerResource(new UserAdministration(getUserDao(), getRoleDao()));
@@ -339,6 +337,11 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         final FilterRegistration.Dynamic filter = environment.servlets()
             .addFilter("cacheControlFilter", new CacheControlFilter());
         filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+    }
+
+    private static void setAntiCSRFFilter(final Environment environment) {
+        environment.servlets().addFilter("csrfFilter", new CsrfFilter())
+            .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
     }
 
     /**
