@@ -33,6 +33,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
+
 /**
  * Map exception messages to a Response message to be sent back with a response
  *
@@ -89,8 +91,11 @@ public final class ExceptionToResponse {
                 LOGGER.debug("Debug: id: {}. {}", uuid, sw);
             }
         } else {
-            if (LOGGER.isErrorEnabled() && status != Response.Status.NOT_FOUND.getStatusCode()) {
+            if (LOGGER.isErrorEnabled() && status != Response.Status.NOT_FOUND.getStatusCode() &&
+                    status != UNPROCESSABLE_ENTITY.getCode() ) {
                 LOGGER.error("Error: id: {}. {}", uuid, sw);
+            } else if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Debug: id: {}. {}", uuid, sw);
             }
         }
 
