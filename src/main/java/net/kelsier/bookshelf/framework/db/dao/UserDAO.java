@@ -27,6 +27,7 @@ import net.kelsier.bookshelf.framework.db.map.UserMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -94,5 +95,6 @@ public interface UserDAO {
      */
     @SqlUpdate("insert into USERS (USERNAME, FIRSTNAME, LASTNAME, EMAIL, ENABLED, PASSWORD, ROLES) " +
             "values (:username, :firstName, :lastName, :email, :enabled, :password, :roles)")
-    void insert(@BindBean DatabaseUser user);
+    @GetGeneratedKeys
+    long insert(@BindBean DatabaseUser user);
 }
