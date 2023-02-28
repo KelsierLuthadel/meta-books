@@ -30,10 +30,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.EMAIL_REGEX;
-import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.PASSWORD_REGEX;
 
 /**
  * User details
@@ -122,7 +122,7 @@ public class UserModel {
         this.lastName = lastName;
         this.email = email;
         this.enabled = enabled;
-        this.roles = roles;
+        this.roles = new ArrayList<>(roles);
     }
 
     /**
@@ -177,6 +177,6 @@ public class UserModel {
      * @return A list of security roles associated with the user
      */
     public List<Integer> getRoles() {
-        return roles;
+        return new ArrayList<>(roles);
     }
 }
