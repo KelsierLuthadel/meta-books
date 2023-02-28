@@ -13,16 +13,17 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.framework.db;
+package net.kelsier.bookshelf.framework.db.map;
 
 
+import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -30,23 +31,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Map a role object to a role object
+ * Map a result set to a role object
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class RoleMapper implements RowMapper<UserRole> {
+public class RoleMapper implements RowMapper<DatabaseUserRole> {
 
     /**
-     * Map a role object to a role object
+     * Map a result set to a role object
      *
      * @param resultSet results from a query
      * @param statementContext context
      * @return A user role
      * @throws SQLException Thrown when there was a database error
      */
-    public UserRole map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
-        return new UserRole(
+    public DatabaseUserRole map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        return new DatabaseUserRole(
                 resultSet.getInt("ID"),
                 resultSet.getString("ROLE"),
                 resultSet.getString("DESCRIPTION"));

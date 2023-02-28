@@ -11,8 +11,7 @@ import java.io.InputStreamReader;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
-public class Helper {
+public final class Helper {
     private Helper() {
         throw new IllegalStateException("Utility class, should not be instantiated.");
     }
@@ -24,16 +23,14 @@ public class Helper {
      *
      * @return The file contents as a string
      */
-    public static String readFromInputStream(final String name)
-           {
+    public static String readFromInputStream(final String name) {
         try {
             InputStream inputStream = Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream(name);
 
             StringBuilder resultStringBuilder = new StringBuilder();
             assert inputStream != null;
-            try (BufferedReader br
-                         = new BufferedReader(new InputStreamReader(inputStream))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
                 String line;
                 while ((line = br.readLine()) != null) {
                     resultStringBuilder.append(line).append("\n");

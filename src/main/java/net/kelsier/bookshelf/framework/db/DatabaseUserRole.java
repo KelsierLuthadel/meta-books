@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -35,11 +35,10 @@ import javax.validation.constraints.NotNull;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
 @Schema(description = "Role Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"id", "role", "description"})
-public class UserRole {
+public class DatabaseUserRole {
     /**
      * Role id
      */
@@ -69,9 +68,9 @@ public class UserRole {
      * @param role Role name
      * @param description role description
      */
-    public UserRole(@JsonProperty("id") final int id,
-                    @JsonProperty("role") final String role,
-                    @JsonProperty("description") final String description) {
+    public DatabaseUserRole(@JsonProperty("id") final int id,
+                            @JsonProperty("role") final String role,
+                            @JsonProperty("description") final String description) {
         this.id = id;
         this.role = role;
         this.description = description;

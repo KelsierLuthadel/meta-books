@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -104,18 +104,8 @@ public final class ResponseException extends Exception {
     }
 
     /**
-     * Creates a deep copy of a list of ResponseErrors.
-     * 
-     * @param errors - The list of errors to copy
-     * @return - A deep copy of the passed list of ResponseErrors
-     */
-    private List<APIResponseError> copyErrors(final List<APIResponseError> errors) {
-        return errors.stream().map(APIResponseError::new).collect(Collectors.toList());
-    }
-
-    /**
      * Constructor
-     * 
+     *
      * @param status    - HTTP response code
      * @param message   - The reason for the error
      * @param errorCode - An optional error code
@@ -138,6 +128,16 @@ public final class ResponseException extends Exception {
         } else {
             this.errors = copyErrors(errors);
         }
+    }
+
+    /**
+     * Creates a deep copy of a list of ResponseErrors.
+     * 
+     * @param errors - The list of errors to copy
+     * @return - A deep copy of the passed list of ResponseErrors
+     */
+    private static List<APIResponseError> copyErrors(final List<APIResponseError> errors) {
+        return errors.stream().map(APIResponseError::new).collect(Collectors.toList());
     }
 
     /**

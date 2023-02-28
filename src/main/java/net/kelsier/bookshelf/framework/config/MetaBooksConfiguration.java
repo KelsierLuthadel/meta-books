@@ -9,24 +9,35 @@ import io.dropwizard.db.DataSourceFactory;
 import org.pac4j.dropwizard.Pac4jFactory;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 
 public class MetaBooksConfiguration extends Configuration {
-    private Pac4jFactory pac4jFactory = new Pac4jFactory();
+    @Valid
+    private final Pac4jFactory pac4jFactory = new Pac4jFactory();
+
+    /**
+     * Create a datasource
+     * Database factory
+     */
+    @Valid
+    @NotNull
+    @JsonProperty("database")
+    private final DataSourceFactory database = new DataSourceFactory();
+
     @JsonSetter(value = "allowedOrigins", nulls = Nulls.SKIP)
-    private String allowedOrigins = "*";
+    private final String allowedOrigins;
 
     @JsonSetter(value = "allowedHeaders", nulls = Nulls.SKIP)
-    private String allowedHeaders = "X-Requested-With,Content-Type,Accept,Origin,Authorization,Cache-Control,Content-Disposition";
+    private final String allowedHeaders;
 
     @JsonSetter(value = "allowedMethods", nulls = Nulls.SKIP)
-    private String allowedMethods = "OPTIONS,GET,PUT,POST,DELETE,HEAD";
+    private final String allowedMethods;
 
     @JsonSetter(value = "exposedHeaders", nulls = Nulls.SKIP)
-    private String exposedHeaders = "Content-Disposition";
+    private final String exposedHeaders;
 
     @JsonSetter(value = "configPath", nulls = Nulls.SKIP)
-    private String configPath = "./config";
+    private final String configPath;
 
     /**
      * @param allowedOrigins                    CORS allowed origins
@@ -58,34 +69,7 @@ public class MetaBooksConfiguration extends Configuration {
         return pac4jFactory;
     }
 
-    /**
-     * Save a PAC4J object, this is provided and called by the framework
-     *
-     * @param pac4jFactory Saves a pac4j object
-     */
-    @JsonProperty("pac4j")
-    private void setPac4jFactory(Pac4jFactory pac4jFactory) {
-        this.pac4jFactory = pac4jFactory;
-    }
 
-    /**
-     * Create a datasource
-     * Database factory
-     */
-    @Valid
-    @NotNull
-    @JsonProperty("database")
-    private DataSourceFactory database = new DataSourceFactory();
-
-    /**
-     * Set a new datasource
-     *
-     * @param factory A factory to save
-     */
-    @JsonProperty("database")
-    public void setDataSourceFactory(DataSourceFactory factory) {
-        this.database = factory;
-    }
 
     /**
      * Get the datasource

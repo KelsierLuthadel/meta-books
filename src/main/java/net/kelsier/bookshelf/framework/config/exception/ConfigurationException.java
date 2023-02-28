@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -29,8 +29,7 @@ package net.kelsier.bookshelf.framework.config.exception;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings("unused")
-public final class ConfigurationException extends Exception {
+public final class ConfigurationException extends RuntimeException {
     /**
      * Constructor
      *
@@ -46,7 +45,7 @@ public final class ConfigurationException extends Exception {
      * @param message the message that details the failure.
      * @param cause   the underlying cause of the failure.
      */
-    public ConfigurationException(final String message, final Exception cause) {
+    public ConfigurationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }
