@@ -1,11 +1,12 @@
-package net.kelsier.bookshelf.framework.db;
+package net.kelsier.bookshelf.api.resource;
 
 import io.dropwizard.jersey.validation.ValidationErrorMessage;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
 import net.kelsier.bookshelf.api.model.User;
 import net.kelsier.bookshelf.api.model.UserModel;
-import net.kelsier.bookshelf.api.resource.UserAdministration;
+import net.kelsier.bookshelf.framework.db.DatabaseUser;
+import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,14 +22,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static javax.ws.rs.core.Response.Status.*;
+import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class UserTest {
-    private static final int UNPROCESSABLE_ENTITY = 422;
+class UserAdministrationTest {
     @Mock static final UserDAO userDAO = mock(UserDAO.class);
     @Mock static final RoleDAO roleDAO = mock(RoleDAO.class);
     private static final ResourceExtension resources = ResourceExtension.builder()
@@ -39,7 +39,7 @@ class UserTest {
     void setup() {
         when(userDAO.find(anyString())).thenReturn(null);
         when(roleDAO.findById(anyInt())).thenReturn(new DatabaseUserRole(1, "any", "any"));
-        doNothing().when(userDAO).insert(any());
+        when(userDAO.insert(any())).thenReturn(1L);
         doNothing().when(userDAO).update(any());
 
     }
@@ -103,15 +103,23 @@ class UserTest {
     // POST
     @Test
     void testAddUser() {
-        final User user = new User( "username", "first", "last",
+        final User user = new User("username", "first", "last",
                 "email@email.com", true,
                 "Pa$$sw0rd!", Arrays.asList(1, 2, 3, 4));
 
-        final Response post = resources.target("/api/1/users").request()
+        final Response response = resources.target("/api/1/users").request()
                 .post(Entity.json(user));
 
-        assertEquals(Response.Status.CREATED.getStatusCode(), post.getStatus(),
-            "Status should be 201 CREATED");
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(),"Status should be 200 OK");
+
+        final UserModel model = response.readEntity(UserModel.class);
+        assertEquals(user.getUsername(), model.getUsername(), "Username should match");
+        assertEquals(user.getFirstName(), model.getFirstName(), "First name should match");
+        assertEquals(user.getLastName(), model.getLastName(), "Last name should match");
+        assertEquals(user.getEmail(), model.getEmail(), "Email should match");
+        assertEquals(user.getEnabled(), model.getEnabled(), "Enabled should match");
+        assertEquals(user.getRoles().size(), model.getRoles().size(), "Number of roles should match");
+        assertArrayEquals(user.getRoles().toArray(), model.getRoles().toArray(), "Roles should match");
     }
 
     @Test
@@ -120,11 +128,19 @@ class UserTest {
             null, true,
             "Pa$$sw0rd!", Arrays.asList(1, 2, 3, 4));
 
-        final Response post = resources.target("/api/1/users").request()
+        final Response response = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(Response.Status.CREATED.getStatusCode(), post.getStatus(),
-            "Status should be 201 CREATED");
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(),"Status should be 200 OK");
+
+        final UserModel model = response.readEntity(UserModel.class);
+        assertEquals(user.getUsername(), model.getUsername(), "Username should match");
+        assertEquals(user.getFirstName(), model.getFirstName(), "First name should match");
+        assertEquals(user.getLastName(), model.getLastName(), "Last name should match");
+        assertEquals(user.getEmail(), model.getEmail(), "Email should match");
+        assertEquals(user.getEnabled(), model.getEnabled(), "Enabled should match");
+        assertEquals(user.getRoles().size(), model.getRoles().size(), "Number of roles should match");
+        assertArrayEquals(user.getRoles().toArray(), model.getRoles().toArray(), "Roles should match");
     }
 
     @Test
@@ -133,34 +149,150 @@ class UserTest {
             "", true,
             "Pa$$sw0rd!", Arrays.asList(1, 2, 3, 4));
 
-        final Response post = resources.target("/api/1/users").request()
+        final Response response = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(Response.Status.CREATED.getStatusCode(), post.getStatus(),
-            "Status should be 201 CREATED");
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(),"Status should be 200 OK");
+
+        final UserModel model = response.readEntity(UserModel.class);
+        assertEquals(user.getUsername(), model.getUsername(), "Username should match");
+        assertEquals(null, model.getFirstName(), "First name should match");
+        assertEquals(null, model.getLastName(), "Last name should match");
+        assertEquals(null, model.getEmail(), "Email should match");
+        assertEquals(user.getEnabled(), model.getEnabled(), "Enabled should match");
+        assertEquals(user.getRoles().size(), model.getRoles().size(), "Number of roles should match");
+        assertArrayEquals(user.getRoles().toArray(), model.getRoles().toArray(), "Roles should match");
+
     }
 
     @Test
     void testUpdateUser() {
-        final User user = new User( "username", "first", "last",
-                "email@email.com", true,
-                "Pa$$sw0rd!", Arrays.asList(1, 2, 3, 4));
+        when(userDAO.get(anyInt())).thenReturn(new DatabaseUser(
+            1, "username", "first", "last",
+            "email@email.com", true,
+            "Pa$$w0rd!", Arrays.asList(1, 2, 3, 4)));
 
-        resources.target("/api/1/users").request()
-                .post(Entity.json(user));
-
-        when(userDAO.get(1)).thenReturn(new DatabaseUser(1, "username", "first", "last",
-                "email@email.com", true, "Pa$$w0rd!", Arrays.asList(1,2,3,4)));
-
-        final User update = new User( "username", "second", "third",
+        final User update = new User(
+            "username", "second", "third",
                 "email@email.com", true,
                 "Pa$$sw0rd!", Arrays.asList(1, 2, 3, 4));
 
         final Response post = resources.target("/api/1/users/1").request()
                 .put(Entity.json(update));
 
-        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), post.getStatus(),
-            "Status should be 204 NO CONTENT");
+        assertEquals(OK.getStatusCode(), post.getStatus(),"Status should be 200 OK");
+        final UserModel model = post.readEntity(UserModel.class);
+
+        assertEquals(update.getUsername(), model.getUsername(), "Username should match");
+        assertEquals(update.getFirstName(), model.getFirstName(), "First name should match");
+        assertEquals(update.getLastName(), model.getLastName(), "Last name should match");
+        assertEquals(update.getEmail(), model.getEmail(), "Email should match");
+        assertEquals(update.getEnabled(), model.getEnabled(), "Enabled should match");
+        assertEquals(update.getRoles(), model.getRoles(), "Roles should match");
+    }
+
+    @Test
+    void testDeleteUser() {
+        when(userDAO.get(anyInt())).thenReturn(new DatabaseUser(
+            1, "username", "first", "last",
+            "email@email.com", true,
+            "Pa$$w0rd!", Arrays.asList(1, 2, 3, 4)));
+
+        final Response post = resources.target("/api/1/users/1").request()
+            .delete();
+
+        assertEquals(OK.getStatusCode(), post.getStatus(),"Status should be 200 OK");
+    }
+
+    /**
+     * Test for failures
+     */
+
+    @Test
+    void testGetUser404() {
+        when(userDAO.get(5)).thenReturn(null);
+
+        final Response post = resources.target("/api/1/users/5").request()
+            .get();
+
+        assertEquals(NOT_FOUND.getStatusCode(), post.getStatus(),"Status should be 404 NOT FOUND");
+    }
+
+    @Test
+    void testAddUserNullName() {
+        final User user = new User("user", "first", "last",
+            "email@email.com", true,
+            "Pa$$sw0rd!", Arrays.asList(1, 2, 3, 4));
+        when(userDAO.find(anyString())).thenReturn(new DatabaseUser(1, "user",
+            "name", "name", "user@email.com", true,
+            "Pa$$sw0rd!", Arrays.asList(1,2)));
+
+        final Response response = resources.target("/api/1/users").request()
+            .post(Entity.json(user));
+
+        assertEquals(BAD_REQUEST.getStatusCode(), response.getStatus(),"Status should be 400 BAD REQUEST");
+    }
+
+    @Test
+    void testAddUserRoleDoesntExist() {
+        final User user = new User("user", "first", "last",
+            "email@email.com", true,
+            "Pa$$sw0rd!", Arrays.asList(0, 1));
+
+        when(userDAO.find("user")).thenReturn(null);
+
+        when(roleDAO.findById(0)).thenReturn(new DatabaseUserRole(1, "admin:c", "create"));
+        when(roleDAO.findById(1)).thenReturn(null);
+
+
+        final Response response = resources.target("/api/1/users").request()
+            .post(Entity.json(user));
+
+        assertEquals(BAD_REQUEST.getStatusCode(), response.getStatus(),"Status should be 400 BAD REQUEST");
+    }
+
+    @Test
+    void testUpdateMissingUser() {
+        when(userDAO.get(5)).thenReturn(null);
+
+        final User update = new User( "username", "second", "third",
+            "email@email.com", true,
+            "Pa$$sw0rd!", Arrays.asList(1, 2, 3, 4));
+
+        final Response post = resources.target("/api/1/users/5").request()
+            .put(Entity.json(update));
+
+        assertEquals(NOT_FOUND.getStatusCode(), post.getStatus(),"Status should be 404 NOT FOUND");
+    }
+
+    @Test
+    void testUpdateExistingUser() {
+        when(userDAO.get(5)).thenReturn(new DatabaseUser(
+            1, "name","first", "last",
+            "email@email.com", true, "Pa££w0rd!", Arrays.asList(1,2,3)));
+
+        when(userDAO.getUserId("differentName")).thenReturn(new DatabaseUser(
+            1, "differentName","first", "last",
+            "email@email.com", true, "Pa££w0rd!", Arrays.asList(1,2,3)));
+
+        final User update = new User( "differentName", "second", "third",
+            "email@email.com", true,
+            "Pa$$sw0rd!", Arrays.asList(1, 2, 3, 4));
+
+        final Response post = resources.target("/api/1/users/5").request()
+            .put(Entity.json(update));
+
+        assertEquals(BAD_REQUEST.getStatusCode(), post.getStatus(),"Status should be 400 BAD REQUEST");
+    }
+
+    @Test
+    void testDeleteUser404() {
+        when(userDAO.get(anyInt())).thenReturn(null);
+
+        final Response post = resources.target("/api/1/users/1").request()
+            .delete();
+
+        assertEquals(NOT_FOUND.getStatusCode(), post.getStatus(),"Status should be 404 NOT FOUND");
     }
 
     /**
@@ -218,7 +350,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
                 .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -236,7 +368,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
                 .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -254,7 +386,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -272,7 +404,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -291,7 +423,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -310,7 +442,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -328,7 +460,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -347,7 +479,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -366,7 +498,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users").request()
             .post(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -385,7 +517,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users/1").request()
             .put(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -403,7 +535,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users/1").request()
             .put(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -412,23 +544,7 @@ class UserTest {
             "There should be an invalid password error");
     }
 
-    @Test
-    void testUpdateNullUsername() {
-        final User user = new User( null, "first", "last",
-            "email@email.com", true,
-            "Pa££w0rd!", Arrays.asList(1, 2, 3, 4));
 
-        final Response post = resources.target("/api/1/users/1").request()
-            .put(Entity.json(user));
-
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
-
-        final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
-
-        assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
-        assertEquals("username must not be null", msg.getErrors().get(0),
-            "There should be an invalid password error");
-    }
 
     @Test
     void testUpdateMinSizeUsername() {
@@ -439,7 +555,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users/1").request()
             .put(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -458,7 +574,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users/1").request()
             .put(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -477,7 +593,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users/1").request()
             .put(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -495,7 +611,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users/1").request()
             .put(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -514,7 +630,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users/1").request()
             .put(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
@@ -533,7 +649,7 @@ class UserTest {
         final Response post = resources.target("/api/1/users/1").request()
             .put(Entity.json(user));
 
-        assertEquals(UNPROCESSABLE_ENTITY, post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
 
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 

@@ -25,7 +25,6 @@ package net.kelsier.bookshelf.framework.validator;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.text.MessageFormat;
 import java.util.Set;
 
