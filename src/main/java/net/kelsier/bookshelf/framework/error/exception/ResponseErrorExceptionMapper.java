@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -24,6 +24,7 @@ package net.kelsier.bookshelf.framework.error.exception;
 
 import net.kelsier.bookshelf.framework.error.response.ExceptionToResponse;
 
+import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -44,7 +45,7 @@ public class ResponseErrorExceptionMapper implements ExceptionMapper<ResponseExc
      * @return HTTP Response
      */
     @Override
-    public final Response toResponse(final ResponseException exception) {
+    public final Response toResponse(@Valid final ResponseException exception) {
         return ExceptionToResponse.makeResponse(
             exception.getStatus(),
             UUID.randomUUID().toString(),

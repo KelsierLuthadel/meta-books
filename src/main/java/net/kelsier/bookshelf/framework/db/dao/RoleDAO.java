@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -22,8 +22,8 @@
 
 package net.kelsier.bookshelf.framework.db.dao;
 
-import net.kelsier.bookshelf.framework.db.RoleMapper;
-import net.kelsier.bookshelf.framework.db.UserRole;
+import net.kelsier.bookshelf.framework.db.map.RoleMapper;
+import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -38,7 +38,6 @@ import java.util.List;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@SuppressWarnings({"UnusedReturnValue", "unused"})
 @RegisterRowMapper(RoleMapper.class)
 public interface RoleDAO {
 
@@ -47,7 +46,7 @@ public interface RoleDAO {
      * @return A list of user roles
      */
     @SqlQuery("select * from ROLES")
-    List<UserRole> getAll();
+    List<DatabaseUserRole> getAll();
 
     /**
      * Return a user role using the id
@@ -57,7 +56,7 @@ public interface RoleDAO {
      * @return A user role object
      */
     @SqlQuery("select * from ROLES where ID = :id")
-    UserRole findById(@Bind("id") int id);
+    DatabaseUserRole findById(@Bind("id") Integer id);
 
     /**
      * Delete a user role
@@ -65,7 +64,7 @@ public interface RoleDAO {
      * @param id the id of the user role
      */
     @SqlUpdate("delete from ROLES where ID = :id")
-    void deleteById(@Bind("id") int id);
+    void deleteById(@Bind("id") Integer id);
 
     /**
      * Update user roles
@@ -73,7 +72,7 @@ public interface RoleDAO {
      * @param userRole the user role to replace
      */
     @SqlUpdate("update ROLES set ROLE = :role, DESCRIPTION = :description where ID = :id")
-    void update(@BindBean UserRole userRole);
+    void update(@BindBean DatabaseUserRole userRole);
 
     /**
      * Add a new role
@@ -81,5 +80,5 @@ public interface RoleDAO {
      * @param user the user role to add
      */
     @SqlUpdate("insert into ROLES (ROLE, DESCRIPTION) values (:role, :description)")
-    void insert(@BindBean UserRole user);
+    void insert(@BindBean DatabaseUserRole user);
 }
