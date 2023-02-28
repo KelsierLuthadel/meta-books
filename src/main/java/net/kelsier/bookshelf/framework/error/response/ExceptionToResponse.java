@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -27,6 +27,7 @@ import net.kelsier.bookshelf.framework.error.exception.WebApplicationSilentExcep
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -66,7 +67,7 @@ public final class ExceptionToResponse {
                                         final Throwable exception,
                                         final Integer errorCode,
                                         final String helpUrl,
-                                        final List<APIResponseError> errors) {
+                                        final List<@Valid APIResponseError> errors) {
         final ResponseErrorFormat responseErrorFormat = new ResponseErrorFormat(
                 status,
                 uuid,
@@ -76,15 +77,19 @@ public final class ExceptionToResponse {
                 errors
         );
 
+
         final StringWriter sw = new StringWriter();
         exception.printStackTrace(new PrintWriter(sw));
         // outputs a debug message for WebApplicationSilentExceptions with 401 or 403 error codes. Anything else gets an error message
-        if ((exception.getClass() == WebApplicationSilentException.class) && ((status == 401) || (status == 403))) {
+        if ((exception.getClass() == WebApplicationSilentException.class) && (
+                status == Response.Status.UNAUTHORIZED.getStatusCode() ||
+                status == Response.Status.FORBIDDEN.getStatusCode()
+        )) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Debug: id: {}. {}", uuid, sw);
             }
         } else {
-            if (LOGGER.isErrorEnabled() && status != 404) {
+            if (LOGGER.isErrorEnabled() && status != Response.Status.NOT_FOUND.getStatusCode()) {
                 LOGGER.error("Error: id: {}. {}", uuid, sw);
             }
         }
@@ -112,7 +117,7 @@ public final class ExceptionToResponse {
                                         final String message,
                                         final Throwable exception,
                                         final String helpUrl,
-                                        final List<APIResponseError> errors) {
+                                        final List<@Valid APIResponseError> errors) {
         return makeResponse(status, uuid, message, exception, null, helpUrl, errors);
     }
 }

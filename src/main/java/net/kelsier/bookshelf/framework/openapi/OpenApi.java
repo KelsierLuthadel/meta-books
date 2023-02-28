@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -32,7 +32,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import net.kelsier.bookshelf.framework.Helper;
-import net.kelsier.bookshelf.api.resource.UserAdministration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ import java.util.Set;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class OpenApi {
+public final class OpenApi {
 
     private OpenApi() {
         throw new IllegalStateException("Utility class. Should not be instantiated.");
@@ -80,7 +79,6 @@ public class OpenApi {
                     .prettyPrint(true)
                     .resourcePackages(resources);
 
-            environment.jersey().register(new UserAdministration());
             environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             environment.jersey().register(new OpenApiResource().openApiConfiguration(oasConfig));
     }
