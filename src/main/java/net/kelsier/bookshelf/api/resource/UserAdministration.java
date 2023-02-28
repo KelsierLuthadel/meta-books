@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.User;
 import net.kelsier.bookshelf.api.model.UserModel;
 import net.kelsier.bookshelf.framework.db.DatabaseUser;
+import net.kelsier.bookshelf.framework.db.DatabaseUserWithRoles;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
 import org.slf4j.Logger;
@@ -108,6 +109,7 @@ public class UserAdministration {
 
     public UserModel getUser(@Parameter(name = "id", required = true) @PathParam("id") final Integer id) {
         final DatabaseUser databaseUser = userDAO.get(id);
+        final DatabaseUserWithRoles foo = userDAO.getWithRoles(id);
 
         if (null == databaseUser) {
             throw new NotFoundException();

@@ -13,42 +13,53 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.framework.db;
+package net.kelsier.bookshelf.framework.db.map;
 
 
+import net.kelsier.bookshelf.framework.db.DatabaseUserWithRoles;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
- * Map a role object to a role object
+ * Map a result set to a user object
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class RoleMapper implements RowMapper<UserRole> {
+public class UserRoleMapper implements RowMapper<DatabaseUserWithRoles> {
 
     /**
-     * Map a role object to a role object
+     * Map a result set to a user object
      *
      * @param resultSet results from a query
      * @param statementContext context
-     * @return A user role
+     * @return A user
      * @throws SQLException Thrown when there was a database error
      */
-    public UserRole map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
-        return new UserRole(
+    public DatabaseUserWithRoles map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        final Integer[] roles = (Integer[])resultSet.getArray("ROLES").getArray();
+        final String[] roleNames = (String[])resultSet.getArray("array_agg").getArray();
+        return new DatabaseUserWithRoles(
                 resultSet.getInt("ID"),
-                resultSet.getString("ROLE"),
-                resultSet.getString("DESCRIPTION"));
+                resultSet.getString("USERNAME"),
+                resultSet.getString("FIRSTNAME"),
+                resultSet.getString("LASTNAME"),
+                resultSet.getString("EMAIL"),
+                resultSet.getBoolean("ENABLED"),
+                resultSet.getString("PASSWORD"),
+                new ArrayList<>(Arrays.asList(roles)),
+                new ArrayList<>(Arrays.asList(roleNames)));
     }
 }

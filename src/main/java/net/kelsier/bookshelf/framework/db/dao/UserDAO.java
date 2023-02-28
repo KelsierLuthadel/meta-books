@@ -23,7 +23,9 @@
 package net.kelsier.bookshelf.framework.db.dao;
 
 import net.kelsier.bookshelf.framework.db.DatabaseUser;
+import net.kelsier.bookshelf.framework.db.DatabaseUserWithRoles;
 import net.kelsier.bookshelf.framework.db.map.UserMapper;
+import net.kelsier.bookshelf.framework.db.map.UserRoleMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -39,6 +41,7 @@ import java.util.List;
  * @version 1.0.2
  */
 @RegisterRowMapper(UserMapper.class)
+@RegisterRowMapper(UserRoleMapper.class)
 public interface UserDAO {
 
     /**
@@ -60,6 +63,10 @@ public interface UserDAO {
      */
     @SqlQuery("select * from USERS where ID = :id")
     DatabaseUser findById(@Bind("id") int id);
+
+    @SqlQuery("SELECT U.id, U.username, U.firstname, U.lastname, U.email, U.enabled, U.password, U.roles, array_agg(R.role)\n" +
+            "FROM users U LEFT JOIN roles R ON R.id = ANY(U.roles) WHERE U.ID = :id GROUP BY U.id")
+    DatabaseUserWithRoles getWithRoles(@Bind("id") Integer id);
 
     @SqlQuery("select * from USERS where USERNAME = :username AND PASSWORD = :password")
     DatabaseUser find(@Bind("username") String username, @Bind("password") String password);
