@@ -52,6 +52,7 @@ import net.kelsier.bookshelf.framework.loaders.ConfigLoader;
 import net.kelsier.bookshelf.framework.loaders.YamlConfigLoader;
 import net.kelsier.bookshelf.framework.log.LogColour;
 import net.kelsier.bookshelf.framework.openapi.OpenApi;
+import net.kelsier.bookshelf.framework.validator.JerseyViolationMapper;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.servlets.DoSFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -189,6 +190,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
 
         // Register custom Exception Mappers
         registerExceptionMappers();
+        registerMappers(environment);
 
         // Disable caching
         setCacheHeaders(environment);
@@ -309,6 +311,10 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
 
         resourceRegistrar.registerResource(new OpenApiResource().openApiConfiguration(oasConfig));
         environment.jersey().register(new OpenApiResource().openApiConfiguration(oasConfig));
+    }
+
+    private void registerMappers(final Environment environment) {
+      //  environment.jersey().register(new JerseyViolationMapper());
     }
 
     private void registerRestResources() {

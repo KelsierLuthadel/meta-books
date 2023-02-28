@@ -23,7 +23,7 @@
 package net.kelsier.bookshelf.framework.db.map;
 
 
-import net.kelsier.bookshelf.framework.db.UserRole;
+import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -36,7 +36,7 @@ import java.sql.SQLException;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class RoleMapper implements RowMapper<UserRole> {
+public class RoleMapper implements RowMapper<DatabaseUserRole> {
 
     /**
      * Map a result set to a role object
@@ -46,8 +46,8 @@ public class RoleMapper implements RowMapper<UserRole> {
      * @return A user role
      * @throws SQLException Thrown when there was a database error
      */
-    public UserRole map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
-        return new UserRole(
+    public DatabaseUserRole map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        return new DatabaseUserRole(
                 resultSet.getInt("ID"),
                 resultSet.getString("ROLE"),
                 resultSet.getString("DESCRIPTION"));

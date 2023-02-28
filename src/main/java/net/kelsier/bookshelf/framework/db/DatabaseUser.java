@@ -45,7 +45,7 @@ import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.*;
 @Schema(description = "User Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"id", "username", "firstname", "lastname", "email", "enabled", "password", "roles"})
-public class User {
+public class DatabaseUser {
     /**
      * User id
      */
@@ -104,7 +104,6 @@ public class User {
     /**
      * roles
      */
-    @NotNull
     @JsonProperty("roles")
     private List<Integer> roles;
 
@@ -115,14 +114,14 @@ public class User {
      * @param id User id
      * @param password User's password
      */
-    public User(@JsonProperty("id") final int id,
-                @JsonProperty("username") final String username,
-                @JsonProperty("firstName") final String firstName,
-                @JsonProperty("lastName") final String lastName,
-                @JsonProperty("email") final String email,
-                @JsonProperty("enabled") final Boolean enabled,
-                @JsonProperty("password") final String password,
-                @JsonProperty("roles") final List<Integer> roles) {
+    public DatabaseUser(@JsonProperty("id") final int id,
+                        @JsonProperty("username") final String username,
+                        @JsonProperty("firstName") final String firstName,
+                        @JsonProperty("lastName") final String lastName,
+                        @JsonProperty("email") final String email,
+                        @JsonProperty("enabled") final Boolean enabled,
+                        @JsonProperty("password") final String password,
+                        @JsonProperty("roles") final List<Integer> roles) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;

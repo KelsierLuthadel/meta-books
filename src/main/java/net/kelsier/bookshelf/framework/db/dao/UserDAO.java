@@ -22,7 +22,7 @@
 
 package net.kelsier.bookshelf.framework.db.dao;
 
-import net.kelsier.bookshelf.framework.db.User;
+import net.kelsier.bookshelf.framework.db.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.map.UserMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -46,10 +46,10 @@ public interface UserDAO {
      * @return A list of user roles
      */
     @SqlQuery("select * from USERS")
-    List<User> getAll();
+    List<DatabaseUser> getAll();
 
     @SqlQuery("select * from USERS WHERE ID = :id")
-    User get(@Bind("id") Integer id);
+    DatabaseUser get(@Bind("id") Integer id);
 
     /**
      * Return a user using the id
@@ -59,13 +59,16 @@ public interface UserDAO {
      * @return A user object
      */
     @SqlQuery("select * from USERS where ID = :id")
-    User findById(@Bind("id") int id);
+    DatabaseUser findById(@Bind("id") int id);
 
     @SqlQuery("select * from USERS where USERNAME = :username AND PASSWORD = :password")
-    User find(@Bind("username") String username, @Bind("password") String password);
+    DatabaseUser find(@Bind("username") String username, @Bind("password") String password);
+
+    @SqlQuery("select * from USERS where USERNAME = :username")
+    DatabaseUser find(@Bind("username") String username);
 
     @SqlQuery("select id from USERS where USERNAME = :username")
-    User getUserId(@Bind("username") String username);
+    DatabaseUser getUserId(@Bind("username") String username);
 
     /**
      * Delete a user
@@ -82,7 +85,7 @@ public interface UserDAO {
      */
     @SqlUpdate("update USERS set USERNAME = :username, FIRSTNAME = :firstName, LASTNAME = :lastName, EMAIL = :email, " +
             "ENABLED = :enabled, PASSWORD = :password, ROLES = :roles  where ID = :id")
-    void update(@BindBean User user);
+    void update(@BindBean DatabaseUser user);
 
     /**
      * Add a new user
@@ -91,5 +94,5 @@ public interface UserDAO {
      */
     @SqlUpdate("insert into USERS (USERNAME, FIRSTNAME, LASTNAME, EMAIL, ENABLED, PASSWORD, ROLES) " +
             "values (:username, :firstName, :lastName, :email, :enabled, :password, :roles)")
-    void insert(@BindBean User user);
+    void insert(@BindBean DatabaseUser user);
 }

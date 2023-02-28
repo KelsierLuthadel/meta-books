@@ -3,7 +3,7 @@ package net.kelsier.bookshelf.api.resource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import net.kelsier.bookshelf.framework.db.UserRole;
+import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class RoleAdministration {
                           @Parameter(name = "description", required = true)  @QueryParam("description") final String description) {
 
         //todo: check exists
-        roleDAO.insert(new UserRole(0,role, description));
+        roleDAO.insert(new DatabaseUserRole(0,role, description));
         return Response.ok().build();
     }
 

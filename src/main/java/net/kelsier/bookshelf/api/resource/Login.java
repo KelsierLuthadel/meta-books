@@ -3,7 +3,7 @@ package net.kelsier.bookshelf.api.resource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import net.kelsier.bookshelf.framework.db.User;
+import net.kelsier.bookshelf.framework.db.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class Login {
 
     public Response login(@Parameter(name = "username", required = true) @QueryParam("username") final String username,
                           @Parameter(name = "password", required = true)  @QueryParam("password") final String password) {
-        final User user = userDAO.find(username, password);
+        final DatabaseUser user = userDAO.find(username, password);
         if (null != user && user.getEnabled()) {
             return Response.ok().build();
         }

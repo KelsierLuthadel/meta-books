@@ -29,9 +29,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.EMAIL_REGEX;
+import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.PASSWORD_REGEX;
 
 /**
  * User details
@@ -41,15 +43,8 @@ import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.EMAIL
  */
 @Schema(description = "User Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"id", "username", "firstName", "lastName", "email", "roles", "enabled"})
-public class UserModel {
-    /**
-     * User id
-     */
-    @NotNull
-    @JsonProperty("id")
-    private final Integer id;
-
+@JsonPropertyOrder({"username", "firstName", "lastName", "email", "password", "roles", "enabled"})
+public class User {
     /**
      * User's username
      */
@@ -83,6 +78,11 @@ public class UserModel {
     @JsonProperty("enabled")
     private final Boolean enabled;
 
+    @JsonProperty("password")
+    @Size(max = 30)
+    @Pattern(regexp = PASSWORD_REGEX)
+    private final String password;
+
     /**
      * roles
      */
@@ -93,40 +93,31 @@ public class UserModel {
     /**
      * Constructor
      *
-     * @param id - User id associated with the user in the Users table
-     * @param username - Unique username
+     * @param username  - Unique username
      * @param firstName - User's first name
-     * @param lastName - User's last name
-     * @param email - Users associated email address
-     * @param enabled - Enabled flag
-     * @param roles - List of associated security roles
+     * @param lastName  - User's last name
+     * @param email     - Users associated email address
+     * @param enabled   - Enabled flag
+     * @param password  - User's password
+     * @param roles     - List of associated security roles
      */
-    public UserModel(@JsonProperty("id") final int id,
-                     @JsonProperty("username") final String username,
-                     @JsonProperty("firstName") final String firstName,
-                     @JsonProperty("lastName") final String lastName,
-                     @JsonProperty("email") final String email,
-                     @JsonProperty("enabled") final Boolean enabled,
-                     @JsonProperty("roles") final List<Integer> roles) {
-        this.id = id;
+    public User(@JsonProperty("username") final String username,
+                @JsonProperty("firstName") final String firstName,
+                @JsonProperty("lastName") final String lastName,
+                @JsonProperty("email") final String email,
+                @JsonProperty("enabled") final Boolean enabled,
+                @JsonProperty("password") final String password,
+                @JsonProperty("roles") final List<Integer> roles) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.enabled = enabled;
+        this.password = password;
         this.roles = roles;
     }
 
     /**
-     *
-     * @return User id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     *
      * @return A string containing the user's name
      */
     public String getUsername() {
@@ -134,7 +125,6 @@ public class UserModel {
     }
 
     /**
-     *
      * @return A string containing the user's first name
      */
     public String getFirstName() {
@@ -142,7 +132,6 @@ public class UserModel {
     }
 
     /**
-     *
      * @return A string containing the user's last name
      */
     public String getLastName() {
@@ -150,7 +139,6 @@ public class UserModel {
     }
 
     /**
-     *
      * @return A string containing the user's email address
      */
     public String getEmail() {
@@ -158,11 +146,17 @@ public class UserModel {
     }
 
     /**
-     *
      * @return A flag determining if the user's account is enabled
      */
     public Boolean getEnabled() {
         return enabled;
+    }
+
+    /**
+     * @return A string containing the user's password
+     */
+    public String getPassword() {
+        return password;
     }
 
     /**

@@ -2,7 +2,7 @@ package net.kelsier.bookshelf.framework.auth;
 
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
-import net.kelsier.bookshelf.framework.db.User;
+import net.kelsier.bookshelf.framework.db.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class BasicAuthenticator  implements Authenticator<BasicCredentials, User
     }
     @Override
     public Optional<UserAuth> authenticate(BasicCredentials credentials) {
-        final User user = userDAO.find(credentials.getUsername(), credentials.getPassword());
+        final DatabaseUser user = userDAO.find(credentials.getUsername(), credentials.getPassword());
 
         if (null == user) {
             return Optional.empty();

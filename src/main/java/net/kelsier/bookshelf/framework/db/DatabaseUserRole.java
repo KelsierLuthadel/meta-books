@@ -38,7 +38,7 @@ import javax.validation.constraints.NotNull;
 @Schema(description = "Role Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"id", "role", "description"})
-public class UserRole {
+public class DatabaseUserRole {
     /**
      * Role id
      */
@@ -68,9 +68,9 @@ public class UserRole {
      * @param role Role name
      * @param description role description
      */
-    public UserRole(@JsonProperty("id") final int id,
-                    @JsonProperty("role") final String role,
-                    @JsonProperty("description") final String description) {
+    public DatabaseUserRole(@JsonProperty("id") final int id,
+                            @JsonProperty("role") final String role,
+                            @JsonProperty("description") final String description) {
         this.id = id;
         this.role = role;
         this.description = description;

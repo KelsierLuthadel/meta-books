@@ -23,7 +23,7 @@
 package net.kelsier.bookshelf.framework.db.map;
 
 
-import net.kelsier.bookshelf.framework.db.User;
+import net.kelsier.bookshelf.framework.db.DatabaseUser;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -38,7 +38,7 @@ import java.util.Arrays;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class UserMapper implements RowMapper<User> {
+public class UserMapper implements RowMapper<DatabaseUser> {
 
     /**
      * Map a result set to a user object
@@ -48,9 +48,9 @@ public class UserMapper implements RowMapper<User> {
      * @return A user
      * @throws SQLException Thrown when there was a database error
      */
-    public User map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+    public DatabaseUser map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
         final Integer[] roles = (Integer[])resultSet.getArray("ROLES").getArray();
-        return new User(
+        return new DatabaseUser(
                 resultSet.getInt("ID"),
                 resultSet.getString("USERNAME"),
                 resultSet.getString("FIRSTNAME"),
