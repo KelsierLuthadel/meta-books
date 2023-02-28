@@ -172,7 +172,7 @@ class RoleAdministrationTest {
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
         assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
-        assertEquals("role size must be between 3 and 30", msg.getErrors().get(0),
+        assertEquals("roleName size must be between 3 and 30", msg.getErrors().get(0),
             "There should be an invalid size error");
     }
 
@@ -204,7 +204,7 @@ class RoleAdministrationTest {
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
         assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
-        assertEquals("role size must be between 3 and 30", msg.getErrors().get(0),
+        assertEquals("roleName size must be between 3 and 30", msg.getErrors().get(0),
             "There should be an invalid size error");
     }
 
@@ -236,7 +236,7 @@ class RoleAdministrationTest {
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
         assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
-        assertEquals("role size must be between 3 and 30", msg.getErrors().get(0),
+        assertEquals("roleName size must be between 3 and 30", msg.getErrors().get(0),
             "There should be an invalid size error");
     }
 
@@ -268,7 +268,7 @@ class RoleAdministrationTest {
         final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
         assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
-        assertEquals("role size must be between 3 and 30", msg.getErrors().get(0),
+        assertEquals("roleName size must be between 3 and 30", msg.getErrors().get(0),
             "There should be an invalid size error");
     }
 
