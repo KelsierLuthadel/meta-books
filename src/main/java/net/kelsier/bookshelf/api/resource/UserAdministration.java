@@ -18,12 +18,26 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import javax.ws.rs.*;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User administration REST resources.
+ *
+ */
 @Path("api/1/users")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -139,33 +153,29 @@ public class UserAdministration {
                     @ApiResponse(responseCode = "401"),
                     @ApiResponse(responseCode = "403")
             })
-    public Response addUser(@Parameter(name = "user", required = true) @Valid final User user) {
-
-        if (null == userDAO.find(user.getUsername())) {
-            validateRoles(user.getRoles());
-            final DatabaseUser databaseUser = new DatabaseUser(0, user.getUsername(), user.getFirstName(),
-                    user.getLastName(), user.getEmail(), user.getEnabled(),
-                    user.getPassword(), user.getRoles());
-            userDAO.insert(databaseUser);
-            return Response.status(Response.Status.CREATED).build();
+    public UserModel addUser(@Parameter(name = "user", required = true) @Valid final User user) {
+        if (null != userDAO.find(user.getUsername())) {
+            throw new BadRequestException();
         }
 
-        return Response.status(Response.Status.BAD_REQUEST).build();
-    }
+        validateRoles(user.getRoles());
+        final DatabaseUser databaseUser = new DatabaseUser(0, user.getUsername(), user.getFirstName(),
+                user.getLastName(), user.getEmail(), user.getEnabled(),
+                user.getPassword(), user.getRoles());
+        long insertedId = userDAO.insert(databaseUser);
 
-    private void validateRoles(List<Integer> roles) {
-        roles.forEach((Integer roleId) -> {
-            if (null == roleDAO.findById(roleId)) {
-                throw new BadRequestException("Invalid role in request");
-            }
-        });
+        final String createdMessage = MessageFormat.format("User {0} created", user.getUsername());
+        LOGGER.info(createdMessage);
+
+        return new UserModel(Math.toIntExact(insertedId), user.getUsername(), user.getFirstName(),user.getLastName(),
+            user.getEmail(), user.getEnabled(), user.getRoles());
     }
 
     /**
      * Update user details
      * Restricted to the following role: admin:c
      *
-     * @param id        - An id representing a user in the database
+     * @param id   - An id representing a user in the database
      * @param user - Object containing user details to persist to database
      * @return HTTP response
      */
@@ -184,55 +194,29 @@ public class UserAdministration {
                     @ApiResponse(responseCode = "403")
             })
 
-    public Response updateUser(@Parameter(name = "id", required = true) @PathParam("id") final Integer id,
+    public UserModel updateUser(@Parameter(name = "id", required = true) @PathParam("id") final Integer id,
                                @Parameter(name = "user", required = true) @Valid final User user) {
         final DatabaseUser databaseUser = userDAO.get(id);
 
         if (null == databaseUser) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new NotFoundException();
         }
 
         // If the username has changed, ensure that there is no other user for the requested change
         if (!databaseUser.getUsername().equals(user.getUsername()) && null != userDAO.getUserId(user.getUsername())) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            throw new BadRequestException();
         }
 
         validateRoles(user.getRoles());
-        userDAO.update(mergeUserDetails(databaseUser, user.getUsername(), user.getFirstName(), user.getLastName(),
-                user.getEmail(), user.getEnabled(), user.getPassword(), user.getRoles()));
-        return Response.status(Response.Status.NO_CONTENT).build();
-    }
+        userDAO.update(new DatabaseUser(
+            databaseUser.getId(),user.getUsername(), user.getFirstName(),user.getLastName(),
+            user.getEmail(), user.getEnabled(), user.getPassword(),user.getRoles()));
 
-    private static DatabaseUser mergeUserDetails(@Valid final DatabaseUser databaseUser,
-                                                 final String username, final String firstName, final String lastName,
-                                                 final String email, final Boolean enabled, final String password,
-                                                 final List<Integer> roles) {
-        databaseUser.setUsername(username);
+        final String createdMessage = MessageFormat.format("User {0} updated", user.getUsername());
+        LOGGER.info(createdMessage);
 
-        if (null != firstName) {
-            databaseUser.setFirstName(firstName);
-        }
-        if (null != lastName) {
-            databaseUser.setLastName(lastName);
-        }
-
-        if (null != email) {
-            databaseUser.setEmail(email);
-        }
-
-        if (null != enabled) {
-            databaseUser.setEnabled(enabled);
-        }
-
-        if (null != password) {
-            databaseUser.setPassword(password);
-        }
-
-        if (null != roles) {
-            databaseUser.setRoles(roles);
-        }
-
-        return databaseUser;
+        return new UserModel(databaseUser.getId(),user.getUsername(), user.getFirstName(),user.getLastName(),
+            user.getEmail(), user.getEnabled(), user.getRoles());
     }
 
     /**
@@ -266,6 +250,22 @@ public class UserAdministration {
 
         userDAO.deleteById(id);
 
+        final String createdMessage = MessageFormat.format("User {0} deleted", user.getUsername());
+        LOGGER.info(createdMessage);
+
         return Response.ok().build();
+    }
+
+    /**
+     * Validate that roles exist
+     *
+     * @param roles - A list of roles to validate
+     */
+    private void validateRoles(final List<Integer> roles) {
+        roles.forEach((Integer roleId) -> {
+            if (null == roleDAO.findById(roleId)) {
+                throw new BadRequestException("Invalid role in request");
+            }
+        });
     }
 }
