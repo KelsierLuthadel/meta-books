@@ -73,7 +73,7 @@ public class UserModel {
      * User's email
      */
     @JsonProperty("email")
-    @Pattern(regexp = EMAIL_REGEX, message = "Invalid email format")
+    @Pattern(regexp = EMAIL_REGEX, message = "invalid format")
     private final String email;
 
     /**

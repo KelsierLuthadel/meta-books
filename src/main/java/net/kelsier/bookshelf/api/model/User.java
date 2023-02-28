@@ -49,18 +49,21 @@ public class User {
      * User's username
      */
     @NotNull
+    @Size(min = 3, max = 30)
     @JsonProperty("username")
     private final String username;
 
     /**
      * User's first name
      */
+    @Size(min = 3,max = 30)
     @JsonProperty("firstName")
     private final String firstName;
 
     /**
      * User's last name
      */
+    @Size(min = 3,max = 30)
     @JsonProperty("lastName")
     private final String lastName;
 
@@ -68,7 +71,9 @@ public class User {
      * User's email
      */
     @JsonProperty("email")
-    @Pattern(regexp = EMAIL_REGEX, message = "Invalid email format")
+    // Email length is defined in RFC 3696
+    @Size(min=5, max = 320)
+    @Pattern(regexp = EMAIL_REGEX, message = "invalid format")
     private final String email;
 
     /**
@@ -79,14 +84,14 @@ public class User {
     private final Boolean enabled;
 
     @JsonProperty("password")
-    @Size(max = 30)
-    @Pattern(regexp = PASSWORD_REGEX)
+    @Pattern(regexp = PASSWORD_REGEX, message = "does not meet minimum requirements")
     private final String password;
 
     /**
      * roles
      */
     @JsonProperty("roles")
+    @Size(max = 24)
     private final List<Integer> roles;
 
 

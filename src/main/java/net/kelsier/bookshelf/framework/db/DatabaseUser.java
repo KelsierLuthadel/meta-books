@@ -81,7 +81,7 @@ public class DatabaseUser {
      * User's email
      */
     @JsonProperty("email")
-    @Pattern(regexp = EMAIL_REGEX, message = "Invalid email format")
+    @Pattern(regexp = EMAIL_REGEX, message = "invalid format")
     private String email;
 
     /**
@@ -97,8 +97,7 @@ public class DatabaseUser {
      */
     @NotNull
     @JsonProperty("password")
-    @Size(max = 30)
-    @Pattern(regexp = PASSWORD_REGEX)
+    @Pattern(regexp = PASSWORD_REGEX, message = "does not meet minimum requirements")
     private String password;
 
     /**
