@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -25,6 +25,7 @@ package net.kelsier.bookshelf.framework.validator;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.text.MessageFormat;
 import java.util.Set;
 
@@ -50,7 +51,6 @@ public final class ObjectValidator {
      * @return validated object
      * @throws ValidationException - Thrown if the object is not valid
      */
-    @SuppressWarnings("UnusedReturnValue")
     public static <T> T validateMapping(final T obj) throws ValidationException {
         Validator validator = Validation.byDefaultProvider()
                 .configure()
@@ -71,4 +71,6 @@ public final class ObjectValidator {
 
         throw new ValidationException(stringBuilder.toString(), violations);
     }
+
+
 }

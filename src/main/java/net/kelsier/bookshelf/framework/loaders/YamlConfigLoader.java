@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -27,6 +27,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
 import net.kelsier.bookshelf.framework.encryption.Cipher;
 import net.kelsier.bookshelf.framework.encryption.EncryptedModule;
+import net.kelsier.bookshelf.framework.validator.CheckedValidationException;
 import net.kelsier.bookshelf.framework.validator.ObjectValidator;
 import net.kelsier.bookshelf.framework.validator.ValidationException;
 
@@ -102,7 +103,7 @@ public final class YamlConfigLoader implements ConfigLoader {
             return config;
         } catch (final ValidationException | IOException e) {
             final String message = MessageFormat.format("{0} failed due to: {1}", configClass.getSimpleName(), e.getMessage());
-            throw new ConfigurationException(message);
+            throw new ConfigurationException(message, e);
         }
     }
 }
