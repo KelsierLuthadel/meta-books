@@ -27,11 +27,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.EMAIL_REGEX;
+import static net.kelsier.bookshelf.framework.error.response.RegexPatterns.PASSWORD_REGEX;
 
 /**
  * User details
@@ -47,6 +50,7 @@ public class UserModel {
      * User id
      */
     @NotNull
+    @Min(1)
     @JsonProperty("id")
     private final Integer id;
 
@@ -54,18 +58,21 @@ public class UserModel {
      * User's username
      */
     @NotNull
+    @Size(min = 3, max = 30)
     @JsonProperty("username")
     private final String username;
 
     /**
      * User's first name
      */
+    @Size(min = 3,max = 30)
     @JsonProperty("firstName")
     private final String firstName;
 
     /**
      * User's last name
      */
+    @Size(min = 3,max = 30)
     @JsonProperty("lastName")
     private final String lastName;
 
@@ -73,6 +80,8 @@ public class UserModel {
      * User's email
      */
     @JsonProperty("email")
+    // Email length is defined in RFC 3696
+    @Size(min=5, max = 320)
     @Pattern(regexp = EMAIL_REGEX, message = "invalid format")
     private final String email;
 
@@ -87,6 +96,7 @@ public class UserModel {
      * roles
      */
     @JsonProperty("roles")
+    @Size(max = 24)
     private final List<Integer> roles;
 
 
