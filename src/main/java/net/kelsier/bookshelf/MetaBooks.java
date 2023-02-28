@@ -47,6 +47,7 @@ import net.kelsier.bookshelf.framework.error.exception.ValidationExceptionMapper
 import net.kelsier.bookshelf.framework.error.exception.WebApplicationExceptionMapper;
 import net.kelsier.bookshelf.framework.error.exception.WebApplicationSilentExceptionMapper;
 import net.kelsier.bookshelf.framework.filter.CacheControlFilter;
+import net.kelsier.bookshelf.framework.filter.CsrfFilter;
 import net.kelsier.bookshelf.framework.health.DatabaseHealth;
 import net.kelsier.bookshelf.framework.loaders.ConfigLoader;
 import net.kelsier.bookshelf.framework.loaders.YamlConfigLoader;
@@ -193,6 +194,9 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         // Disable caching
         setCacheHeaders(environment);
 
+        // Anti CSRF Filtering
+        setAntiCSRFFilter(environment);
+
         // Create CORS and DOS Filter
         setupFilters(configuration, environment, configLoader);
 
@@ -333,6 +337,11 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         final FilterRegistration.Dynamic filter = environment.servlets()
             .addFilter("cacheControlFilter", new CacheControlFilter());
         filter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+    }
+
+    private static void setAntiCSRFFilter(final Environment environment) {
+        environment.servlets().addFilter("csrfFilter", new CsrfFilter())
+            .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
     }
 
     /**
