@@ -53,6 +53,7 @@ import net.kelsier.bookshelf.framework.loaders.ConfigLoader;
 import net.kelsier.bookshelf.framework.loaders.YamlConfigLoader;
 import net.kelsier.bookshelf.framework.log.LogColour;
 import net.kelsier.bookshelf.framework.openapi.OpenApi;
+import net.kelsier.bookshelf.migrations.MigrateSQLite;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.servlets.DoSFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -217,6 +218,20 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         registerHealthChecks(environment, getRoleDao());
 
         MetaBooksInfo info = new MetaBooksInfo(classLoader);
+
+
+        MigrateSQLite migrate = new MigrateSQLite(databaseConnection,"c:/temp/metadata.db");
+
+        migrate.authors();
+        migrate.books();
+        migrate.comments();
+        migrate.data();
+        migrate.identifiers();
+        migrate.languages();
+        migrate.bookAuthorLink();
+        migrate.bookLanguageLink();
+        migrate.bookPublisherLink();
+        migrate.customColumns();
 
         LOGGER.info(
             "{}{} version {} has started{}",
