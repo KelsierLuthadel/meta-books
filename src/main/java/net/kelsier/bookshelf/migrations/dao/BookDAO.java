@@ -32,6 +32,8 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.util.List;
+
 /**
  *
  *
@@ -43,8 +45,14 @@ public interface BookDAO {
     @SqlQuery("SELECT * FROM books WHERE ID = :id")
     Book get(@Bind("id") int id);
 
+    @SqlQuery("SELECT * FROM books LIMIT 10")
+    List<Book> get();
+
     @SqlUpdate("INSERT INTO books (title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
             "values (:title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")
     @GetGeneratedKeys
     long insert(@BindBean Book book);
+
+    @SqlUpdate("DELETE FROM books")
+    void purge();
 }

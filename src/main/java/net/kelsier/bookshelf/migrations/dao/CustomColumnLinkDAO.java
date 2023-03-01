@@ -24,8 +24,11 @@ package net.kelsier.bookshelf.migrations.dao;
 
 import net.kelsier.bookshelf.migrations.mapper.CustomColumnLinkMapper;
 import net.kelsier.bookshelf.migrations.model.CustomColumn;
+import net.kelsier.bookshelf.migrations.model.CustomColumnLink;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.customizer.Define;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -48,9 +51,21 @@ public interface CustomColumnLinkDAO {
      * @return
      */
     @SqlQuery("select * from <table>")
-    CustomColumn get(@Define("table") String table);
+    CustomColumnLink get(@Define("table") String table);
 
-    @SqlUpdate("create table if not exists <table> (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, value INTEGER NOT NULL, UNIQUE(value))")
+    @SqlUpdate("create public.table if not exists <table> (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, value INTEGER NOT NULL, " +
+            "UNIQUE(book, value))")
     void create(@Define("table") String table);
+
+    @SqlUpdate("INSERT INTO <table> (book, value) " +
+            "values (:book, :value)")
+    @GetGeneratedKeys
+    long insert(@Define("table") String table, @BindBean CustomColumnLink customColumn);
+
+    @SqlUpdate("DELETE FROM <table>")
+    void purge(@Define("table") String table);
+
+    @SqlUpdate("DROP TABLE <table>")
+    void drop(@Define("table") String table);
 
 }

@@ -22,32 +22,42 @@
 
 package net.kelsier.bookshelf.migrations.dao;
 
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.migrations.mapper.AuthorMapper;
-import net.kelsier.bookshelf.migrations.model.Author;
+import net.kelsier.bookshelf.migrations.mapper.CustomColumnMapper;
+import net.kelsier.bookshelf.migrations.mapper.CustomColumnsMapper;
+import net.kelsier.bookshelf.migrations.model.BookTagLink;
+import net.kelsier.bookshelf.migrations.model.CustomColumn;
+import net.kelsier.bookshelf.migrations.model.CustomColumns;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.util.List;
+
 /**
- *
+ * DAO for users in a database
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@RegisterRowMapper(AuthorMapper.class)
-public interface AuthorDAO {
-    @SqlQuery("SELECT * FROM authors WHERE ID = :id")
-    Author get(@Bind("id") int id);
+@RegisterRowMapper(CustomColumnsMapper.class)
+public interface CustomColumnsDAO {
 
-    @SqlUpdate("INSERT INTO authors (name, sort) " +
-            "values (:name, :sort)")
+    @SqlQuery("SELECT * FROM custom_columns")
+    List<CustomColumns> get();
+
+    @SqlQuery("SELECT * FROM custom_columns WHERE ID = :id")
+    CustomColumns get(@Bind("id") int id);
+
+    @SqlUpdate("INSERT INTO custom_columns (label, name, datatype, display, is_multiple, normalized) " +
+            "values (:label, :name, :dataType, :display, :multiple, :normalized)")
     @GetGeneratedKeys
-    long insert(@BindBean Author author);
+    long insert(@BindBean CustomColumns bookTagLink);
 
-    @SqlUpdate("DELETE FROM authors")
+    @SqlUpdate("DELETE FROM custom_columns")
     void purge();
+
 }

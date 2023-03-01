@@ -24,12 +24,12 @@ public class Series {
     private final String name;
 
     @JsonProperty("text")
-    private final String text;
+    private final String sort;
 
-    public Series(final Integer id, final String name, final String text) {
+    public Series(final Integer id, final String name, final String sort) {
         this.id = id;
         this.name = name;
-        this.text = text;
+        this.sort = sort;
     }
 
     public Integer getId() {
@@ -40,7 +40,7 @@ public class Series {
         return name;
     }
 
-    public String getText() {
-        return text;
+    public String getSort() {
+        return sort;
     }
 }

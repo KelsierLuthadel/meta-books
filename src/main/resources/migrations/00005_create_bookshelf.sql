@@ -24,7 +24,7 @@ CREATE TABLE public.authors (
    sort TEXT
 );
 
-CREATE TABLE books (
+CREATE TABLE public.books (
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL DEFAULT 'Unknown',
     sort TEXT ,
@@ -37,14 +37,14 @@ CREATE TABLE books (
     last_modified TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00+00:00'
 );
 
-CREATE TABLE comments (
+CREATE TABLE public.comments (
     id SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     text TEXT NOT NULL ,
     UNIQUE(book)
 );
 
-CREATE TABLE data (
+CREATE TABLE public.data (
     id  SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     format TEXT NOT NULL ,
@@ -53,7 +53,7 @@ CREATE TABLE data (
     UNIQUE(book, format)
 );
 
-CREATE TABLE identifiers (
+CREATE TABLE public.identifiers (
     id SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     type TEXT NOT NULL DEFAULT 'isbn' ,
@@ -61,81 +61,81 @@ CREATE TABLE identifiers (
     UNIQUE(book, type)
 );
 
-CREATE TABLE languages (
+CREATE TABLE public.languages (
     id SERIAL PRIMARY KEY,
     lang_code TEXT NOT NULL ,
     UNIQUE(lang_code)
 );
 
-CREATE TABLE publishers (
+CREATE TABLE public.publishers (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL ,
     sort TEXT ,
     UNIQUE(name)
 );
 
-CREATE TABLE ratings (
+CREATE TABLE public.ratings (
     id SERIAL PRIMARY KEY,
     rating INTEGER CHECK(rating > -1 AND rating < 11),
     UNIQUE (rating)
 );
 
-CREATE TABLE series (
+CREATE TABLE public.series (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL ,
     sort TEXT ,
     UNIQUE (name)
 );
 
-CREATE TABLE tags (
+CREATE TABLE public.tags (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL ,
     UNIQUE (name)
 );
 
-CREATE TABLE books_authors_link (
+CREATE TABLE public.books_authors_link (
     id SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     author INTEGER NOT NULL,
     UNIQUE(book, author)
 );
 
-CREATE TABLE books_languages_link (
+CREATE TABLE public.books_languages_link (
     id SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     lang_code INTEGER NOT NULL,
     UNIQUE(book, lang_code)
 );
 
-CREATE TABLE books_publishers_link (
+CREATE TABLE public.books_publishers_link (
     id SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     publisher INTEGER NOT NULL,
     UNIQUE(book)
 );
 
-CREATE TABLE books_ratings_link (
+CREATE TABLE public.books_ratings_link (
     id SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     rating INTEGER NOT NULL,
     UNIQUE(book, rating)
 );
 
-CREATE TABLE books_series_link (
+CREATE TABLE public.books_series_link (
     id SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     series INTEGER NOT NULL,
     UNIQUE(book)
 );
 
-CREATE TABLE books_tags_link (
+CREATE TABLE public.books_tags_link (
     id SERIAL PRIMARY KEY,
     book INTEGER NOT NULL,
     tag INTEGER NOT NULL,
     UNIQUE(book, tag)
 );
 
-CREATE TABLE custom_columns (
+CREATE TABLE public.custom_columns (
     id SERIAL PRIMARY KEY,
     label TEXT NOT NULL,
     name TEXT NOT NULL,

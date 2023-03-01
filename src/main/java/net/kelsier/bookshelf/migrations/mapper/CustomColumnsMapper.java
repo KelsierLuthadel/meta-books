@@ -20,47 +20,50 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.migrations.dao;
+package net.kelsier.bookshelf.migrations.mapper;
 
-import net.kelsier.bookshelf.migrations.mapper.CustomColumnMapper;
-import net.kelsier.bookshelf.migrations.model.Comment;
+
 import net.kelsier.bookshelf.migrations.model.CustomColumn;
-import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.customizer.Define;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import net.kelsier.bookshelf.migrations.model.CustomColumns;
+import net.kelsier.bookshelf.migrations.model.Data;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/*
+id  SERIAL PRIMARY KEY,
+    book INTEGER NOT NULL,
+    format TEXT NOT NULL ,
+    uncompressed_size INTEGER NOT NULL,
+    name TEXT NOT NULL,
+ */
 
 /**
- * DAO for users in a database
+ *
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@RegisterRowMapper(CustomColumnMapper.class)
-public interface CustomColumnDAO {
+public class CustomColumnsMapper implements RowMapper<CustomColumns> {
 
     /**
      *
+     *
+     * @param resultSet results from a query
+     * @param statementContext context
      * @return
+     * @throws SQLException Thrown when there was a database error
      */
-    @SqlQuery("select * from <table>")
-    CustomColumn get(@Define("table") String table);
-
-    @SqlUpdate("create public.table if not exists <table> (id SERIAL PRIMARY KEY, value TEXT NOT NULL, UNIQUE(value))")
-    void create(@Define("table") String table);
-
-    @SqlUpdate("INSERT INTO <table> (value) " +
-            "values (:value)")
-    @GetGeneratedKeys
-    long insert(@Define("table") String table, @BindBean CustomColumn customColumn);
-
-    @SqlUpdate("DELETE FROM <table>")
-    void purge(@Define("table") String table);
-
-    @SqlUpdate("DROP TABLE <table>")
-    void drop(@Define("table") String table);
-
-
+    public CustomColumns map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        return new CustomColumns(
+                resultSet.getInt("ID"),
+                resultSet.getString("LABEL"),
+                resultSet.getString("NAME"),
+                resultSet.getString("DATATYPE"),
+                resultSet.getString("DISPLAY"),
+                resultSet.getBoolean("MULTIPLE"),
+                resultSet.getBoolean("NORMALIZED"));
+    }
 }

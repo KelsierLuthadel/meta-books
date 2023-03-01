@@ -22,9 +22,10 @@
 
 package net.kelsier.bookshelf.migrations.dao;
 
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.migrations.mapper.AuthorMapper;
-import net.kelsier.bookshelf.migrations.model.Author;
+import net.kelsier.bookshelf.migrations.mapper.LanguageMapper;
+import net.kelsier.bookshelf.migrations.mapper.PublisherMapper;
+import net.kelsier.bookshelf.migrations.model.Language;
+import net.kelsier.bookshelf.migrations.model.Publisher;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -38,16 +39,16 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@RegisterRowMapper(AuthorMapper.class)
-public interface AuthorDAO {
-    @SqlQuery("SELECT * FROM authors WHERE ID = :id")
-    Author get(@Bind("id") int id);
+@RegisterRowMapper(PublisherMapper.class)
+public interface PublisherDAO {
+    @SqlQuery("SELECT * FROM publishers WHERE ID = :id")
+    Publisher get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO authors (name, sort) " +
+    @SqlUpdate("INSERT INTO publishers (name, sort) " +
             "values (:name, :sort)")
     @GetGeneratedKeys
-    long insert(@BindBean Author author);
+    long insert(@BindBean Publisher publisher);
 
-    @SqlUpdate("DELETE FROM authors")
+    @SqlUpdate("DELETE FROM publishers")
     void purge();
 }
