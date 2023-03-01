@@ -22,9 +22,10 @@
 
 package net.kelsier.bookshelf.migrations.dao;
 
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.migrations.mapper.AuthorMapper;
-import net.kelsier.bookshelf.migrations.model.Author;
+import net.kelsier.bookshelf.migrations.mapper.SeriesMapper;
+import net.kelsier.bookshelf.migrations.mapper.TagMapper;
+import net.kelsier.bookshelf.migrations.model.Series;
+import net.kelsier.bookshelf.migrations.model.Tag;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -38,16 +39,16 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@RegisterRowMapper(AuthorMapper.class)
-public interface AuthorDAO {
-    @SqlQuery("SELECT * FROM authors WHERE ID = :id")
-    Author get(@Bind("id") int id);
+@RegisterRowMapper(TagMapper.class)
+public interface TagDAO {
+    @SqlQuery("SELECT * FROM tags WHERE ID = :id")
+    Tag get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO authors (name, sort) " +
-            "values (:name, :sort)")
+    @SqlUpdate("INSERT INTO tags (name) " +
+            "values (:name)")
     @GetGeneratedKeys
-    long insert(@BindBean Author author);
+    long insert(@BindBean Tag tag);
 
-    @SqlUpdate("DELETE FROM authors")
+    @SqlUpdate("DELETE FROM tags")
     void purge();
 }

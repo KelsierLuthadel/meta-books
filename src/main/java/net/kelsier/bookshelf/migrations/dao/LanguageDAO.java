@@ -48,4 +48,7 @@ public interface LanguageDAO {
             "values (:languageCode)")
     @GetGeneratedKeys
     long insert(@BindBean Language author);
+
+    @SqlUpdate("DELETE FROM languages")
+    void purge();
 }

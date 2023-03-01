@@ -22,9 +22,10 @@
 
 package net.kelsier.bookshelf.migrations.dao;
 
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.migrations.mapper.AuthorMapper;
-import net.kelsier.bookshelf.migrations.model.Author;
+import net.kelsier.bookshelf.migrations.mapper.RatingMapper;
+import net.kelsier.bookshelf.migrations.mapper.SeriesMapper;
+import net.kelsier.bookshelf.migrations.model.Rating;
+import net.kelsier.bookshelf.migrations.model.Series;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -38,16 +39,16 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@RegisterRowMapper(AuthorMapper.class)
-public interface AuthorDAO {
-    @SqlQuery("SELECT * FROM authors WHERE ID = :id")
-    Author get(@Bind("id") int id);
+@RegisterRowMapper(SeriesMapper.class)
+public interface SeriesDAO {
+    @SqlQuery("SELECT * FROM series WHERE ID = :id")
+    Series get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO authors (name, sort) " +
+    @SqlUpdate("INSERT INTO series (name, sort) " +
             "values (:name, :sort)")
     @GetGeneratedKeys
-    long insert(@BindBean Author author);
+    long insert(@BindBean Series series);
 
-    @SqlUpdate("DELETE FROM authors")
+    @SqlUpdate("DELETE FROM series")
     void purge();
 }

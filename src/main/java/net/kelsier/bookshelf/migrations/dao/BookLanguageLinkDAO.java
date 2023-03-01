@@ -48,4 +48,7 @@ public interface BookLanguageLinkDAO {
             "values (:book, :languageCode)")
     @GetGeneratedKeys
     long insert(@BindBean BookLanguageLink bookLanguageLink);
+
+    @SqlUpdate("DELETE FROM books_languages_link")
+    void purge();
 }

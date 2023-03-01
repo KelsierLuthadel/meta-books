@@ -20,34 +20,32 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.migrations.dao;
+package net.kelsier.bookshelf.migrations.exception;
 
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.migrations.mapper.AuthorMapper;
-import net.kelsier.bookshelf.migrations.model.Author;
-import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
-import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 /**
- *
+ * ConfigurationException
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@RegisterRowMapper(AuthorMapper.class)
-public interface AuthorDAO {
-    @SqlQuery("SELECT * FROM authors WHERE ID = :id")
-    Author get(@Bind("id") int id);
+public final class MigrationException extends RuntimeException {
+    /**
+     * Constructor
+     *
+     * @param message the message that details the failure.
+     */
+    public MigrationException(final String message) {
+        super(message);
+    }
 
-    @SqlUpdate("INSERT INTO authors (name, sort) " +
-            "values (:name, :sort)")
-    @GetGeneratedKeys
-    long insert(@BindBean Author author);
-
-    @SqlUpdate("DELETE FROM authors")
-    void purge();
+    /**
+     * Constructor
+     *
+     * @param message the message that details the failure.
+     * @param cause   the underlying cause of the failure.
+     */
+    public MigrationException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -44,8 +44,11 @@ public interface DataDAO {
     @SqlQuery("SELECT * FROM data WHERE ID = :id")
     Data get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO data (book, format, uncompressedSize, text) " +
-            "values (:name, :sort)")
+    @SqlUpdate("INSERT INTO data (book, format, uncompressed_size, name) " +
+            "values (:book, :format, :uncompressedSize, :name)")
     @GetGeneratedKeys
     long insert(@BindBean Data author);
+
+    @SqlUpdate("DELETE FROM data")
+    void purge();
 }

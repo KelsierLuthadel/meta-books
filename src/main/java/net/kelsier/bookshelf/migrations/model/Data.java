@@ -33,14 +33,14 @@ public class Data {
 
     @NotNull
     @JsonProperty("text")
-    private final String text;
+    private final String name;
 
-    public Data(final Integer id, final Integer book, final String format, final Integer uncompressedSize, final String text) {
+    public Data(final Integer id, final Integer book, final String format, final Integer uncompressedSize, final String name) {
         this.id = id;
         this.book = book;
         this.format = format;
         this.uncompressedSize = uncompressedSize;
-        this.text = text;
+        this.name = name;
     }
 
     public Integer getId() {
@@ -59,7 +59,7 @@ public class Data {
         return uncompressedSize;
     }
 
-    public String getText() {
-        return text;
+    public String getName() {
+        return name;
     }
 }

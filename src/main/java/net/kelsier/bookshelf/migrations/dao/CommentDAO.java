@@ -49,4 +49,7 @@ public interface CommentDAO {
             "values (:book, :text)")
     @GetGeneratedKeys
     long insert(@BindBean Comment comment);
+
+    @SqlUpdate("DELETE FROM comments")
+    void purge();
 }

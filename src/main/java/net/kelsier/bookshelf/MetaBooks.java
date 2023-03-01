@@ -22,10 +22,11 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
-import net.kelsier.bookshelf.api.resource.Bookshelf;
+import net.kelsier.bookshelf.api.resource.bookshelf.Bookshelf;
 import net.kelsier.bookshelf.api.resource.Login;
 import net.kelsier.bookshelf.api.resource.RoleAdministration;
 import net.kelsier.bookshelf.api.resource.UserAdministration;
+import net.kelsier.bookshelf.api.resource.bookshelf.BookshelfAdministration;
 import net.kelsier.bookshelf.framework.MetaBooksInfo;
 import net.kelsier.bookshelf.framework.auth.BasicAuthenticator;
 import net.kelsier.bookshelf.framework.auth.BasicAuthorizer;
@@ -219,20 +220,6 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
 
         MetaBooksInfo info = new MetaBooksInfo(classLoader);
 
-
-        MigrateSQLite migrate = new MigrateSQLite(databaseConnection,"c:/temp/metadata.db");
-
-        migrate.authors();
-        migrate.books();
-        migrate.comments();
-        migrate.data();
-        migrate.identifiers();
-        migrate.languages();
-        migrate.bookAuthorLink();
-        migrate.bookLanguageLink();
-        migrate.bookPublisherLink();
-        migrate.customColumns();
-
         LOGGER.info(
             "{}{} version {} has started{}",
             LogColour.ANSI_PURPLE,
@@ -334,7 +321,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
      resourceRegistrar.registerResource(new Login(getUserDao()));
      resourceRegistrar.registerResource(new UserAdministration(getUserDao(), getRoleDao()));
      resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
-     resourceRegistrar.registerResource(new Bookshelf());
+     resourceRegistrar.registerResource(new Bookshelf(databaseConnection));
+     resourceRegistrar.registerResource(new BookshelfAdministration(databaseConnection));
     }
 
     private static void registerHealthChecks(final Environment environment, final RoleDAO roleDAO) {

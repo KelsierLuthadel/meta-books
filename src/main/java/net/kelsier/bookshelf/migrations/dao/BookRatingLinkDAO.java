@@ -22,9 +22,10 @@
 
 package net.kelsier.bookshelf.migrations.dao;
 
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.migrations.mapper.AuthorMapper;
-import net.kelsier.bookshelf.migrations.model.Author;
+import net.kelsier.bookshelf.migrations.mapper.BookPublisherLinkMapper;
+import net.kelsier.bookshelf.migrations.mapper.BookRatingLinkMapper;
+import net.kelsier.bookshelf.migrations.model.BookPublisherLink;
+import net.kelsier.bookshelf.migrations.model.BookRatingLink;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -38,16 +39,15 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-@RegisterRowMapper(AuthorMapper.class)
-public interface AuthorDAO {
-    @SqlQuery("SELECT * FROM authors WHERE ID = :id")
-    Author get(@Bind("id") int id);
+@RegisterRowMapper(BookRatingLinkMapper.class)
+public interface BookRatingLinkDAO {
+    @SqlQuery("SELECT * FROM books_ratings_link WHERE ID = :id")
+    BookRatingLink get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO authors (name, sort) " +
-            "values (:name, :sort)")
+    @SqlUpdate("INSERT INTO books_ratings_link (book, rating) values (:book, :rating)")
     @GetGeneratedKeys
-    long insert(@BindBean Author author);
+    long insert(@BindBean BookRatingLink bookRatingLink);
 
-    @SqlUpdate("DELETE FROM authors")
+    @SqlUpdate("DELETE FROM books_ratings_link")
     void purge();
 }
