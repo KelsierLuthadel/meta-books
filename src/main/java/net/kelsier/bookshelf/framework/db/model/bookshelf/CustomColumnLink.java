@@ -21,10 +21,12 @@ public class CustomColumnLink {
     private final Integer id;
 
     @NotNull
+    @Min(1)
     @JsonProperty("book")
     private final Integer book;
 
     @NotNull
+    @Min(1)
     @JsonProperty("value")
     private final Integer value;
 

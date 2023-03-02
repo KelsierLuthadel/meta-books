@@ -24,6 +24,7 @@ public class Comment {
     @Min(1)
     private final Integer book;
 
+    @NotNull
     @JsonProperty("text")
     private final String text;
 
