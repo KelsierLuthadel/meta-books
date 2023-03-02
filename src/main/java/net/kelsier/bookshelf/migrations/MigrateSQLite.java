@@ -8,7 +8,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import javax.ws.rs.InternalServerErrorException;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -25,25 +24,25 @@ public class MigrateSQLite {
         this.sqliteDatabase = sqliteDatabase;
     }
     public void migrate() throws MigrationException {
-        authors();
-        books();
-        comments();
-        data();
-        identifiers();
-        languages();
-        publishers();
-        ratings();
-        series();
-        tags();
-        bookAuthorLink();
-        bookLanguageLink();
-        bookPublisherLink();
-        bookRatingsLink();
-        bookSeriesLink();
-        booksTagsLink();
-        customColumns();
-        createCustomColumns();
+        populateAuthors();
+        populateBooks();
+        populateComments();
+        populateData();
+        populateIdentifiers();
+        populateLanguages();
+        populatePublishers();
+        populateRatings();
+        populateSeries();
+        populateTags();
+        populateBookAuthorLink();
+        populateBookLanguageLink();
+        populateBookPublisherLink();
+        populateBookRatingsLink();
+        populateBookSeriesLink();
+        populateBooksTagsLink();
         populateCustomColumns();
+        createCustomColumn();
+        populateCustomColumn();
     }
 
     public void drop() {
@@ -68,79 +67,37 @@ public class MigrateSQLite {
     }
 
     private Connection connect() {
-        final String url = MessageFormat.format("jdbc:sqlite:{0}", sqliteDatabase);
-
-        Connection conn = null;
         try {
-            conn = DriverManager.getConnection(url);
+            return DriverManager.getConnection(MessageFormat.format("jdbc:sqlite:{0}", sqliteDatabase));
         } catch (final SQLException e) {
             throw new MigrationException("Unable to connect to source database", e);
         }
-        return conn;
     }
 
 
-    public void createCustomColumns() {
-        String sql = "select * from custom_columns;";
-
-        try (Connection conn = this.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+    public void createCustomColumn() {
+        try {
+            final List<Integer> columns = getColumns();
 
             CustomColumnDAO customColumnDAO = databaseConnection.onDemand(CustomColumnDAO.class);
             CustomColumnLinkDAO customColumnLinkDAO = databaseConnection.onDemand(CustomColumnLinkDAO.class);
-            // loop through the result set
-            while (rs.next()) {
-                final Integer id = rs.getInt("id");
-                String table = MessageFormat.format("custom_column_{0}", id);
-                customColumnDAO.create(table);
-                table = MessageFormat.format("custom_column_{0}_link", id);
-                customColumnLinkDAO.create(table);
-            }
-        } catch (SQLException e) {
+            columns.forEach((Integer columnId) -> {
+                customColumnDAO.create(MessageFormat.format("public.custom_column_{0}", columnId));
+                customColumnLinkDAO.create(MessageFormat.format("public.custom_column_{0}_link", columnId));
+            });
+        } catch (MigrationException e) {
             throw new MigrationException("Unable to create custom columns", e);
         }
     }
 
-    public void populateCustomColumns() {
-        final List<Integer> customColumns = new ArrayList<>();
+    public void populateCustomColumn() {
+        final List<Integer> customColumns = getColumns();
+        populateCustom(customColumns);
+        populateCustomLink(customColumns);
+    }
 
-        CustomColumnDAO customColumnDAO = databaseConnection.onDemand(CustomColumnDAO.class);
+    private void populateCustomLink(final List<Integer> customColumns) {
         CustomColumnLinkDAO customColumnLinkDAO = databaseConnection.onDemand(CustomColumnLinkDAO.class);
-
-        try (Connection conn = this.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery( "select * from custom_columns;")) {
-
-            while (rs.next()) {
-                final Integer id = rs.getInt("id");
-                final Boolean normalized = rs.getBoolean("normalized");
-                if (normalized) {
-                    customColumns.add(id);
-                }
-            }
-        } catch (SQLException e) {
-            throw new MigrationException("Unable to read from custom columns", e);
-        }
-
-        customColumns.forEach((Integer columnId) -> {
-            final String table = MessageFormat.format("custom_column_{0}", columnId);
-            final String sql = MessageFormat.format("select * from {0};", table);
-            try (Connection conn = this.connect();
-                 Statement stmt = conn.createStatement();
-
-                 ResultSet rs = stmt.executeQuery( sql)) {
-
-                while (rs.next()) {
-                    final String value = rs.getString("value");
-                    customColumnDAO.insert(table, new CustomColumn(0, value));
-
-                }
-            } catch (SQLException e) {
-                throw new MigrationException("Unable to populate custom column", e);
-            }
-        });
-
         customColumns.forEach((Integer columnId) -> {
             final String table = MessageFormat.format("custom_column_{0}_link", columnId);
             final String sql = MessageFormat.format("select * from books_{0};", table);
@@ -162,185 +119,155 @@ public class MigrateSQLite {
         });
     }
 
-    public void bookSeriesLink() {
-        String sql = " select * from books_series_link;";
+    private void populateCustom(final List<Integer> customColumns) {
+        CustomColumnDAO customColumnDAO = databaseConnection.onDemand(CustomColumnDAO.class);
+        customColumns.forEach((Integer columnId) -> {
+            final String table = MessageFormat.format("custom_column_{0}", columnId);
+            final String sql = MessageFormat.format("select * from {0};", table);
+            try (Connection conn = this.connect();
+                 Statement stmt = conn.createStatement();
 
+                 ResultSet rs = stmt.executeQuery( sql)) {
+
+                while (rs.next()) {
+                    customColumnDAO.insert(table, new CustomColumn(0, rs.getString("value")));
+
+                }
+            } catch (SQLException e) {
+                throw new MigrationException("Unable to populate custom column", e);
+            }
+        });
+    }
+
+    private List<Integer> getColumns() throws MigrationException {
+        final List<Integer> customColumns = new ArrayList<>();
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery( "select * from custom_columns;")) {
 
+            while (rs.next()) {
+                if (rs.getBoolean("normalized")) {
+                    customColumns.add(rs.getInt("id"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new MigrationException("Unable to read from custom columns", e);
+        }
+        return customColumns;
+    }
+
+    public void populateBookSeriesLink() {
+        try (Connection conn = this.connect();
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from books_series_link;")) {
             final BookSeriesLinkDAO bookSeriesLinkDAO = databaseConnection.onDemand(BookSeriesLinkDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final Integer series = rs.getInt("series");
-
-                final BookSeriesLink bookSeriesLink = new BookSeriesLink(0, book, series);
-
-                bookSeriesLinkDAO.insert(bookSeriesLink);
-
+                bookSeriesLinkDAO.insert(new BookSeriesLink(0, rs.getInt("book"), rs.getInt("series")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book series link", e);
         }
     }
 
-    public void booksTagsLink() {
-        String sql = " select * from books_tags_link;";
-
+    public void populateBooksTagsLink() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from books_tags_link;")) {
             final BookTagLinkDAO bookTagLinkDAO = databaseConnection.onDemand(BookTagLinkDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final Integer rating = rs.getInt("tag");
-
-                final BookTagLink bookTagLink = new BookTagLink(0, book, rating);
-
-                bookTagLinkDAO.insert(bookTagLink);
-
+                bookTagLinkDAO.insert(new BookTagLink(0, rs.getInt("book"), rs.getInt("tag")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book tags link", e);
         }
     }
 
-    public void customColumns() {
-        String sql = " select * from custom_columns;";
-
+    public void populateCustomColumns() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from custom_columns;")) {
             final CustomColumnsDAO customColumnsDAO = databaseConnection.onDemand(CustomColumnsDAO.class);
 
             while (rs.next()) {
-                final String label = rs.getString("label");
-                final String name = rs.getString("name");
-                final String datatype = rs.getString("datatype");
-                final String display = rs.getString("display");
-                final Boolean isMultiple = rs.getBoolean("is_multiple");
-                final Boolean normalized = rs.getBoolean("normalized");
-
-                final CustomColumns customColumns = new CustomColumns(0, label, name, datatype, display,
-                        isMultiple, normalized);
-
-                customColumnsDAO.insert(customColumns);
-
+                customColumnsDAO.insert(new CustomColumns(
+                        0,
+                        rs.getString("label"),
+                        rs.getString("name"),
+                        rs.getString("datatype"),
+                        rs.getString("display"),
+                        rs.getBoolean("is_multiple"),
+                        rs.getBoolean("normalized")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate custom columns", e);
         }
     }
 
-    public void bookRatingsLink() {
-        String sql = " select * from books_ratings_link;";
-
+    public void populateBookRatingsLink() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from books_ratings_link;")) {
             final BookRatingLinkDAO bookRatingLinkDAO = databaseConnection.onDemand(BookRatingLinkDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final Integer rating = rs.getInt("rating");
-
-                final BookRatingLink bookRatingLink = new BookRatingLink(0, book, rating);
-
-                bookRatingLinkDAO.insert(bookRatingLink);
-
+                bookRatingLinkDAO.insert(new BookRatingLink(0, rs.getInt("book"), rs.getInt("rating")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate books ratings link", e);
         }
     }
 
-    public void publishers() {
-        String sql = " select * from publishers;";
-
+    public void populatePublishers() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from publishers;")) {
             final PublisherDAO publisherDAO = databaseConnection.onDemand(PublisherDAO.class);
 
             while (rs.next()) {
-                final String name = rs.getString("name");
-                final String sort = rs.getString("sort");
-
-                final Publisher publisher = new Publisher(0, name, sort);
-
-                publisherDAO.insert(publisher);
-
+                publisherDAO.insert(new Publisher(0, rs.getString("name"), rs.getString("sort")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate publishers", e);
         }
     }
 
-    public void series() {
-        String sql = " select * from series;";
-
+    public void populateSeries() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from series;")) {
             final SeriesDAO seriesDAO = databaseConnection.onDemand(SeriesDAO.class);
 
             while (rs.next()) {
-                final String name = rs.getString("name");
-                final String sort = rs.getString("sort");
-
-                final Series series = new Series(0, name, sort);
-
-                seriesDAO.insert(series);
-
+                seriesDAO.insert(new Series(0, rs.getString("name"), rs.getString("sort")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate series", e);
         }
     }
 
-    public void tags() {
-        String sql = " select * from tags;";
-
+    public void populateTags() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from tags;")) {
             final TagDAO tagDAO = databaseConnection.onDemand(TagDAO.class);
 
             while (rs.next()) {
-                final String name = rs.getString("name");
-
-                final Tag tag = new Tag(0, name);
-
-                tagDAO.insert(tag);
-
+                tagDAO.insert(new Tag(0, rs.getString("name")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate tags", e);
         }
     }
-    public void ratings() {
-        String sql = " select * from ratings;";
-
+    public void populateRatings() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from ratings;")) {
             final RatingDAO ratingDAO = databaseConnection.onDemand(RatingDAO.class);
 
             while (rs.next()) {
-                final Integer ratingValue = rs.getInt("rating");
-
-                final Rating rating = new Rating(0, ratingValue);
-
-                ratingDAO.insert(rating);
+                ratingDAO.insert(new Rating(0, rs.getInt("rating")));
 
             }
         } catch (SQLException e) {
@@ -349,20 +276,14 @@ public class MigrateSQLite {
     }
 
 
-    public void authors() {
-        String sql = " select * from authors;";
-
+    public void populateAuthors() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from authors;")) {
             final AuthorDAO authorDAO = databaseConnection.onDemand(AuthorDAO.class);
 
             while (rs.next()) {
-                final String name = rs.getString("name");
-                final String sort = rs.getString("sort");
-                final Author author = new Author(0, name, sort);
-                authorDAO.insert(author);
+                authorDAO.insert(new Author(0, rs.getString("name"), rs.getString("sort")));
             }
 
         } catch (SQLException e) {
@@ -370,29 +291,24 @@ public class MigrateSQLite {
         }
     }
 
-    public void books() {
-        String sql = " select * from books;";
-
+    public void populateBooks() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from books;")) {
             final BookDAO bookDAO = databaseConnection.onDemand(BookDAO.class);
 
             while (rs.next()) {
-                final String title = rs.getString("title");
-                final String sort = rs.getString("sort");
-                final Timestamp dateAdded = parseDateField(rs.getString("timestamp"));
-                final Timestamp publicationDate = parseDateField(rs.getString("pubdate"));
-                final Double series_index = rs.getDouble("series_index");
-                final String isbn = rs.getString("isbn");
-                final String path = rs.getString("path");
-                final Boolean hasCover = rs.getBoolean("has_cover");
-                final Timestamp lastModified = parseDateField(rs.getString("last_modified"));
-
-                final Book book = new Book(0, title, sort, dateAdded, publicationDate, series_index, isbn, path, hasCover, lastModified);
-                bookDAO.insert(book);
-
+                bookDAO.insert(new Book(
+                        0,
+                        rs.getString("title"),
+                        rs.getString("sort"),
+                        parseDateField(rs.getString("timestamp")),
+                        parseDateField(rs.getString("pubdate")),
+                        rs.getDouble("series_index"),
+                        rs.getString("isbn"),
+                        rs.getString("path"),
+                        rs.getBoolean("has_cover"),
+                        parseDateField(rs.getString("last_modified"))));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate books", e);
@@ -400,67 +316,50 @@ public class MigrateSQLite {
     }
 
 
-    public void comments() {
-        String sql = " select * from comments;";
-
+    public void populateComments() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from comments;")) {
             final CommentDAO commentDao = databaseConnection.onDemand(CommentDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final String text = rs.getString("text");
-                final Comment comment = new Comment(0, book, text);
-                commentDao.insert(comment);
-
+                commentDao.insert(new Comment(0, rs.getInt("book"), rs.getString("text")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate comments", e);
         }
     }
 
-    public void data() {
-        String sql = " select * from data;";
-
+    public void populateData() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from data;")) {
             final DataDAO dataDAO = databaseConnection.onDemand(DataDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final String format = rs.getString("format");
-                final Integer size = rs.getInt("uncompressed_size");
-                final String name = rs.getString("name");
-
-                final Data data = new Data(0, book, format, size, name);
-                dataDAO.insert(data);
-
+                dataDAO.insert(new Data(0,
+                        rs.getInt("book"),
+                        rs.getString("format"),
+                        rs.getInt("uncompressed_size"),
+                        rs.getString("name")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate data", e);
         }
     }
 
-    public void identifiers() {
-        String sql = " select * from identifiers;";
-
+    public void populateIdentifiers() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from identifiers;")) {
             final IdentifierDAO identifierDAO = databaseConnection.onDemand(IdentifierDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final String type = rs.getString("type");
-                final String val = rs.getString("val");
-
-                final Identifier data = new Identifier(0, book, type, val);
-                identifierDAO.insert(data);
+                identifierDAO.insert(new Identifier(
+                        0,
+                        rs.getInt("book"),
+                        rs.getString("type"),
+                        rs.getString("val")));
 
             }
         } catch (SQLException e) {
@@ -468,94 +367,64 @@ public class MigrateSQLite {
         }
     }
 
-    public void languages() {
-        String sql = " select * from languages;";
-
+    public void populateLanguages() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from languages;")) {
             final LanguageDAO languageDAO = databaseConnection.onDemand(LanguageDAO.class);
 
             while (rs.next()) {
-                final String languageCode = rs.getString("lang_code");
-
-                final Language data = new Language(0, languageCode);
-                languageDAO.insert(data);
-
+                languageDAO.insert(new Language(0, rs.getString("lang_code")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate languages", e);
         }
     }
 
-    public void bookAuthorLink() {
-        String sql = " select * from books_authors_link;";
-
+    public void populateBookAuthorLink() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from books_authors_link;")) {
             final BookAuthorLinkDAO bookAuthorLinkDAO = databaseConnection.onDemand(BookAuthorLinkDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final Integer author = rs.getInt("author");
-
-                final BookAuthorLink bookAuthorLink = new BookAuthorLink(0, book, author);
-                bookAuthorLinkDAO.insert(bookAuthorLink);
-
+                bookAuthorLinkDAO.insert(new BookAuthorLink(
+                        0, rs.getInt("book"), rs.getInt("author")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book author link", e);
         }
     }
 
-    public void bookLanguageLink() {
-        String sql = " select * from books_languages_link;";
-
+    public void populateBookLanguageLink() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from books_languages_link;")) {
             final BookLanguageLinkDAO bookLanguageLinkDAO = databaseConnection.onDemand(BookLanguageLinkDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final Integer languageCode = rs.getInt("lang_code");
-
-                final BookLanguageLink bookLanguageLink = new BookLanguageLink(0, book, languageCode);
-                bookLanguageLinkDAO.insert(bookLanguageLink);
-
+                bookLanguageLinkDAO.insert(new BookLanguageLink(
+                        0, rs.getInt("book"), rs.getInt("lang_code")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book languages link", e);
         }
     }
 
-    public void bookPublisherLink() {
-        String sql = " select * from books_publishers_link;";
-
+    public void populateBookPublisherLink() {
         try (Connection conn = this.connect();
-             final Statement stmt = conn.createStatement();
-             final ResultSet rs = stmt.executeQuery(sql)) {
-
+            final Statement stmt = conn.createStatement();
+            final ResultSet rs = stmt.executeQuery("select * from books_publishers_link;")) {
             final BookPublisherLinkDAO bookPublisherLinkDAO = databaseConnection.onDemand(BookPublisherLinkDAO.class);
 
             while (rs.next()) {
-                final Integer book = rs.getInt("book");
-                final Integer publisher = rs.getInt("publisher");
-
-                final BookPublisherLink bookPublisherLink = new BookPublisherLink(0, book, publisher);
-                bookPublisherLinkDAO.insert(bookPublisherLink);
-
+                bookPublisherLinkDAO.insert( new BookPublisherLink(
+                        0, rs.getInt("book"), rs.getInt("publisher")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book publishers link", e);
         }
     }
-
-    //
 
     public void purgeCustomColumn() {
         CustomColumnsDAO customColumnsDao = databaseConnection.onDemand(CustomColumnsDAO.class);

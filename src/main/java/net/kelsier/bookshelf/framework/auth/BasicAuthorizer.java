@@ -25,7 +25,7 @@ public class BasicAuthorizer implements Authorizer<UserAuth> {
     }
     @Override
     public boolean authorize(@Valid final UserAuth user, final String role) {
-        final DatabaseUser authUser = userDAO.find(user.getUsername(),user.getPassword());
+        final DatabaseUser authUser = userDAO.find(user.getUsername());
 
         if (null == authUser) {
             return false;

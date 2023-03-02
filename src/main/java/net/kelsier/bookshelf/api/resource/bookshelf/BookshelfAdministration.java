@@ -54,7 +54,7 @@ public class BookshelfAdministration {
                     @ApiResponse(responseCode = "200")
             })
 
-    public Response migrateDatabase(@Parameter(name = "database", required = true) @Valid final String database) {
+    public Response migrateDatabase(@Parameter(name = "database", required = true) final String database) {
         try {
             LOGGER.info("Migrating database");
             final MigrateSQLite migrate = new MigrateSQLite(databaseConnection,database);

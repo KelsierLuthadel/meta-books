@@ -48,7 +48,7 @@ public interface CustomColumnDAO {
     @SqlQuery("select * from <table>")
     CustomColumn get(@Define("table") String table);
 
-    @SqlUpdate("create public.table if not exists <table> (id SERIAL PRIMARY KEY, value TEXT NOT NULL, UNIQUE(value))")
+    @SqlUpdate("create table if not exists <table> (id SERIAL PRIMARY KEY, value TEXT NOT NULL, UNIQUE(value))")
     void create(@Define("table") String table);
 
     @SqlUpdate("INSERT INTO <table> (value) " +
