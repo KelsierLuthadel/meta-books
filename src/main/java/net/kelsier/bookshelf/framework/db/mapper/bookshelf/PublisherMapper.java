@@ -20,48 +20,36 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.framework.health;
+package net.kelsier.bookshelf.framework.db.mapper.bookshelf;
 
-import com.codahale.metrics.health.HealthCheck;
-import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Publisher;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- * Database health check for Dropwizard
+ *
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class DatabaseHealth extends HealthCheck {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealth.class);
-    /**
-     * An instance of a DAO
-     */
-    private final RoleDAO roleDAO;
+public class PublisherMapper implements RowMapper<Publisher> {
 
     /**
-     * Constructor
      *
-     * @param roleDAO An instance of a DAO
-     */
-    public DatabaseHealth(final RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
-    }
-
-    /**
-     * The check to be performed
      *
-     * @return Healthy if there was no issue. Refer to Dropwizard for response status
+     * @param resultSet results from a query
+     * @param statementContext context
+     * @return
+     * @throws SQLException Thrown when there was a database error
      */
-    @Override
-    protected Result check() {
-        try {
-            roleDAO.getAll();
-            return Result.healthy();
-        } catch (final Exception e) {
-            LOGGER.error("Database connection failed", e);
-            return Result.unhealthy("Database connection failed");
-        }
+    public Publisher map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        return new Publisher(
+                resultSet.getInt("ID"),
+                resultSet.getString("NAME"),
+                resultSet.getString("SORT"));
     }
 }

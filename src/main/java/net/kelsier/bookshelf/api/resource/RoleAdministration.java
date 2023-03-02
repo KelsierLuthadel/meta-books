@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.Role;
 import net.kelsier.bookshelf.api.model.RoleModel;
-import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
+import net.kelsier.bookshelf.framework.db.model.users.DatabaseUserRole;
+import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

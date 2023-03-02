@@ -20,48 +20,41 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.framework.health;
+package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
-import com.codahale.metrics.health.HealthCheck;
-import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.kelsier.bookshelf.framework.db.mapper.bookshelf.DataMapper;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Data;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+/*
+id  SERIAL PRIMARY KEY,
+    book INTEGER NOT NULL,
+    format TEXT NOT NULL ,
+    uncompressed_size INTEGER NOT NULL,
+    name TEXT NOT NULL,
+ */
 
 /**
- * Database health check for Dropwizard
+ *
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class DatabaseHealth extends HealthCheck {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealth.class);
-    /**
-     * An instance of a DAO
-     */
-    private final RoleDAO roleDAO;
+@RegisterRowMapper(DataMapper.class)
+public interface DataDAO {
+    @SqlQuery("SELECT * FROM data WHERE ID = :id")
+    Data get(@Bind("id") int id);
 
-    /**
-     * Constructor
-     *
-     * @param roleDAO An instance of a DAO
-     */
-    public DatabaseHealth(final RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
-    }
+    @SqlUpdate("INSERT INTO data (book, format, uncompressed_size, name) " +
+            "values (:book, :format, :uncompressedSize, :name)")
+    @GetGeneratedKeys
+    long insert(@BindBean Data author);
 
-    /**
-     * The check to be performed
-     *
-     * @return Healthy if there was no issue. Refer to Dropwizard for response status
-     */
-    @Override
-    protected Result check() {
-        try {
-            roleDAO.getAll();
-            return Result.healthy();
-        } catch (final Exception e) {
-            LOGGER.error("Database connection failed", e);
-            return Result.unhealthy("Database connection failed");
-        }
-    }
+    @SqlUpdate("DELETE FROM data")
+    void purge();
 }

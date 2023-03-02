@@ -10,12 +10,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.User;
 import net.kelsier.bookshelf.api.model.UserModel;
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
-import net.kelsier.bookshelf.framework.db.dao.UserDAO;
+import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
+import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
+import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
-import org.jasypt.util.password.BasicPasswordEncryptor;
-import org.jasypt.util.password.PasswordEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

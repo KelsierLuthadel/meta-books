@@ -20,48 +20,43 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.framework.health;
+package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
-import com.codahale.metrics.health.HealthCheck;
-import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.kelsier.bookshelf.framework.db.mapper.bookshelf.IdentifierMapper;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Identifier;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+/*
+ * CREATE TABLE identifiers (
+ *     id SERIAL PRIMARY KEY,
+ *     book INTEGER NOT NULL,
+ *     type TEXT NOT NULL DEFAULT 'isbn' ,
+ *     val  TEXT NOT NULL ,
+ *     UNIQUE(book, type)
+ * );
+ */
 
 /**
- * Database health check for Dropwizard
+ *
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class DatabaseHealth extends HealthCheck {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealth.class);
-    /**
-     * An instance of a DAO
-     */
-    private final RoleDAO roleDAO;
+@RegisterRowMapper(IdentifierMapper.class)
+public interface IdentifierDAO {
+    @SqlQuery("SELECT * FROM identifiers WHERE ID = :id")
+    Identifier get(@Bind("id") int id);
 
-    /**
-     * Constructor
-     *
-     * @param roleDAO An instance of a DAO
-     */
-    public DatabaseHealth(final RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
-    }
+    @SqlUpdate("INSERT INTO identifiers (book, type, val) " +
+            "values (:book, :type, :val)")
+    @GetGeneratedKeys
+    long insert(@BindBean Identifier author);
 
-    /**
-     * The check to be performed
-     *
-     * @return Healthy if there was no issue. Refer to Dropwizard for response status
-     */
-    @Override
-    protected Result check() {
-        try {
-            roleDAO.getAll();
-            return Result.healthy();
-        } catch (final Exception e) {
-            LOGGER.error("Database connection failed", e);
-            return Result.unhealthy("Database connection failed");
-        }
-    }
+    @SqlUpdate("DELETE FROM identifiers")
+    void purge();
 }

@@ -2,13 +2,10 @@ package net.kelsier.bookshelf.framework.auth;
 
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.framework.db.dao.UserDAO;
+import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
+import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
-import org.jasypt.util.password.BasicPasswordEncryptor;
-import org.jasypt.util.password.PasswordEncryptor;
 
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 /**

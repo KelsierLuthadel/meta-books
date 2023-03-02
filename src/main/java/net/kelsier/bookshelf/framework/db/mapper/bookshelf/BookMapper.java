@@ -20,48 +20,43 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.framework.health;
+package net.kelsier.bookshelf.framework.db.mapper.bookshelf;
 
-import com.codahale.metrics.health.HealthCheck;
-import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Book;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- * Database health check for Dropwizard
+ *
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class DatabaseHealth extends HealthCheck {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealth.class);
-    /**
-     * An instance of a DAO
-     */
-    private final RoleDAO roleDAO;
+public class BookMapper implements RowMapper<Book> {
 
     /**
-     * Constructor
      *
-     * @param roleDAO An instance of a DAO
-     */
-    public DatabaseHealth(final RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
-    }
-
-    /**
-     * The check to be performed
      *
-     * @return Healthy if there was no issue. Refer to Dropwizard for response status
+     * @param resultSet results from a query
+     * @param statementContext context
+     * @return
+     * @throws SQLException Thrown when there was a database error
      */
-    @Override
-    protected Result check() {
-        try {
-            roleDAO.getAll();
-            return Result.healthy();
-        } catch (final Exception e) {
-            LOGGER.error("Database connection failed", e);
-            return Result.unhealthy("Database connection failed");
-        }
+    public Book map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        return new Book(
+                resultSet.getInt("ID"),
+                resultSet.getString("TITLE"),
+                resultSet.getString("SORT"),
+                resultSet.getTimestamp("DATE_ADDED"),
+                resultSet.getTimestamp("PUBLICATION_DATE"),
+                resultSet.getDouble("SERIES_INDEX"),
+                resultSet.getString("ISBN"),
+                resultSet.getString("PATH"),
+                resultSet.getBoolean("HAS_COVER"),
+                resultSet.getTimestamp("LAST_MODIFIED"));
     }
 }

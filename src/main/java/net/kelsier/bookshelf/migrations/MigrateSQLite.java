@@ -1,8 +1,8 @@
 package net.kelsier.bookshelf.migrations;
 
-import net.kelsier.bookshelf.migrations.dao.*;
+import net.kelsier.bookshelf.framework.db.dao.bookshelf.*;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.*;
 import net.kelsier.bookshelf.migrations.exception.MigrationException;
-import net.kelsier.bookshelf.migrations.model.*;
 import org.jdbi.v3.core.Jdbi;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
