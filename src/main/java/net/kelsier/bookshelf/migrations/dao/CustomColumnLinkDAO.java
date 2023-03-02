@@ -53,7 +53,7 @@ public interface CustomColumnLinkDAO {
     @SqlQuery("select * from <table>")
     CustomColumnLink get(@Define("table") String table);
 
-    @SqlUpdate("create public.table if not exists <table> (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, value INTEGER NOT NULL, " +
+    @SqlUpdate("create table if not exists <table> (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, value INTEGER NOT NULL, " +
             "UNIQUE(book, value))")
     void create(@Define("table") String table);
 

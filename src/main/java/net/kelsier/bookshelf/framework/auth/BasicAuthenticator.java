@@ -4,7 +4,11 @@ import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 import net.kelsier.bookshelf.framework.db.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
+import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
+import org.jasypt.util.password.BasicPasswordEncryptor;
+import org.jasypt.util.password.PasswordEncryptor;
 
+import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 /**
@@ -18,14 +22,14 @@ public class BasicAuthenticator  implements Authenticator<BasicCredentials, User
     }
     @Override
     public Optional<UserAuth> authenticate(BasicCredentials credentials) {
-        final DatabaseUser user = userDAO.find(credentials.getUsername(), credentials.getPassword());
+        final DatabaseUser user = userDAO.find(credentials.getUsername());
 
-        if (null == user) {
-            return Optional.empty();
+        if (null != user && user.getEnabled() && new PasswordEncrypt().checkPassword(credentials.getPassword(), user.getPassword())) {
+            final UserAuth userAuth = new UserAuth(credentials.getUsername(), credentials.getPassword());
+            userAuth.setId(user.getId());
+            return Optional.of(userAuth);
         }
 
-        final UserAuth userAuth = new UserAuth(credentials.getUsername(),credentials.getPassword());
-        userAuth.setId(user.getId());
-        return Optional.of(userAuth);
+        return Optional.empty();
     }
 }

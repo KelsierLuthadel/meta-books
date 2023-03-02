@@ -89,7 +89,7 @@ public class DatabaseUser {
      */
     @NotNull
     @JsonProperty("enabled")
-    private Boolean enabled;
+    private boolean enabled;
 
 
     /**
@@ -118,7 +118,7 @@ public class DatabaseUser {
                         @JsonProperty("firstName") final String firstName,
                         @JsonProperty("lastName") final String lastName,
                         @JsonProperty("email") final String email,
-                        @JsonProperty("enabled") final Boolean enabled,
+                        @JsonProperty("enabled") final boolean enabled,
                         @JsonProperty("password") final String password,
                         @JsonProperty("roles") final List<Integer> roles) {
         this.id = id;
@@ -159,7 +159,7 @@ public class DatabaseUser {
         return email;
     }
 
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 

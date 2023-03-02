@@ -38,6 +38,7 @@ import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
 import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.JasyptCipher;
+import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
 import net.kelsier.bookshelf.framework.environment.ResourceRegistrar;
 import net.kelsier.bookshelf.framework.error.exception.JsonProcessingExceptionMapper;
 import net.kelsier.bookshelf.framework.error.exception.ResponseErrorExceptionMapper;
