@@ -30,29 +30,30 @@ public class Book {
     @JsonProperty("title")
     private final String title;
 
-    @NotNull
     @JsonProperty("sort")
     private final String sort;
 
-    @NotNull
     @JsonProperty("dateAdded")
     private final Timestamp dateAdded;
 
     @JsonProperty("publicationDate")
     private final Timestamp publicationDate;
 
+    @NotNull
     @JsonProperty("seriesIndex")
     private final Double seriesIndex;
 
     @JsonProperty("isbn")
     private final String isbn;
 
+    @NotNull
     @JsonProperty("path")
     private final String path;
 
     @JsonProperty("hasCover")
     private final Boolean hasCover;
 
+    @NotNull
     @JsonProperty("lastModified")
     private final Timestamp lastModified;
 

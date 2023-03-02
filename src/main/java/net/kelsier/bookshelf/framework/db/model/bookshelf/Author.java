@@ -22,7 +22,6 @@ public class Author {
     @JsonProperty("name")
     private final String name;
 
-    @NotNull
     @JsonProperty("sort")
     private final String sort;
 
