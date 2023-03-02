@@ -20,48 +20,41 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.framework.health;
+package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
-import com.codahale.metrics.health.HealthCheck;
-import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.kelsier.bookshelf.framework.db.mapper.bookshelf.RatingMapper;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Rating;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+/*
+ * CREATE TABLE ratings (
+ *     id SERIAL PRIMARY KEY,
+ *     rating INTEGER CHECK(rating > -1 AND rating < 11),
+ *     UNIQUE (rating)
+ * );
+ */
 
 /**
- * Database health check for Dropwizard
+ *
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class DatabaseHealth extends HealthCheck {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealth.class);
-    /**
-     * An instance of a DAO
-     */
-    private final RoleDAO roleDAO;
+@RegisterRowMapper(RatingMapper.class)
+public interface RatingDAO {
+    @SqlQuery("SELECT * FROM ratings WHERE ID = :id")
+    Rating get(@Bind("id") int id);
 
-    /**
-     * Constructor
-     *
-     * @param roleDAO An instance of a DAO
-     */
-    public DatabaseHealth(final RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
-    }
+    @SqlUpdate("INSERT INTO ratings (rating) " +
+            "values (:rating)")
+    @GetGeneratedKeys
+    long insert(@BindBean Rating rating);
 
-    /**
-     * The check to be performed
-     *
-     * @return Healthy if there was no issue. Refer to Dropwizard for response status
-     */
-    @Override
-    protected Result check() {
-        try {
-            roleDAO.getAll();
-            return Result.healthy();
-        } catch (final Exception e) {
-            LOGGER.error("Database connection failed", e);
-            return Result.unhealthy("Database connection failed");
-        }
-    }
+    @SqlUpdate("DELETE FROM ratings")
+    void purge();
 }
