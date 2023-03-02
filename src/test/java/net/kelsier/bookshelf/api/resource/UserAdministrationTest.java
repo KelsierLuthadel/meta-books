@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static javax.ws.rs.core.Response.Status.*;
 import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
@@ -656,6 +657,128 @@ class UserAdministrationTest {
         assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
         assertEquals("password does not meet minimum requirements", msg.getErrors().get(0),
             "There should be a password error");
+    }
+
+    //
+
+    @Test
+    void testAllLowerCasePasswordFails() {
+        testForBadPassword("password");
+    }
+    @Test
+    void testAllUpperCasePasswordFails() {
+        testForBadPassword("PASSWORD");
+    }
+
+    @Test
+    void testMixedCasePasswordFails() {
+        testForBadPassword("PassWord");
+    }
+
+    @Test
+    void testMixedCaseWithNumberPasswordFails() {
+        testForBadPassword("PassWord123");
+    }
+
+    @Test
+    void testValidPasswordFailsWhenTooLong() {
+        testForBadPassword("passwordThatIsLongerThanThirtyCharactersButEndsWithValidChars95£12_u.oO98");
+    }
+
+    @Test
+    void testEmailNoAt() {
+        testForBadEmail("userAtDomain.com");
+    }
+
+    @Test
+    void testEmailNoDomain() {
+        testForBadEmail("valid.user@");
+    }
+
+    @Test
+    void testEmailNoUser() {
+        testForBadEmail("@domain.com");
+    }
+
+    @Test
+    void testEmailBadDomains() {
+        /*
+        Allowed characters: DNS names can contain only alphabetic characters (A-Z), numeric characters (0-9),
+        the minus sign (-), and the period (.). Period characters are allowed only when they're used to delimit the
+        components of domain style names.
+         */
+
+        final String ascii = new String(IntStream.rangeClosed(32, 126).toArray(), 0, 95);
+        final String illegal = ascii.replaceAll("[a-zA-Z0-9-.]", "");
+        final char disallowedCharacters[] = illegal.toCharArray();
+
+        for (char disallowedCharacter : disallowedCharacters) {
+            testForBadEmail(MessageFormat.format("user@dom{0}ain", disallowedCharacter));
+        }
+
+    }
+
+    @Test
+    void testEmailBadUser() {
+        /*
+            The local-part of the email address may use any of these ASCII characters:
+
+            uppercase and lowercase Latin letters A to Z and a to z;
+            digits 0 to 9;
+            special characters !#$%&'*+-/=?^_`{|}~;
+         */
+
+        final String ascii = new String(IntStream.rangeClosed(32, 126).toArray(), 0, 95);
+        final String illegal = ascii.replaceAll("[a-zA-Z0-9-.!#$%&'*+-/=?^_`{|}~]", "");
+        final char disallowedCharacters[] = illegal.toCharArray();
+
+        for (char disallowedCharacter : disallowedCharacters) {
+            testForBadEmail(MessageFormat.format("user{0}@domain", disallowedCharacter));
+        }
+    }
+
+    void testForBadPassword(final String password) {
+       final Response response = testPassword(password);
+
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), response.getStatus(), "Status should be UNPROCESSABLE_ENTITY");
+
+        final ValidationErrorMessage msg = response.readEntity(ValidationErrorMessage.class);
+
+        assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
+        assertEquals("password does not meet minimum requirements", msg.getErrors().get(0),
+                "There should be an invalid password error");
+    }
+
+    private Response testPassword(final String password) {
+        final User user = new User( "username", "first", "last",
+                "email@email.com", true,
+                password, Arrays.asList(1, 2, 3, 4));
+
+        return resources.target("/api/1/users").request()
+                .post(Entity.json(user));
+
+    }
+
+    void testForBadEmail(final String emailAddress) {
+        final Response response = testEmail(emailAddress);
+
+        assertEquals(UNPROCESSABLE_ENTITY.getCode(), response.getStatus(), MessageFormat.format("{0} should be a bad email",emailAddress));
+
+        final ValidationErrorMessage msg = response.readEntity(ValidationErrorMessage.class);
+
+        assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
+        assertEquals("email invalid format", msg.getErrors().get(0),
+                "There should be an invalid email error");
+    }
+
+    private Response testEmail(final String email) {
+        final User user = new User( "username", "first", "last",
+                email, true,
+                "Pa55words!", Arrays.asList(1, 2, 3, 4));
+
+        return resources.target("/api/1/users").request()
+                .post(Entity.json(user));
+
     }
 
 }
