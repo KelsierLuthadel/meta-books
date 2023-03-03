@@ -1,12 +1,17 @@
 package net.kelsier.bookshelf.api.resource;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.Role;
 import net.kelsier.bookshelf.api.model.RoleModel;
-import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
+import net.kelsier.bookshelf.framework.db.model.users.DatabaseUserRole;
+import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +35,15 @@ import java.util.List;
 
 @Path("api/1/roles")
 @Produces({"application/json", "application/xml"})
+@SecurityScheme(
+        name = "basicAuth",
+        in = SecuritySchemeIn.HEADER,
+        type = SecuritySchemeType.HTTP,
+        scheme = "basic"
+)
+@OpenAPIDefinition(
+        security = @SecurityRequirement(name = "basicAuth")
+)
 public class RoleAdministration {
     private static final Logger LOGGER = LoggerFactory.getLogger(RoleAdministration.class);
     private final RoleDAO roleDAO;
