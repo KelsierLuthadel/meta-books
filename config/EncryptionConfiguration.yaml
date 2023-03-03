@@ -1,0 +1,5 @@
+algorithm: SHA-256
+saltSize: 16
+iterations: 100000
+key: TtRFjq9dIGJDBIxAMKv0whL9LPslDas6
+
