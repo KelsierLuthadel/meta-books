@@ -46,9 +46,15 @@ url: jdbc:postgresql://localhost:5432/bookshelf
 The admin port (default: 1310) provides `tasks/encrypt` so that a password can be encrypted for use in a config field.
 
 **Example**
+
+request:
 ```
 curl --location --request POST 'http://localhost:1311/tasks/encrypt?plaintext=password'
-ya8ftMwhAAhn1/dxuQtENf7bNJij7rle
+```
+
+response:
+```
+[{"Ciphertext":"VIQ6gOOJ57hdAfocHT2DIgpAOaeGGG8s"}]
 ```
 *Note: Providing the same plain-text password multiple times will produce a different password each time*
 
