@@ -28,7 +28,10 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import net.kelsier.bookshelf.MetaBooks;
 import net.kelsier.bookshelf.framework.encryption.exception.CipherException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -39,6 +42,7 @@ import java.io.IOException;
  * @version 1.0.2
  */
 public final class EncryptedModule extends SimpleModule {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EncryptedModule.class);
     private static final long serialVersionUID = 1L;
     private final transient Cipher cipher;
 
@@ -75,6 +79,7 @@ public final class EncryptedModule extends SimpleModule {
             if (am.hasAnnotation(Encrypted.class)) {
                 return new EncryptedDeserializer(am.getRawType());
             }
+
             return super.findDeserializer(am);
         }
     }
@@ -90,7 +95,9 @@ public final class EncryptedModule extends SimpleModule {
          *
          * @param rawType - The expected field type
          */
-        private EncryptedDeserializer(final Class<?> rawType) { this.rawType = rawType; }
+        private EncryptedDeserializer(final Class<?> rawType) {
+            this.rawType = rawType;
+        }
 
         /**
          * Implementation of the deserialize function. Takes the value of a field with the encrypted annotation and
@@ -104,13 +111,11 @@ public final class EncryptedModule extends SimpleModule {
          */
         @Override
         public String deserialize(final JsonParser p, final DeserializationContext context) throws IOException {
-            if (!rawType.equals(String.class)) {
-                throw new IOException("Encrypted annotation should not be added to non-String fields");
-            }
             try {
                 return cipher.decrypt(p.getValueAsString());
             } catch (final CipherException e) {
-                throw new IOException("Error decrypting encrypted field", e);
+                LOGGER.error("Error decrypting encrypted field: {}", e.getMessage());
+                return p.getValueAsString();
             }
         }
     }

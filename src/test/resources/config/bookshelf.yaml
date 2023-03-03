@@ -1,6 +1,5 @@
 server:
-  type: user-control-server
-  registerDefaultExceptionMappers: false
+  type: bookshelf-server
   rootPath: /api/
   requestLog:
     type: classic
@@ -17,12 +16,6 @@ server:
     - type: http
       port: 1310
       maxRequestHeaderSize: 8KiB
-    #- type: internalhttps
-    #  port: 9220
-    #  bindHost: 127.0.0.1 # only bind to loopback
-    #  maxRequestHeaderSize: 8 KiB
-    #  keyStorePassword: password
-    #  keyStorePath: "./KeyStore.jks"
   adminConnectors:
     - type: http
       port: 1311
@@ -40,9 +33,9 @@ logging:
       timeZone: UTC
       logFormat: "%-5level [%date{ISO8601}] %-4relative %mdc %logger - %msg%n"
     - type: file
-      currentLogFilename: ./logs/usercontrol.log
+      currentLogFilename: ./logs/bookshelf.log
       threshold: INFO
-      archivedLogFilenamePattern: ./logs/usercontrol-%d-%i.log
+      archivedLogFilenamePattern: ./logs/bookshelf-%d-%i.log
       maxFileSize: 1GB
       timeZone: UTC
       logFormat: "%-5level [%date{ISO8601}] %-4relative %mdc %logger - %msg%n"
@@ -62,15 +55,16 @@ exposedHeaders: "Content-Disposition"
 # Path to service configuration files. Each of these are mapped to a corresponding POJO
 configPath: ./config
 
-database:
-  # the name of your JDBC driver
-  driverClass: org.postgresql.Driver
+databaseEnabled: false
 
+<<<<<<<< HEAD:config/Bookshelf.yaml
+cipherPass: xyzzy
+========
   # the username
   user: bookshelf
 
   # the password
-  password: 1.327*10^-11
+  password: password
 
   # the JDBC URL
   url: jdbc:postgresql://localhost:5432/bookshelf
@@ -102,3 +96,4 @@ database:
 
   # the minimum amount of time a connection must sit idle in the pool before it is eligible for eviction
   minIdleTime: 1 minute
+>>>>>>>> d824874c6dbd59095901ea3eb30884ebd4a3208c:src/test/resources/config/bookshelf.yaml

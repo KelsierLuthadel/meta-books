@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.User;
 import net.kelsier.bookshelf.api.model.UserModel;
+import net.kelsier.bookshelf.framework.config.EncryptionConfiguration;
 import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
@@ -57,15 +58,18 @@ public class UserAdministration {
 
     private final RoleDAO roleDAO;
 
+    private final EncryptionConfiguration cipherConfiguration;
+
     /**
      * User Administration
      *
      * @param userDAO - User object represented in the database
      * @param roleDAO - Role objected represented in the database
      */
-    public UserAdministration(final UserDAO userDAO, final RoleDAO roleDAO) {
+    public UserAdministration(final UserDAO userDAO, final RoleDAO roleDAO, final EncryptionConfiguration cipherConfiguration) {
         this.userDAO = userDAO;
         this.roleDAO = roleDAO;
+        this.cipherConfiguration = cipherConfiguration;
     }
 
     /**
@@ -162,7 +166,7 @@ public class UserAdministration {
         validateRoles(user.getRoles());
         final DatabaseUser databaseUser = new DatabaseUser(0, user.getUsername(), user.getFirstName(),
                 user.getLastName(), user.getEmail(), user.getEnabled(),
-                new PasswordEncrypt().encryptPassword(user.getPassword()), user.getRoles());
+                new PasswordEncrypt(cipherConfiguration).encryptPassword(user.getPassword()), user.getRoles());
         long insertedId = userDAO.insert(databaseUser);
 
         final String createdMessage = MessageFormat.format("User {0} created", user.getUsername());
