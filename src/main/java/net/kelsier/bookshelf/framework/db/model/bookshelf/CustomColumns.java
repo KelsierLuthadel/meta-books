@@ -5,18 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- * CREATE TABLE custom_columns (
- *     id SERIAL PRIMARY KEY,
- *     label TEXT NOT NULL,
- *     name TEXT NOT NULL,
- *     datatype TEXT NOT NULL,
- *     display  TEXT DEFAULT '{}' NOT NULL,
- *     is_multiple BOOL DEFAULT false NOT NULL,
- *     normalized BOOL NOT NULL,
- *     UNIQUE(label)
- * );
+/*
+  custom_columns (id SERIAL PRIMARY KEY, label TEXT NOT NULL, name TEXT NOT NULL, datatype TEXT NOT NULL,
+                  display  TEXT DEFAULT '{}' NOT NULL, is_multiple BOOL DEFAULT false NOT NULL, normalized BOOL NOT NULL, UNIQUE(label))
  */
+
 public class CustomColumns {
     @NotNull
     @JsonProperty("id")

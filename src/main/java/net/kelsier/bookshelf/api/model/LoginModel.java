@@ -2,7 +2,6 @@ package net.kelsier.bookshelf.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class LoginModel {

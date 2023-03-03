@@ -31,9 +31,7 @@ class CustomColumnsTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(customColumns);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -43,9 +41,7 @@ class CustomColumnsTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(customColumns);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -55,9 +51,7 @@ class CustomColumnsTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(customColumns);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -67,9 +61,7 @@ class CustomColumnsTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(customColumns);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -79,9 +71,7 @@ class CustomColumnsTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(customColumns);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -91,9 +81,7 @@ class CustomColumnsTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(customColumns);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -103,9 +91,7 @@ class CustomColumnsTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(customColumns);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -115,9 +101,7 @@ class CustomColumnsTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(customColumns);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
 

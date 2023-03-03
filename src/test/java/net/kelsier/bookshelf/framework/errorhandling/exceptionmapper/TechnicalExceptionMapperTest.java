@@ -14,12 +14,13 @@ public class TechnicalExceptionMapperTest {
     public void testToResponse() {
         final TechnicalExceptionMapper mapper = new TechnicalExceptionMapper();
         final TechnicalException thrown = assertThrows(TechnicalException.class, this::throwException);
-        final Response response = mapper.toResponse(thrown);
-        final ResponseErrorFormat error = (ResponseErrorFormat) response.getEntity();
+        try(final Response response = mapper.toResponse(thrown)) {
+            final ResponseErrorFormat error = (ResponseErrorFormat) response.getEntity();
 
-        assertEquals(error.getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
-        assertEquals("Something bad", error.getMessage());
-        assertTrue(error.getErrors().isEmpty());
+            assertEquals(error.getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
+            assertEquals("Something bad", error.getMessage());
+            assertTrue(error.getErrors().isEmpty());
+        }
     }
 
     private void throwException() throws TechnicalException {

@@ -6,14 +6,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /*
-CREATE TABLE books_custom_column_26_link(
-                    id SERIAL PRIMARY KEY,
-                    book INTEGER NOT NULL,
-                    value INTEGER NOT NULL,
-
-                    UNIQUE(book, value)
-                    );
+books_custom_column_n_link(id SERIAL PRIMARY KEY, book INTEGER NOT NULL, value INTEGER NOT NULL, UNIQUE(book, value))
  */
+
 public class CustomColumnLink {
     @NotNull
     @JsonProperty("id")

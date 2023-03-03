@@ -5,15 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- * CREATE TABLE identifiers (
- *     id SERIAL PRIMARY KEY,
- *     book INTEGER NOT NULL,
- *     type TEXT NOT NULL DEFAULT 'isbn' ,
- *     val  TEXT NOT NULL ,
- *     UNIQUE(book, type)
- * );
+/*
+ * identifiers (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, type TEXT NOT NULL DEFAULT 'isbn', val TEXT NOT NULL, UNIQUE(book, type))
  */
+
 public class Identifier {
     @NotNull
     @JsonProperty("id")

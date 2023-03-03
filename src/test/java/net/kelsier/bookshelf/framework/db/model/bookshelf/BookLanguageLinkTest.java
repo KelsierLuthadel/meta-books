@@ -17,76 +17,64 @@ class BookLanguageLinkTest {
 
     @Test
     void testValid() {
-        final BookLanguageLink book = new BookLanguageLink(1, 1, 1);
+        final BookLanguageLink bookLanguageLink = new BookLanguageLink(1, 1, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookLanguageLink);
         assertEquals(0, violations.size());
     }
 
     @Test
     void testNullId() {
-        final BookLanguageLink book = new BookLanguageLink(null, 1, 1);
+        final BookLanguageLink bookLanguageLink = new BookLanguageLink(null, 1, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookLanguageLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testZeroId() {
-        final BookLanguageLink book = new BookLanguageLink(0, 1, 1);
+        final BookLanguageLink bookLanguageLink = new BookLanguageLink(0, 1, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookLanguageLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testNullBook() {
-        final BookLanguageLink book = new BookLanguageLink(1, null, 1);
+        final BookLanguageLink bookLanguageLink = new BookLanguageLink(1, null, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookLanguageLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testZeroBook() {
-        final BookLanguageLink book = new BookLanguageLink(1, 0, 1);
+        final BookLanguageLink bookLanguageLink = new BookLanguageLink(1, 0, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookLanguageLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testNullLanguage() {
-        final BookLanguageLink book = new BookLanguageLink(1, 1, null);
+        final BookLanguageLink bookLanguageLink = new BookLanguageLink(1, 1, null);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookLanguageLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testZeroLanguage() {
-        final BookLanguageLink book = new BookLanguageLink(1, 1, 0);
+        final BookLanguageLink bookLanguageLink = new BookLanguageLink(1, 1, 0);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookLanguageLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
 

@@ -1,7 +1,6 @@
 package net.kelsier.bookshelf.framework.tasks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import io.dropwizard.servlets.tasks.Task;
 import net.kelsier.bookshelf.framework.encryption.Cipher;
 import net.kelsier.bookshelf.framework.encryption.exception.CipherException;

@@ -28,9 +28,7 @@ class DatabaseUserRoleTest {
         final DatabaseUserRole userRole = new DatabaseUserRole(null, "name", "sort");
         final Set<ConstraintViolation<Object>> violations = validate(userRole);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -38,9 +36,7 @@ class DatabaseUserRoleTest {
         final DatabaseUserRole userRole = new DatabaseUserRole(0, "name", "sort");
         final Set<ConstraintViolation<Object>> violations = validate(userRole);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -48,9 +44,7 @@ class DatabaseUserRoleTest {
         final DatabaseUserRole userRole = new DatabaseUserRole(0, "name", "sort");
         final Set<ConstraintViolation<Object>> violations = validate(userRole);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -58,9 +52,7 @@ class DatabaseUserRoleTest {
         final DatabaseUserRole userRole = new DatabaseUserRole(1, null, "sort");
         final Set<ConstraintViolation<Object>> violations = validate(userRole);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -68,9 +60,7 @@ class DatabaseUserRoleTest {
         final DatabaseUserRole userRole = new DatabaseUserRole(1, "role", null);
         final Set<ConstraintViolation<Object>> violations = validate(userRole);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     Set<ConstraintViolation<Object>> validate(final Object object) {

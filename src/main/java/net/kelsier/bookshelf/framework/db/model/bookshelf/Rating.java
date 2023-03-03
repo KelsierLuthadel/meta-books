@@ -6,13 +6,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- * CREATE TABLE ratings (
- *     id SERIAL PRIMARY KEY,
- *     rating INTEGER CHECK(rating > -1 AND rating < 11),
- *     UNIQUE (rating)
- * );
+/*
+ * ratings (id SERIAL PRIMARY KEY, rating INTEGER CHECK(rating > -1 AND rating < 11), UNIQUE (rating))
  */
+
 public class Rating {
     @NotNull
     @JsonProperty("id")

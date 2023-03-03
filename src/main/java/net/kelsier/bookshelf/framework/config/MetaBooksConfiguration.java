@@ -5,11 +5,9 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.db.DataSourceFactory;
 import org.pac4j.dropwizard.Pac4jFactory;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 public class MetaBooksConfiguration extends Configuration {
     @Valid

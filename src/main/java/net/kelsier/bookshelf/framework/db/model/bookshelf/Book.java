@@ -7,18 +7,20 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 /*
-CREATE TABLE books (
-    id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL DEFAULT 'Unknown',
-    sort TEXT ,
-    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    publication_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    series_index REAL NOT NULL DEFAULT 1.0,
-    isbn TEXT DEFAULT '' ,
-    path TEXT NOT NULL DEFAULT '',
-    has_cover BOOL DEFAULT false,
-    last_modified TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00+00:00'
-);
+    Books table
+
+    public.books (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL DEFAULT 'Unknown',
+        sort TEXT ,
+        date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        publication_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        series_index REAL NOT NULL DEFAULT 1.0,
+        isbn TEXT DEFAULT '' ,
+        path TEXT NOT NULL DEFAULT '',
+        has_cover BOOL DEFAULT false,
+        last_modified TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00+00:00'
+    )
  */
 public class Book {
     @NotNull

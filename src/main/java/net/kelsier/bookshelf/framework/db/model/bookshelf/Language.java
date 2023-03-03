@@ -5,13 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- * CREATE TABLE languages (
- *     id SERIAL PRIMARY KEY,
- *     lang_code TEXT NOT NULL ,
- *     UNIQUE(lang_code)
- * );
+/*
+ * languages(id SERIAL PRIMARY KEY, lang_code TEXT NOT NULL, UNIQUE(lang_code))
  */
+
 public class Language {
     @NotNull
     @JsonProperty("id")

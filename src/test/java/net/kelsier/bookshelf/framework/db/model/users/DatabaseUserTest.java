@@ -1,22 +1,17 @@
 package net.kelsier.bookshelf.framework.db.model.users;
 
-import io.dropwizard.jersey.validation.ValidationErrorMessage;
 import io.dropwizard.testing.junit5.DropwizardClientExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import net.kelsier.bookshelf.MetaBooks;
-import net.kelsier.bookshelf.api.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.validation.ConstraintViolation;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
@@ -38,9 +33,7 @@ class DatabaseUserTest {
         final Set<ConstraintViolation<Object>> violations = validate(user);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -50,9 +43,7 @@ class DatabaseUserTest {
         final Set<ConstraintViolation<Object>> violations = validate(user);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -62,9 +53,7 @@ class DatabaseUserTest {
         final Set<ConstraintViolation<Object>> violations = validate(user);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be blank", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be blank", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -74,9 +63,7 @@ class DatabaseUserTest {
         final Set<ConstraintViolation<Object>> violations = validate(user);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -86,9 +73,7 @@ class DatabaseUserTest {
         final Set<ConstraintViolation<Object>> violations = validate(user);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -125,7 +110,7 @@ class DatabaseUserTest {
 
         final String ascii = new String(IntStream.rangeClosed(32, 126).toArray(), 0, 95);
         final String illegal = ascii.replaceAll("[a-zA-Z0-9-.]", "");
-        final char disallowedCharacters[] = illegal.toCharArray();
+        final char[] disallowedCharacters = illegal.toCharArray();
 
         for (char disallowedCharacter : disallowedCharacters) {
             testForBadEmail(MessageFormat.format("user@dom{0}ain", disallowedCharacter));
@@ -145,7 +130,7 @@ class DatabaseUserTest {
 
         final String ascii = new String(IntStream.rangeClosed(32, 126).toArray(), 0, 95);
         final String illegal = ascii.replaceAll("[a-zA-Z0-9-.!#$%&'*+-/=?^_`{|}~]", "");
-        final char disallowedCharacters[] = illegal.toCharArray();
+        final char[] disallowedCharacters = illegal.toCharArray();
 
         for (char disallowedCharacter : disallowedCharacters) {
             testForBadEmail(MessageFormat.format("user{0}@domain", disallowedCharacter));
@@ -158,20 +143,7 @@ class DatabaseUserTest {
         final Set<ConstraintViolation<Object>> violations = validate(user);
 
         assertEquals(1, violations.size());
-        violations.forEach(emailConstraintViolation -> {
-            assertEquals("invalid format", emailConstraintViolation.getMessage());
-        });
-    }
-
-    void testForBadPassword(final String password) {
-        final DatabaseUser user = new DatabaseUser(1, "name", "sort", "lastName",
-                "email@address", true, password, Arrays.asList(1, 2, 3));
-        final Set<ConstraintViolation<Object>> violations = validate(user);
-
-        assertEquals(1, violations.size());
-        violations.forEach(passwordConstraintViolation -> {
-            assertEquals("does not meet minimum requirements ", passwordConstraintViolation.getMessage());
-        });
+        violations.forEach(emailConstraintViolation -> assertEquals("invalid format", emailConstraintViolation.getMessage()));
     }
 
     Set<ConstraintViolation<Object>> validate(final Object object) {

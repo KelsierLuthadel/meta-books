@@ -2,6 +2,7 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,7 +16,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import javax.ws.rs.*;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -31,15 +37,27 @@ import java.util.List;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class Bookshelf {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Bookshelf.class);
     private final Jdbi databaseConnection;
 
+    /**
+     * Bookshelf REST resource
+     *
+     * @param databaseConnection - Connection to the database where book data is stored
+     */
     public Bookshelf(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
+    /**
+     * Get a list of books in the database based on the title
+     * Restricted to the following roles: admin:r, user:r
+     *
+     * @param title - Title of the book to find
+     *
+     * @return A paginated list of books
+     */
     @GET
-    @RolesAllowed({"admin:c"})
+    @RolesAllowed({"admin:r", "user:r"})
     @Valid
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,10 +66,13 @@ public class Bookshelf {
         tags = {"Bookshelf"},
         description = "Get a list of books",
         responses = {
-            @ApiResponse(responseCode = "200")
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorised"),
+            @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
+            @ApiResponse(responseCode = "404", description = "No books found"),
         })
-    public List<Book> books()  {
-        return databaseConnection.onDemand(BookDAO.class).get();
+    public List<Book> books(@Parameter(name="title", required = true) @QueryParam("title") @NotNull final String title)  {
+        return databaseConnection.onDemand(BookDAO.class).findByTitle(title, 10, 0);
     }
 
 }
