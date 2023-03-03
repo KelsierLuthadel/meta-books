@@ -1,22 +1,42 @@
 package net.kelsier.bookshelf.framework.encryption;
 
+import net.kelsier.bookshelf.framework.config.EncryptionConfiguration;
 import org.jasypt.digest.StandardStringDigester;
 import org.jasypt.util.password.PasswordEncryptor;
 
 public class PasswordEncrypt implements PasswordEncryptor {
+    private static final String DEFAULT_ALGORITHM = "SHA-256";
+
+    private static final Integer DEFAULT_SALT_SIZE = 16;
+
+    private static final Integer DEFAULT_ITERATIONS = 100_000;
+
     private final StandardStringDigester digester;
 
 
     /**
-     * Creates a new instance of <tt>StrongPasswordEncryptor</tt>
+     * Creates a new instance of <tt>PasswordEncrypt</tt> with default values
      *
      */
     public PasswordEncrypt() {
         super();
         this.digester = new StandardStringDigester();
-        this.digester.setAlgorithm("SHA-256");
-        this.digester.setIterations(100000);
-        this.digester.setSaltSizeBytes(16);
+        this.digester.setAlgorithm(DEFAULT_ALGORITHM);
+        this.digester.setIterations(DEFAULT_ITERATIONS);
+        this.digester.setSaltSizeBytes(DEFAULT_SALT_SIZE);
+        this.digester.initialize();
+    }
+
+    /**
+     * Creates a new instance of <tt>PasswordEncrypt</tt>
+     *
+     */
+    public PasswordEncrypt(final EncryptionConfiguration cipherConfiguration) {
+        super();
+        this.digester = new StandardStringDigester();
+        this.digester.setAlgorithm(cipherConfiguration.getAlgorithm());
+        this.digester.setIterations(cipherConfiguration.getIterations());
+        this.digester.setSaltSizeBytes(cipherConfiguration.getSaltSize());
         this.digester.initialize();
     }
 

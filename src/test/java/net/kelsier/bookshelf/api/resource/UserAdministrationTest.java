@@ -5,6 +5,7 @@ import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
 import net.kelsier.bookshelf.api.model.User;
 import net.kelsier.bookshelf.api.model.UserModel;
+import net.kelsier.bookshelf.framework.config.EncryptionConfiguration;
 import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.model.users.DatabaseUserRole;
 import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
@@ -32,8 +33,10 @@ import static org.mockito.Mockito.*;
 class UserAdministrationTest {
     @Mock static final UserDAO userDAO = mock(UserDAO.class);
     @Mock static final RoleDAO roleDAO = mock(RoleDAO.class);
+
     private static final ResourceExtension resources = ResourceExtension.builder()
-        .addResource(new UserAdministration(userDAO, roleDAO))
+        .addResource(new UserAdministration(userDAO, roleDAO, new EncryptionConfiguration(
+            "SHA-256", 10, 100_000, "key")))
         .build();
 
     @BeforeEach
