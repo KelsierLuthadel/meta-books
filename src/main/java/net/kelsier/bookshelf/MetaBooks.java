@@ -22,10 +22,11 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
-import net.kelsier.bookshelf.api.resource.Bookshelf;
+import net.kelsier.bookshelf.api.resource.bookshelf.Bookshelf;
 import net.kelsier.bookshelf.api.resource.Login;
 import net.kelsier.bookshelf.api.resource.RoleAdministration;
 import net.kelsier.bookshelf.api.resource.UserAdministration;
+import net.kelsier.bookshelf.api.resource.bookshelf.BookshelfAdministration;
 import net.kelsier.bookshelf.framework.MetaBooksInfo;
 import net.kelsier.bookshelf.framework.auth.BasicAuthenticator;
 import net.kelsier.bookshelf.framework.auth.BasicAuthorizer;
@@ -34,8 +35,8 @@ import net.kelsier.bookshelf.framework.config.AuthConfiguration;
 import net.kelsier.bookshelf.framework.config.DenialOfServiceConfiguration;
 import net.kelsier.bookshelf.framework.config.MetaBooksConfiguration;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
-import net.kelsier.bookshelf.framework.db.dao.UserDAO;
+import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
+import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.JasyptCipher;
 import net.kelsier.bookshelf.framework.environment.ResourceRegistrar;
 import net.kelsier.bookshelf.framework.error.exception.JsonProcessingExceptionMapper;
@@ -319,7 +320,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
      resourceRegistrar.registerResource(new Login(getUserDao()));
      resourceRegistrar.registerResource(new UserAdministration(getUserDao(), getRoleDao()));
      resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
-     resourceRegistrar.registerResource(new Bookshelf());
+     resourceRegistrar.registerResource(new Bookshelf(databaseConnection));
+     resourceRegistrar.registerResource(new BookshelfAdministration(databaseConnection));
     }
 
     private static void registerHealthChecks(final Environment environment, final RoleDAO roleDAO) {

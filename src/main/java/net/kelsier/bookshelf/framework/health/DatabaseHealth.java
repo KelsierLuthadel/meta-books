@@ -23,7 +23,7 @@
 package net.kelsier.bookshelf.framework.health;
 
 import com.codahale.metrics.health.HealthCheck;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
+import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

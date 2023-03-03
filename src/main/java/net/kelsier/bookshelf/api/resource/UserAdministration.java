@@ -10,9 +10,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.User;
 import net.kelsier.bookshelf.api.model.UserModel;
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
-import net.kelsier.bookshelf.framework.db.dao.UserDAO;
+import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
+import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
+import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
+import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,7 +162,7 @@ public class UserAdministration {
         validateRoles(user.getRoles());
         final DatabaseUser databaseUser = new DatabaseUser(0, user.getUsername(), user.getFirstName(),
                 user.getLastName(), user.getEmail(), user.getEnabled(),
-                user.getPassword(), user.getRoles());
+                new PasswordEncrypt().encryptPassword(user.getPassword()), user.getRoles());
         long insertedId = userDAO.insert(databaseUser);
 
         final String createdMessage = MessageFormat.format("User {0} created", user.getUsername());
