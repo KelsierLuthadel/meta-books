@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -43,6 +44,7 @@ public class DatabaseUserRole {
      * Role id
      */
     @NotNull
+    @Min(1)
     @JsonProperty("id")
     private final Integer id;
 
@@ -68,7 +70,7 @@ public class DatabaseUserRole {
      * @param role Role name
      * @param description role description
      */
-    public DatabaseUserRole(@JsonProperty("id") final int id,
+    public DatabaseUserRole(@JsonProperty("id") final Integer id,
                             @JsonProperty("role") final String role,
                             @JsonProperty("description") final String description) {
         this.id = id;
