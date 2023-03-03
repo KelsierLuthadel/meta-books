@@ -61,7 +61,7 @@ public interface BookDAO {
     List<Book> get(@Bind("limit") int limit, @Bind("offset") int offset);
 
     @SqlQuery("SELECT * FROM books WHERE books.title LIKE :title LIMIT :limit OFFSET :offset")
-    List<Book> findByTitle(@Bind("author") String title, @Bind("limit") int limit, @Bind("offset") int offset);
+    List<Book> findByTitle(@Bind("title") String title, @Bind("limit") int limit, @Bind("offset") int offset);
 
     @SqlUpdate("INSERT INTO books (title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
             "values (:title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")
