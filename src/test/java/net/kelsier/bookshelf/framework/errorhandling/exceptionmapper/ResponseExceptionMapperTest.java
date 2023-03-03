@@ -21,17 +21,18 @@ public class ResponseExceptionMapperTest {
         final ResponseErrorExceptionMapper mapper = new ResponseErrorExceptionMapper();
         final ResponseException thrown = assertThrows(ResponseException.class, this::throwException);
 
-        final Response response = mapper.toResponse(thrown);
-        final ResponseErrorFormat error = (ResponseErrorFormat) response.getEntity();
+        try(final Response response = mapper.toResponse(thrown)) {
+            final ResponseErrorFormat error = (ResponseErrorFormat) response.getEntity();
 
-        Assert.assertEquals(error.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        Assert.assertEquals("Error", error.getMessage());
-        assertEquals(1, (int) error.getErrorCode());
-        Assert.assertEquals(3, error.getErrors().size());
-        assertEquals(2, (int) error.getErrors().get(2).getErrorCode());
-        Assert.assertEquals("help-url", error.getHelpUrl());
-        final String reference = error.getReference();
-        assertEquals(36, reference.length());
+            Assert.assertEquals(error.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            Assert.assertEquals("Error", error.getMessage());
+            assertEquals(1, (int) error.getErrorCode());
+            Assert.assertEquals(3, error.getErrors().size());
+            assertEquals(2, (int) error.getErrors().get(2).getErrorCode());
+            Assert.assertEquals("help-url", error.getHelpUrl());
+            final String reference = error.getReference();
+            assertEquals(36, reference.length());
+        }
     }
 
     private void throwException() throws ResponseException {

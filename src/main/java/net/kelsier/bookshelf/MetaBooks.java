@@ -11,6 +11,7 @@ import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi3.JdbiFactory;
+import io.dropwizard.jdbi3.bundles.JdbiExceptionsBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -22,20 +23,23 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
-import net.kelsier.bookshelf.api.resource.Bookshelf;
+import net.kelsier.bookshelf.api.resource.bookshelf.Bookshelf;
 import net.kelsier.bookshelf.api.resource.Login;
 import net.kelsier.bookshelf.api.resource.RoleAdministration;
 import net.kelsier.bookshelf.api.resource.UserAdministration;
+import net.kelsier.bookshelf.api.resource.bookshelf.BookshelfAdministration;
 import net.kelsier.bookshelf.framework.MetaBooksInfo;
 import net.kelsier.bookshelf.framework.auth.BasicAuthenticator;
 import net.kelsier.bookshelf.framework.auth.BasicAuthorizer;
 import net.kelsier.bookshelf.framework.auth.UserAuth;
 import net.kelsier.bookshelf.framework.config.AuthConfiguration;
+import net.kelsier.bookshelf.framework.config.DatasourceConfiguration;
+import net.kelsier.bookshelf.framework.config.EncryptionConfiguration;
 import net.kelsier.bookshelf.framework.config.DenialOfServiceConfiguration;
 import net.kelsier.bookshelf.framework.config.MetaBooksConfiguration;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
-import net.kelsier.bookshelf.framework.db.dao.UserDAO;
+import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
+import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.JasyptCipher;
 import net.kelsier.bookshelf.framework.environment.ResourceRegistrar;
 import net.kelsier.bookshelf.framework.error.exception.JsonProcessingExceptionMapper;
@@ -53,6 +57,7 @@ import net.kelsier.bookshelf.framework.loaders.ConfigLoader;
 import net.kelsier.bookshelf.framework.loaders.YamlConfigLoader;
 import net.kelsier.bookshelf.framework.log.LogColour;
 import net.kelsier.bookshelf.framework.openapi.OpenApi;
+import net.kelsier.bookshelf.framework.tasks.EncrypterTask;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.servlets.DoSFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -84,6 +89,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     private final ClassLoader classLoader;
 
     private Jdbi databaseConnection;
+
+    private JasyptCipher cipher;
 
     @Valid
     private final Pac4jBundle<MetaBooksConfiguration> pac4j = new Pac4jBundle<>() {
@@ -149,7 +156,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         bootstrap.addBundle(new MigrationsBundle<>() {
             @Override
             public DataSourceFactory getDataSourceFactory(@Valid MetaBooksConfiguration configuration) {
-                return configuration.getDataSourceFactory();
+                return new YamlConfigLoader(configuration.getConfigPath(),getJasyptCipher(configuration)).
+                    loadConfiguration(DatasourceConfiguration.class);
             }
         });
 
@@ -165,6 +173,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
             )
         );
 
+        bootstrap.addBundle(new JdbiExceptionsBundle());
+
         // Add Swagger as a resource
         bootstrap.addBundle(new AssetsBundle("/swagger3/", "/swagger", "index.html", "swagger"));
         bootstrap.addBundle(new AssetsBundle("/assets/", "/", "index.html"));
@@ -179,8 +189,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
      */
     private void startServer(final MetaBooksConfiguration configuration, final Environment environment) throws ConfigurationException {
         //Create a cipher to handle encrypted configuration
-
-        final JasyptCipher cipher = getJasyptCipher();
+        cipher = getJasyptCipher(configuration);
 
         // Configuration loader for yaml -> pojo
         final ConfigLoader configLoader = new YamlConfigLoader(
@@ -200,21 +209,32 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         // Create CORS and DOS Filter
         setupFilters(configuration, environment, configLoader);
 
-
-        databaseConnection = getJdbiFactory(configuration, environment);
-
         // Add tasks to the environment
-        addToEnvironment();
+        addToEnvironment(environment);
+
+        registerOpenAPI(environment);
+
+
+        if (configuration.getDatabaseEnabled()) {
+            databaseConnection = getJdbiFactory(configLoader.loadConfiguration(DatasourceConfiguration.class),environment);
+        } else {
+            LOGGER.warn("{}Unable to connect to database, functionality will be limited{}",LogColour.ANSI_YELLOW, LogColour.ANSI_RESET);
+        }
 
         // Configure basic authentication
-        configureBasicAuth(configLoader.loadConfiguration(AuthConfiguration.class), environment);
+        configureBasicAuth(
+            configLoader.loadConfiguration(AuthConfiguration.class),
+            configLoader.loadConfiguration(EncryptionConfiguration.class),
+            environment);
 
         // Register resources
-        registerOpenAPI(environment);
-        registerRestResources();
+
+        registerRestResources(configLoader.loadConfiguration(EncryptionConfiguration.class));
 
         // Register health checks
-        registerHealthChecks(environment, getRoleDao());
+        if (null != databaseConnection) {
+            registerHealthChecks(environment, getRoleDao());
+        }
 
         MetaBooksInfo info = new MetaBooksInfo(classLoader);
 
@@ -232,20 +252,26 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
             LogColour.ANSI_RESET);
     }
 
-    private static JasyptCipher getJasyptCipher() {
+    private static JasyptCipher getJasyptCipher(final MetaBooksConfiguration configuration) {
         if (null != System.getProperty("CIPHER")) {
             return new JasyptCipher(System.getProperty("CIPHER"));
+        } else if (null != configuration.getCipherPass()) {
+            LOGGER.warn("{}Setting cipher password from configuration is insecure. " +
+                "It is recommended to pass in the cipher through system properties{}",
+                LogColour.ANSI_RED, LogColour.ANSI_RESET);
+            return new JasyptCipher(configuration.getCipherPass());
+        } else {
+            LOGGER.info("Not using encrypted configuration.");
+            return null;
         }
-
-        return null;
     }
 
-    private static Jdbi getJdbiFactory(MetaBooksConfiguration configuration, Environment environment) {
+    private static Jdbi getJdbiFactory(DataSourceFactory datasourceConfiguration, Environment environment) {
         final JdbiFactory factory = new JdbiFactory();
         return factory.build(
-                environment,
-                configuration.getDataSourceFactory(),
-                "postgresql");
+            environment,
+            datasourceConfiguration,
+            "postgresql");
     }
 
     private RoleDAO getRoleDao() {
@@ -267,9 +293,11 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         resourceRegistrar.registerResource(new JsonProcessingExceptionMapper());
     }
 
-    private void addToEnvironment() {
+    private void addToEnvironment(Environment environment) {
         //Enable multipart form data
         resourceRegistrar.registerResource(MultiPartFeature.class);
+
+        environment.admin().addTask(new EncrypterTask(cipher));
     }
 
     private static void setupFilters(MetaBooksConfiguration configuration, Environment environment, ConfigLoader configLoader) throws ConfigurationException {
@@ -315,11 +343,19 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         environment.jersey().register(new OpenApiResource().openApiConfiguration(oasConfig));
     }
 
-    private void registerRestResources() {
-     resourceRegistrar.registerResource(new Login(getUserDao()));
-     resourceRegistrar.registerResource(new UserAdministration(getUserDao(), getRoleDao()));
-     resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
-     resourceRegistrar.registerResource(new Bookshelf());
+    private void registerRestResources(final EncryptionConfiguration encryptionConfiguration) {
+        if (null == databaseConnection) {
+            LOGGER.warn("{}Unable to connect to database, some REST resources will not be loaded{}",LogColour.ANSI_YELLOW, LogColour.ANSI_RESET);
+        } else {
+            resourceRegistrar.registerResource(new Login(getUserDao(), encryptionConfiguration));
+            resourceRegistrar.registerResource(new UserAdministration(
+                getUserDao(),
+                getRoleDao(),
+                encryptionConfiguration));
+            resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
+            resourceRegistrar.registerResource(new Bookshelf(databaseConnection));
+            resourceRegistrar.registerResource(new BookshelfAdministration(databaseConnection));
+        }
     }
 
     private static void registerHealthChecks(final Environment environment, final RoleDAO roleDAO) {
@@ -389,10 +425,15 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 
-    private void configureBasicAuth(final AuthConfiguration configuration, final Environment environment) {
+    private void configureBasicAuth(final AuthConfiguration configuration, final EncryptionConfiguration cipherConfiguration, final Environment environment) {
+        if (null == databaseConnection) {
+            LOGGER.error("{}Unable to connect to database, basic auth will not be available.{}",LogColour.ANSI_RED, LogColour.ANSI_RESET);
+            return;
+        }
+
         environment.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<UserAuth>()
-                        .setAuthenticator(new BasicAuthenticator(getUserDao()))
+                        .setAuthenticator(new BasicAuthenticator(getUserDao(), cipherConfiguration))
                         .setAuthorizer(new BasicAuthorizer(getUserDao(), getRoleDao()))
                         .setRealm(configuration.getRealm())
                         .buildAuthFilter()));

@@ -31,8 +31,9 @@ public class JsonProcessingExceptionMapperTest {
 
     private ResponseErrorFormat getResponseErrorFormat(final JsonProcessingException exception) {
         final JsonProcessingExceptionMapper exceptionMapper = new JsonProcessingExceptionMapper();
-        final Response response = exceptionMapper.toResponse(exception);
-        return (ResponseErrorFormat) response.getEntity();
+        try(final Response response = exceptionMapper.toResponse(exception)) {
+            return (ResponseErrorFormat) response.getEntity();
+        }
     }
 
     @Test

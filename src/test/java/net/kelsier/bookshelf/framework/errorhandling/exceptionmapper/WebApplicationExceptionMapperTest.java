@@ -18,12 +18,13 @@ public class WebApplicationExceptionMapperTest {
     public void testToResponse() {
         final WebApplicationExceptionMapper mapper = new WebApplicationExceptionMapper();
         final WebApplicationException thrown = assertThrows(WebApplicationException.class, this::throwException);
-        final Response response = mapper.toResponse(thrown);
-        final ResponseErrorFormat error = (ResponseErrorFormat) response.getEntity();
+        try(final Response response = mapper.toResponse(thrown)) {
+            final ResponseErrorFormat error = (ResponseErrorFormat) response.getEntity();
 
-        Assert.assertEquals(error.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        Assert.assertEquals("Something bad", error.getMessage());
-        assertTrue(error.getErrors().isEmpty());
+            Assert.assertEquals(error.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            Assert.assertEquals("Something bad", error.getMessage());
+            assertTrue(error.getErrors().isEmpty());
+        }
     }
 
 

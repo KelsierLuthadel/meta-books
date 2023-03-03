@@ -50,7 +50,8 @@ public final class RegexPatterns {
      *   Special characters are limited to: !£$%^&*()-_=+[]{};:@#~,<>.\/?|
      */
 
-    public static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-\\+=;\\:~<>\\\\\\/|\\._^\\(\\)£#$@!%&*?])[-\\+=;\\:~<>\\\\\\/|A-Za-z\\d\\._^\\(\\)£#$@!%&*?]{8,30}$";
+    public static final String PASSWORD_REGEX =
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\ \\-\\+\\:\\\\\\/|\\.\\(\\)\\[\\]_^,=;~<>£#$\"'`{}@!%&*?])[\\ \\-\\+\\:\\\\\\/|A-Za-z\\d\\.\\(\\)\\[\\]_^,=;~<>£#\"'`{}$@!%&*?]{8,30}$";
 
     /**
      * Regular expression for 'No whitespace, at least one character'

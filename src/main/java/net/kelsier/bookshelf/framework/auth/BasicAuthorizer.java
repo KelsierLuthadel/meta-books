@@ -1,10 +1,10 @@
 package net.kelsier.bookshelf.framework.auth;
 
 import io.dropwizard.auth.Authorizer;
-import net.kelsier.bookshelf.framework.db.DatabaseUser;
-import net.kelsier.bookshelf.framework.db.DatabaseUserRole;
-import net.kelsier.bookshelf.framework.db.dao.RoleDAO;
-import net.kelsier.bookshelf.framework.db.dao.UserDAO;
+import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
+import net.kelsier.bookshelf.framework.db.model.users.DatabaseUserRole;
+import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
+import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class BasicAuthorizer implements Authorizer<UserAuth> {
     }
     @Override
     public boolean authorize(@Valid final UserAuth user, final String role) {
-        final DatabaseUser authUser = userDAO.find(user.getUsername(),user.getPassword());
+        final DatabaseUser authUser = userDAO.find(user.getUsername());
 
         if (null == authUser) {
             return false;

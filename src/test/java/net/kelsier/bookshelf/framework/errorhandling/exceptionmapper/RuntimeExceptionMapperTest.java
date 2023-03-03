@@ -14,12 +14,13 @@ public class RuntimeExceptionMapperTest {
         final RuntimeExceptionMapper mapper = new RuntimeExceptionMapper();
         final Throwable thrown = assertThrows(Throwable.class, this::throwException);
 
-        final Response response = mapper.toResponse(thrown);
-        final ResponseErrorFormat error = (ResponseErrorFormat) response.getEntity();
+        try(final Response response = mapper.toResponse(thrown)) {
+            final ResponseErrorFormat error = (ResponseErrorFormat) response.getEntity();
 
-        assertEquals(error.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        assertEquals("Something bad", error.getMessage());
-        assertTrue(error.getErrors().isEmpty());
+            assertEquals(error.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            assertEquals("Something bad", error.getMessage());
+            assertTrue(error.getErrors().isEmpty());
+        }
     }
 
 
