@@ -6,13 +6,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /*
-CREATE TABLE comments (
-    id SERIAL PRIMARY KEY,
-    book INTEGER NOT NULL,
-    text TEXT NOT NULL ,
-    UNIQUE(book)
-);
+ comments (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, text TEXT NOT NULL , UNIQUE(book))
  */
+
 public class Comment {
     @NotNull
     @JsonProperty("id")

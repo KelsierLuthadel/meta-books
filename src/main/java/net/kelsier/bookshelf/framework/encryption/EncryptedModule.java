@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import net.kelsier.bookshelf.MetaBooks;
 import net.kelsier.bookshelf.framework.encryption.exception.CipherException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -5,14 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- * CREATE TABLE series (
- *     id SERIAL PRIMARY KEY,
- *     name TEXT NOT NULL ,
- *     sort TEXT ,
- *     UNIQUE (name)
- * );
+/*
+ * series(id SERIAL PRIMARY KEY, name TEXT NOT NULL, sort TEXT, UNIQUE (name))
  */
+
 public class Series {
     @NotNull
     @JsonProperty("id")

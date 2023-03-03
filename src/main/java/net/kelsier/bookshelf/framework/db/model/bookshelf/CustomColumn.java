@@ -6,11 +6,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /*
-CREATE TABLE custom_column_(
-                    id    SERIAL PRIMARY KEY,
-                    value TEXT NOT NULL ,
-                    UNIQUE(value));
+ custom_column_n(id SERIAL PRIMARY KEY, value TEXT NOT NULL, UNIQUE(value))
  */
+
 public class CustomColumn {
     @NotNull
     @JsonProperty("id")

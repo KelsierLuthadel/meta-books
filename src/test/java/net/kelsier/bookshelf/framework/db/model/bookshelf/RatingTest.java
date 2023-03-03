@@ -29,9 +29,7 @@ class RatingTest {
         final Set<ConstraintViolation<Object>> violations = validate(rating);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -40,9 +38,7 @@ class RatingTest {
         final Set<ConstraintViolation<Object>> violations = validate(rating);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
 
@@ -52,9 +48,7 @@ class RatingTest {
         final Set<ConstraintViolation<Object>> violations = validate(rating);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 0", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 0", authorConstraintViolation.getMessage()));
     }
 
     @Test
@@ -63,9 +57,7 @@ class RatingTest {
         final Set<ConstraintViolation<Object>> violations = validate(rating);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be less than or equal to 10", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be less than or equal to 10", authorConstraintViolation.getMessage()));
     }
     
 

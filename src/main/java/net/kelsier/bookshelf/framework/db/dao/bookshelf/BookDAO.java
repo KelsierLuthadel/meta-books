@@ -44,7 +44,7 @@ CREATE TABLE books (
     path TEXT NOT NULL DEFAULT '',
     has_cover BOOL DEFAULT false,
     last_modified TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00+00:00'
-);
+)
  */
 /**
  *
@@ -57,8 +57,11 @@ public interface BookDAO {
     @SqlQuery("SELECT * FROM books WHERE ID = :id")
     Book get(@Bind("id") int id);
 
-    @SqlQuery("SELECT * FROM books LIMIT 10")
-    List<Book> get();
+    @SqlQuery("SELECT * FROM books LIMIT :limit OFFSET :offset")
+    List<Book> get(@Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM books WHERE books.title LIKE :title LIMIT :limit OFFSET :offset")
+    List<Book> findByTitle(@Bind("author") String title, @Bind("limit") int limit, @Bind("offset") int offset);
 
     @SqlUpdate("INSERT INTO books (title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
             "values (:title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")

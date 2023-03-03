@@ -7,6 +7,7 @@ import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Optional;
  */
 public class BasicAuthenticator  implements Authenticator<BasicCredentials, UserAuth> {
     private final UserDAO userDAO;
-    private final EncryptionConfiguration cipherConfiguration;
+    private final @Valid EncryptionConfiguration cipherConfiguration;
 
     public BasicAuthenticator(final UserDAO userDAO, final EncryptionConfiguration cipherConfiguration) {
         this.userDAO = userDAO;

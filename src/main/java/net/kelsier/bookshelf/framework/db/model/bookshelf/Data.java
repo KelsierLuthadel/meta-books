@@ -6,12 +6,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /*
-id  SERIAL PRIMARY KEY,
-    book INTEGER NOT NULL,
-    format TEXT NOT NULL ,
-    uncompressed_size INTEGER NOT NULL,
-    name TEXT NOT NULL,
- */
+ data(id SERIAL PRIMARY KEY, book INTEGER NOT NULL, format TEXT NOT NULL, uncompressed_size INTEGER NOT NULL,
+      name TEXT NOT NULL, UNIQUE(book, format))
+*/
+
 public class Data {
     @NotNull
     @JsonProperty("id")

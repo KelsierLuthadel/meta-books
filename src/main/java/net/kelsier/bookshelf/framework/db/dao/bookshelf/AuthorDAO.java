@@ -31,11 +31,7 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 /*
-CREATE TABLE public.authors (
-   id SERIAL PRIMARY KEY,
-   name TEXT NOT NULL ,
-   sort TEXT
-);
+    public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)
  */
 
 /**

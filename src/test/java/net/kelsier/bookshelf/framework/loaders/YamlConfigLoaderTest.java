@@ -5,60 +5,106 @@ import com.fasterxml.jackson.annotation.Nulls;
 import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
 import net.kelsier.bookshelf.framework.encryption.Cipher;
 import net.kelsier.bookshelf.framework.encryption.Encrypted;
+import net.kelsier.bookshelf.framework.encryption.JasyptCipher;
 import net.kelsier.bookshelf.framework.encryption.exception.CipherException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("unused")
-public class YamlConfigLoaderTest {
+class YamlConfigLoaderTest {
     @Test
-    public void testValidReadConfiguration() throws ConfigurationException {
+    void testValidReadConfiguration() throws ConfigurationException {
         final ValidRead configuration = loadTestConfiguration(ValidRead.class);
-        assertEquals(5, configuration.testInteger);
-        assertEquals("STR", configuration.testString);
+        assertEquals(5, configuration.testInteger, "testInteger value should match");
+        assertEquals("STR", configuration.testString, "testString value should match");
     }
 
     @Test
-    public void testInvalidReadConfiguration() {
-        assertThrows(ConfigurationException.class, () -> loadTestConfiguration(InvalidRead.class));
+    void testInvalidReadConfiguration() {
+        assertThrows(ConfigurationException.class,
+            () -> loadTestConfiguration(InvalidRead.class),
+            "A ConfigurationException exception should be thrown");
     }
 
     @Test
-    public void testCasting() throws  ConfigurationException {
+    void testCasting() throws  ConfigurationException {
         final Casting configuration = loadTestConfiguration(Casting.class);
-        assertEquals(5, configuration.testInteger);
-        assertEquals("5", configuration.testString);
+        assertEquals(5, configuration.testInteger, "testInteger value should match");
+        assertEquals("5", configuration.testString, "testString value should match");
     }
-
-
-
 
     @Test
-    public void testReadConfigurationNested() throws  ConfigurationException {
+    void testReadConfigurationNested() throws  ConfigurationException {
         final Outer configuration = loadTestConfiguration(Outer.class);
-        assertEquals(5, configuration.testInteger);
-        assertEquals("STR", configuration.testString);
-        assertEquals("STR", configuration.testInner.testString);
+        assertEquals(5, configuration.testInteger, "Integer value should match");
+        assertEquals("STR", configuration.testString, "String value should match");
+        assertEquals("STR", configuration.testInner.testString, "testInner value should match");
     }
 
+    @Test
+    void testEncryptedValues() throws ConfigurationException {
+        final JasyptCipher cipher = new JasyptCipher("xyzzy");
 
-    @SuppressWarnings("rawtypes")
-    private void checkViolationExists(final Set<ConstraintViolation> violations, final String configField, final String vMessage) {
-        assertTrue(violations.stream().anyMatch(
-                        conVi -> conVi.getPropertyPath().toString().equals(configField) && conVi.getMessage().equals(vMessage)),
-                "Expected violation:\n" + configField + " : " + vMessage + "\nActual violations:\n" + violations
-        );
+        final EncryptedValues values = new YamlConfigLoader("src/test/resources/config/", cipher).
+            loadConfiguration(EncryptedValues.class);
+
+        assertEquals("EncryptedUser", values.getUsername(), "Username should be decrypted");
+        assertEquals("EncryptedPassword", values.getPassword(), "Password should be decrypted");
+        assertEquals("Plaintext", values.getPlaintext(), "Plaintext should be plaintext");
+        assertEquals("StringNotEncrypted", values.getNotEncrypted(), "Encrypted field should contain plaintext");
+    }
+
+    @Test
+    void testEncryptedValuesWrongKey() throws ConfigurationException {
+        final JasyptCipher cipher = new JasyptCipher("badkey");
+
+        final EncryptedValues values = new YamlConfigLoader("src/test/resources/config/", cipher).
+            loadConfiguration(EncryptedValues.class);
+
+        assertEquals("UUGoqeYjd4Z77etPtQPSyTFf9gxIRZ2H", values.getUsername(), "Username should remain encrypted");
+        assertEquals("VbV7GIcCnrm8fbhJMkjeTn6+hiKIp+HSQXEx9skshNA=", values.getPassword(), "Password remain encrypted");
+        assertEquals("Plaintext", values.getPlaintext(), "Plaintext should be plaintext");
+        assertEquals("StringNotEncrypted", values.getNotEncrypted(), "Encrypted field should contain plaintext");
+    }
+
+    private static final class EncryptedValues {
+        @NotNull
+        @Encrypted
+        private String username;
+
+        @NotNull
+        @Encrypted
+        private String password;
+
+        @NotNull
+        private String plaintext;
+
+        @NotNull
+        @Encrypted
+        private String notEncrypted;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getPlaintext() {
+            return plaintext;
+        }
+
+        public String getNotEncrypted() {
+            return notEncrypted;
+        }
     }
 
     @SuppressWarnings("unused")

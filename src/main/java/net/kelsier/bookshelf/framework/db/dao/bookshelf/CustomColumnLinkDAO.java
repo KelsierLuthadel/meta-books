@@ -50,15 +50,13 @@ CREATE TABLE books_custom_column_26_link(
 @RegisterRowMapper(CustomColumnLinkMapper.class)
 public interface CustomColumnLinkDAO {
 
-    /**
-     *
+    /*
      * id INTEGER PRIMARY KEY AUTOINCREMENT,
      *                     book INTEGER NOT NULL,
      *                     value INTEGER NOT NULL,
-     *
      *                     UNIQUE(book, value)
-     * @return
      */
+
     @SqlQuery("select * from <table>")
     CustomColumnLink get(@Define("table") String table);
 

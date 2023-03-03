@@ -5,14 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- * CREATE TABLE publishers (
- *     id SERIAL PRIMARY KEY,
- *     name TEXT NOT NULL ,
- *     sort TEXT ,
- *     UNIQUE(name)
- * );
+/*
+ * publishers(id SERIAL PRIMARY KEY, name TEXT NOT NULL, sort TEXT, UNIQUE(name))
  */
+
 public class Publisher {
     @NotNull
     @JsonProperty("id")

@@ -6,12 +6,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /*
-CREATE TABLE public.authors (
-   id SERIAL PRIMARY KEY,
-   name TEXT NOT NULL ,
-   sort TEXT
-);
+    Authors table
+        public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL,sort TEXT)
  */
+
 public class Author {
     @NotNull
     @JsonProperty("id")

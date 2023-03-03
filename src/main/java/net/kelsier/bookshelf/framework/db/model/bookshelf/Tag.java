@@ -6,12 +6,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * CREATE TABLE tags (
- *     id SERIAL PRIMARY KEY,
- *     name TEXT NOT NULL ,
- *     UNIQUE (name)
- * );
+ * tags(id SERIAL PRIMARY KEY, name TEXT NOT NULL , UNIQUE (name))
  */
+
 public class Tag {
     @NotNull
     @JsonProperty("id")

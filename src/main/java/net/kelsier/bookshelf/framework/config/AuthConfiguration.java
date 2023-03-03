@@ -54,7 +54,7 @@ public final class AuthConfiguration {
 
 
     /**
-     * @param auth - The auth type (only basic is supported)
+     * @param authType - The auth type (only basic is supported)
      * @param realm - The realm
 
      */

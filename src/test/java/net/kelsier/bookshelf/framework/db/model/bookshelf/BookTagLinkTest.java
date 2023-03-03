@@ -17,76 +17,64 @@ class BookTagLinkTest {
 
     @Test
     void testValid() {
-        final BookTagLink book = new BookTagLink(1, 1, 1);
+        final BookTagLink bookTagLink = new BookTagLink(1, 1, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
         assertEquals(0, violations.size());
     }
 
     @Test
     void testNullId() {
-        final BookTagLink book = new BookTagLink(null, 1, 1);
+        final BookTagLink bookTagLink = new BookTagLink(null, 1, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testZeroId() {
-        final BookTagLink book = new BookTagLink(0, 1, 1);
+        final BookTagLink bookTagLink = new BookTagLink(0, 1, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testNullBook() {
-        final BookTagLink book = new BookTagLink(1, null, 1);
+        final BookTagLink bookTagLink = new BookTagLink(1, null, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testZeroBook() {
-        final BookTagLink book = new BookTagLink(1, 0, 1);
+        final BookTagLink bookTagLink = new BookTagLink(1, 0, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testNullTag() {
-        final BookTagLink book = new BookTagLink(1, 1, null);
+        final BookTagLink bookTagLink = new BookTagLink(1, 1, null);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must not be null", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testZeroTag() {
-        final BookTagLink book = new BookTagLink(1, 1, 0);
+        final BookTagLink bookTagLink = new BookTagLink(1, 1, 0);
 
-        final Set<ConstraintViolation<Object>> violations = validate(book);
+        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage());
-        });
+        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
     }
 
 

@@ -5,14 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- *
- id SERIAL PRIMARY KEY,
- book INTEGER NOT NULL,
- tag INTEGER NOT NULL,
- UNIQUE(book, tag)
- );
+/*
+  book_tag_link(id SERIAL PRIMARY KEY, book INTEGER NOT NULL, tag INTEGER NOT NULL, UNIQUE(book, tag))
  */
+
 public class BookTagLink {
     @NotNull
     @JsonProperty("id")
