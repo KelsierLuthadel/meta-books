@@ -91,23 +91,29 @@ class DatabaseUserTest {
         });
     }
 
-
     @Test
-    void testBadPassword() {
-        /*
-                -  + = ;  : ~ < > \ / | . _ ^ \ ( \ ) £ # $ @ ! % & * ?
-         */
-
+    void testPasswordCharacters() {
         final String ascii = new String(IntStream.rangeClosed(32, 126).toArray(), 0, 95);
-        final String illegal = ascii.replaceAll("[a-zA-Z0-9-.!#$%&'*+-/=?^_`{|}~]", "");
-        final char disallowedCharacters[] = illegal.toCharArray();
+        final String invalid = ascii.replaceAll("[ a-zA-Z0-9\\\\\\/\\-+:\\.\\[\\]|()_^,=;~<>£#$\"'`{}@!%&*?]", "");
+        assertEquals(0, invalid.length());
 
-        for (char disallowedCharacter : disallowedCharacters) {
-            testForBadPassword(MessageFormat.format("user{0}@domain", disallowedCharacter));
-        }
+        final String allowed = "-+:\\/[].|()_^,=;~ <>£#$\"'`{}@!%&*?";
+
+        // Maximum length may be exceeded, so split allowed characters in half
+        String firstHalf = MessageFormat.format("aA0{0}", allowed.substring(0, (allowed.length()/2)));
+        String secondHalf = MessageFormat.format("aA0{0}", allowed.substring(allowed.length()/2));
+
+        DatabaseUser user = new DatabaseUser(1, "name", "sort", "lastName",
+                "email@address", true, firstHalf, Arrays.asList(1, 2, 3));
+        Set<ConstraintViolation<Object>> violations = validate(user);
+        assertEquals(0, violations.size());
+
+
+        user = new DatabaseUser(1, "name", "sort", "lastName",
+                "email@address", true, secondHalf, Arrays.asList(1, 2, 3));
+        violations = validate(user);
+        assertEquals(0, violations.size());
     }
-
-
 
     @Test
     void testEmailBadDomains() {
@@ -152,8 +158,8 @@ class DatabaseUserTest {
         final Set<ConstraintViolation<Object>> violations = validate(user);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("invalid format", authorConstraintViolation.getMessage());
+        violations.forEach(emailConstraintViolation -> {
+            assertEquals("invalid format", emailConstraintViolation.getMessage());
         });
     }
 
@@ -163,8 +169,8 @@ class DatabaseUserTest {
         final Set<ConstraintViolation<Object>> violations = validate(user);
 
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> {
-            assertEquals("invalid format", authorConstraintViolation.getMessage());
+        violations.forEach(passwordConstraintViolation -> {
+            assertEquals("does not meet minimum requirements ", passwordConstraintViolation.getMessage());
         });
     }
 
