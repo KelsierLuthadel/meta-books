@@ -23,13 +23,17 @@
 package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
 import net.kelsier.bookshelf.framework.db.mapper.bookshelf.TagMapper;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Series;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Tag;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+import java.util.List;
 
 /*
  * CREATE TABLE tags (
@@ -54,6 +58,12 @@ public interface TagDAO {
             "values (:name)")
     @GetGeneratedKeys
     long insert(@BindBean Tag tag);
+
+    @SqlQuery("SELECT * FROM tags LIMIT :limit OFFSET :offset")
+    List<Tag> find(@Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM tags WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
+    List<Tag> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
 
     @SqlUpdate("DELETE FROM tags")
     void purge();

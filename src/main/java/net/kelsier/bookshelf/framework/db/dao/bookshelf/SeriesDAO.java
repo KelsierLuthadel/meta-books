@@ -23,13 +23,17 @@
 package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
 import net.kelsier.bookshelf.framework.db.mapper.bookshelf.SeriesMapper;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Rating;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Series;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+import java.util.List;
 
 /*
  * CREATE TABLE series (
@@ -55,6 +59,12 @@ public interface SeriesDAO {
             "values (:name, :sort)")
     @GetGeneratedKeys
     long insert(@BindBean Series series);
+
+    @SqlQuery("SELECT * FROM series LIMIT :limit OFFSET :offset")
+    List<Series> find(@Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM series WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
+    List<Series> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
 
     @SqlUpdate("DELETE FROM series")
     void purge();

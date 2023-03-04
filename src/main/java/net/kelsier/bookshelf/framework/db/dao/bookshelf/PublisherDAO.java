@@ -23,13 +23,17 @@
 package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
 import net.kelsier.bookshelf.framework.db.mapper.bookshelf.PublisherMapper;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Language;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Publisher;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+import java.util.List;
 
 /*
  * CREATE TABLE publishers (
@@ -55,6 +59,12 @@ public interface PublisherDAO {
             "values (:name, :sort)")
     @GetGeneratedKeys
     long insert(@BindBean Publisher publisher);
+
+    @SqlQuery("SELECT * FROM publishers LIMIT :limit OFFSET :offset")
+    List<Publisher> find(@Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM publishers WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
+    List<Publisher> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
 
     @SqlUpdate("DELETE FROM publishers")
     void purge();

@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import net.kelsier.bookshelf.api.model.bookshelf.BookLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.LanguageLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
-import net.kelsier.bookshelf.framework.db.dao.bookshelf.BookDAO;
-import net.kelsier.bookshelf.framework.db.model.bookshelf.Book;
+import net.kelsier.bookshelf.framework.db.dao.bookshelf.LanguageDAO;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Language;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.annotation.security.RolesAllowed;
@@ -21,7 +21,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("api/1/bookshelf/books")
+@Path("api/1/bookshelf/languages")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -32,7 +32,7 @@ import java.util.List;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class Books {
+public class Languages {
     private final Jdbi databaseConnection;
 
     /**
@@ -40,15 +40,15 @@ public class Books {
      *
      * @param databaseConnection - Connection to the database where book data is stored
      */
-    public Books(final Jdbi databaseConnection) {
+    public Languages(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
     /**
-     * Get a list of books in the database based on the title
+     *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of books
+     * @return
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -56,22 +56,22 @@ public class Books {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Search for books",
+        summary = "Search for a language",
         tags = {"Bookshelf"},
-        description = "Get a list of books",
+        description = "Search for a language",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No books found"),
+            @ApiResponse(responseCode = "404", description = "No languages found"),
         })
-    public List<Book> books(@Parameter(name="search", required = true) @NotNull @Valid final Search<BookLookup> search)  {
+    public List<Language> languages(@Parameter(name="data", required = true) @NotNull @Valid final Search<LanguageLookup> search)  {
         if (null == search.getLookup()) {
-            return databaseConnection.onDemand(BookDAO.class).get(
+            return databaseConnection.onDemand(LanguageDAO.class).find(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart());
         } else {
-            return databaseConnection.onDemand(BookDAO.class).find(
+            return databaseConnection.onDemand(LanguageDAO.class).find(
                     search.getLookup().getWildcardValue(),
                     search.getLookup().getField(),
                     search.getPagination().getLimit(),
@@ -86,17 +86,17 @@ public class Books {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get book details",
+            summary = "Get language details",
             tags = {"Bookshelf"},
-            description = "Get book details",
+            description = "Get language details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No books found"),
+                    @ApiResponse(responseCode = "404", description = "No languages found"),
             })
-    public Book book(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer bookId)  {
-        return databaseConnection.onDemand(BookDAO.class).get(bookId);
+    public Language language(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer languageId)  {
+        return databaseConnection.onDemand(LanguageDAO.class).get(languageId);
     }
 
 }

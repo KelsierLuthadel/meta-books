@@ -57,9 +57,9 @@ public class Authors {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Get authors",
-        tags = {"Authors"},
-        description = "Get a list of authors",
+        summary = "Search for authors",
+        tags = {"Bookshelf"},
+        description = "Search for authors",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
@@ -87,8 +87,8 @@ public class Authors {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get an author",
-            tags = {"Authors"},
+            summary = "Get author details",
+            tags = {"Bookshelf"},
             description = "Get author details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

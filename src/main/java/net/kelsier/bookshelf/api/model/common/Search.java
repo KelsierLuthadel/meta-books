@@ -10,11 +10,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 
-@Schema(name = "search", title = "Database query", description = "Search database for entities")
 @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
-public class Search<T> {
+public final class Search<T> {
     @Valid
-//    final Lookup lookup;
     final T lookup;
 
     @Valid

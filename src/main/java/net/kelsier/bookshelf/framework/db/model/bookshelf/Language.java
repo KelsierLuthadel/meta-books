@@ -16,7 +16,7 @@ public class Language {
     private final Integer id;
 
     @NotNull
-    @JsonProperty("id")
+    @JsonProperty("languageCode")
     private final String languageCode;
 
     public Language(final Integer id, final String languageCode) {

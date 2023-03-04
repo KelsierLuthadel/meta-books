@@ -49,7 +49,7 @@ public class Comments {
      *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of authors
+     * @return
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -57,16 +57,16 @@ public class Comments {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Get comments",
-        tags = {"Comments"},
-        description = "",
+        summary = "Search within comments",
+        tags = {"Bookshelf"},
+        description = "Search within comments",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
             @ApiResponse(responseCode = "404", description = "No comments found"),
         })
-    public List<Comment> authors(@Parameter(name="comment", required = true) @NotNull @Valid final Search<CommentLookup> search)  {
+    public List<Comment> comments(@Parameter(name="comment", required = true) @NotNull @Valid final Search<CommentLookup> search)  {
         if (null == search.getLookup()) {
             return databaseConnection.onDemand(CommentDAO.class).find(
                     search.getPagination().getLimit(),
@@ -87,8 +87,8 @@ public class Comments {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get comments by id",
-            tags = {"Comments"},
+            summary = "Get comments",
+            tags = {"Bookshelf"},
             description = "Get comments for a book",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

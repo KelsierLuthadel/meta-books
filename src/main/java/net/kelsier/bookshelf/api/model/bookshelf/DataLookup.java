@@ -4,14 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.validation.OneOf;
 import io.swagger.v3.oas.annotations.media.Schema;
+import net.kelsier.bookshelf.api.model.common.ColumnLookup;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 
-public class DataLookup {
+public class DataLookup implements ColumnLookup {
+    private static final String DEFAULT_VALUE = "name";
+
     @NotNull
     @JsonProperty("field")
     @OneOf({"format", "name"})
+    @Schema(description = "Search query field", defaultValue = DEFAULT_VALUE)
     final String field;
 
     @NotNull
@@ -25,8 +29,6 @@ public class DataLookup {
         this.value = value;
     }
 
-    @JsonProperty("field")
-    @Schema(description = "Search query field", defaultValue = "name")
     public String getField() {
         return field;
     }

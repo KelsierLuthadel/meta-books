@@ -15,6 +15,11 @@ SQLi testing
 XSS testing  
 
 ## Searching
-Case-insensitive search  
+Custom fields   
+Integer values  
+Desired response body  
+
+## Admin
+roles, users: Set constraints and add swagger API details (from books)
 
 

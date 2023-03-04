@@ -49,7 +49,7 @@ public class Data {
      *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of authors
+     * @return
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -57,14 +57,14 @@ public class Data {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Get book data",
-        tags = {"Data"},
-        description = "",
+        summary = "Search for book details",
+        tags = {"Bookshelf"},
+        description = "Get data for books",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No comments found"),
+            @ApiResponse(responseCode = "404", description = "No data found"),
         })
     public List<BookData> authors(@Parameter(name="data", required = true) @NotNull @Valid final Search<DataLookup> search)  {
         if (null == search.getLookup()) {
@@ -87,14 +87,14 @@ public class Data {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get book data by id",
-            tags = {"Data"},
+            summary = "Get data for a book",
+            tags = {"Bookshelf"},
             description = "Get data for a book",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No comments found"),
+                    @ApiResponse(responseCode = "404", description = "No data found"),
             })
     public BookData comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer bookDataId)  {
         return databaseConnection.onDemand(DataDAO.class).get(bookDataId);
