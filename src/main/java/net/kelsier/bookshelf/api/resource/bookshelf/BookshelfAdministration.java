@@ -19,7 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("api/1/admin")
+@Path("api/1/bookshelf/admin")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",

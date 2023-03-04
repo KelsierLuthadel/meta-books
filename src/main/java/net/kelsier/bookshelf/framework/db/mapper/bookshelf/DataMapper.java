@@ -23,7 +23,7 @@
 package net.kelsier.bookshelf.framework.db.mapper.bookshelf;
 
 
-import net.kelsier.bookshelf.framework.db.model.bookshelf.Data;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.BookData;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -44,7 +44,7 @@ id  SERIAL PRIMARY KEY,
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
-public class DataMapper implements RowMapper<Data> {
+public class DataMapper implements RowMapper<BookData> {
 
     /**
      *
@@ -54,12 +54,12 @@ public class DataMapper implements RowMapper<Data> {
      * @return
      * @throws SQLException Thrown when there was a database error
      */
-    public Data map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
-        return new Data(
+    public BookData map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        return new BookData(
                 resultSet.getInt("ID"),
                 resultSet.getInt("BOOK"),
                 resultSet.getString("FORMAT"),
                 resultSet.getInt("UNCOMPRESSED_SIZE"),
-                resultSet.getString("TEXT"));
+                resultSet.getString("NAME"));
     }
 }

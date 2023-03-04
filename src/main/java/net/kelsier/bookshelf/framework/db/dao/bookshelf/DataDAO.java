@@ -22,14 +22,18 @@
 
 package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
+import io.dropwizard.validation.OneOf;
 import net.kelsier.bookshelf.framework.db.mapper.bookshelf.DataMapper;
-import net.kelsier.bookshelf.framework.db.model.bookshelf.Data;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.BookData;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+import java.util.List;
 
 /*
 id  SERIAL PRIMARY KEY,
@@ -48,12 +52,21 @@ id  SERIAL PRIMARY KEY,
 @RegisterRowMapper(DataMapper.class)
 public interface DataDAO {
     @SqlQuery("SELECT * FROM data WHERE ID = :id")
-    Data get(@Bind("id") int id);
+    BookData get(@Bind("id") int id);
+
+    @SqlQuery("SELECT * FROM data LIMIT :limit OFFSET :offset")
+    List<BookData> find(@Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM data WHERE data.format ILIKE :format LIMIT :limit OFFSET :offset")
+    List<BookData> findByFormat(@Bind("format") String format, @Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM data WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
+    List<BookData> find(@Bind("text") String name, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
 
     @SqlUpdate("INSERT INTO data (book, format, uncompressed_size, name) " +
             "values (:book, :format, :uncompressedSize, :name)")
     @GetGeneratedKeys
-    long insert(@BindBean Data author);
+    long insert(@BindBean BookData author);
 
     @SqlUpdate("DELETE FROM data")
     void purge();

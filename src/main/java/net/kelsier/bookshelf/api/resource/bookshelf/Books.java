@@ -8,7 +8,8 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import net.kelsier.bookshelf.api.model.Search;
+import net.kelsier.bookshelf.api.model.bookshelf.BookLookup;
+import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.framework.db.dao.bookshelf.BookDAO;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Book;
 import org.jdbi.v3.core.Jdbi;
@@ -20,7 +21,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("api/1/bookshelf")
+@Path("api/1/bookshelf/books")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -31,7 +32,7 @@ import java.util.List;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class Bookshelf {
+public class Books {
     private final Jdbi databaseConnection;
 
     /**
@@ -39,7 +40,7 @@ public class Bookshelf {
      *
      * @param databaseConnection - Connection to the database where book data is stored
      */
-    public Bookshelf(final Jdbi databaseConnection) {
+    public Books(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
@@ -56,7 +57,7 @@ public class Bookshelf {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Get Books",
-        tags = {"Bookshelf"},
+        tags = {"Books"},
         description = "Get a list of books",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -64,11 +65,38 @@ public class Bookshelf {
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
             @ApiResponse(responseCode = "404", description = "No books found"),
         })
-    public List<Book> books(@Parameter(name="search", required = true) @NotNull final Search search)  {
-        return databaseConnection.onDemand(BookDAO.class).findByTitle(
-                search.getValue(),
-                search.getPagination().getLimit(),
-                search.getPagination().getStart());
+    public List<Book> books(@Parameter(name="search", required = true) @NotNull @Valid final Search<BookLookup> search)  {
+        if (null == search.getLookup()) {
+            return databaseConnection.onDemand(BookDAO.class).get(
+                    search.getPagination().getLimit(),
+                    search.getPagination().getStart());
+        } else {
+            return databaseConnection.onDemand(BookDAO.class).find(
+                    search.getLookup().getWildcardValue(),
+                    search.getLookup().getField(),
+                    search.getPagination().getLimit(),
+                    search.getPagination().getStart());
+        }
+    }
+
+    @GET
+    @Path("{id}")
+    @RolesAllowed({"admin:r", "user:r"})
+    @Valid
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(
+            summary = "Get a book",
+            tags = {"Books"},
+            description = "Get book details",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorised"),
+                    @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
+                    @ApiResponse(responseCode = "404", description = "No books found"),
+            })
+    public Book book(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer bookId)  {
+        return databaseConnection.onDemand(BookDAO.class).get(bookId);
     }
 
 }

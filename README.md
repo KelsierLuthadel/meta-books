@@ -2,7 +2,7 @@
 
 
 ## Encryption
-The recommended approach to storing sensitive data is by using encryption at rest. 
+The recommended approach to storing sensitive bookData is by using encryption at rest. 
 
 ### Encrypting passwords in a configuration file
 When a class defines a password field as `@Encrypted`, the associated yaml field can be used to either store the password 

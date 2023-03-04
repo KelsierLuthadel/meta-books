@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.api.model;
+package net.kelsier.bookshelf.api.model.database;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
