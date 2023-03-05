@@ -60,11 +60,24 @@ public interface PublisherDAO {
     @GetGeneratedKeys
     long insert(@BindBean Publisher publisher);
 
-    @SqlQuery("SELECT * FROM publishers LIMIT :limit OFFSET :offset")
-    List<Publisher> find(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM publishers ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Publisher> find(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM publishers WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Publisher> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM publishers WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Publisher> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("DELETE FROM publishers")
     void purge();

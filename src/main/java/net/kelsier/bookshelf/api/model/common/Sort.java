@@ -15,12 +15,12 @@ import javax.validation.constraints.NotNull;
 public class Sort {
     @NotNull
     @JsonProperty("field")
-    final String field;
+    private final String field;
 
     @NotNull
     @OneOf({"asc", "desc"})
     @JsonProperty("direction")
-    final String direction;
+    private final String direction;
 
     public Sort(@JsonProperty("field") final String field, @JsonProperty("direction") final String direction) {
         this.field = field;

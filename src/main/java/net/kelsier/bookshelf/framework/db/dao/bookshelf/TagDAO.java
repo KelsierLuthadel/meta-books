@@ -59,11 +59,24 @@ public interface TagDAO {
     @GetGeneratedKeys
     long insert(@BindBean Tag tag);
 
-    @SqlQuery("SELECT * FROM tags LIMIT :limit OFFSET :offset")
-    List<Tag> find(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM tags ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Tag> find(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM tags WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Tag> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM tags WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Tag> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("DELETE FROM tags")
     void purge();

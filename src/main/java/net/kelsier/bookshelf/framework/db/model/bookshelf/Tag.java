@@ -19,7 +19,8 @@ public class Tag {
     @JsonProperty("name")
     private final String name;
 
-    public Tag(final Integer id, final String name) {
+    public Tag(@NotNull @JsonProperty("id") @Min(1) final Integer id,
+               @JsonProperty("name") final String name) {
         this.id = id;
         this.name = name;
     }

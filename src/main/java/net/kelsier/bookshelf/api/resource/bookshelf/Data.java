@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.bookshelf.BookLookup;
 import net.kelsier.bookshelf.api.model.bookshelf.DataLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
+import net.kelsier.bookshelf.framework.db.dao.bookshelf.BookDAO;
 import net.kelsier.bookshelf.framework.db.dao.bookshelf.DataDAO;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.BookData;
 import org.jdbi.v3.core.Jdbi;
@@ -70,13 +71,34 @@ public class Data {
         if (null == search.getLookup()) {
             return databaseConnection.onDemand(DataDAO.class).find(
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection());
         } else {
-            return databaseConnection.onDemand(DataDAO.class).find(
-                    search.getLookup().getWildcardValue(),
-                    search.getLookup().getField(),
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+            switch(search.getLookup().getField()) {
+                case "format":
+                case "name":
+                    return databaseConnection.onDemand(DataDAO.class).find(
+                            search.getLookup().getLookupValue(),
+                            search.getLookup().getField(),
+                            search.getLookup().getOperator().getLabel(),
+                            search.getPagination().getLimit(),
+                            search.getPagination().getStart(),
+                            search.getPagination().getSort().getField(),
+                            search.getPagination().getSort().getDirection()
+                    );
+                case "uncompressed_size":
+                    return databaseConnection.onDemand(DataDAO.class).find(
+                            Integer.parseInt(search.getLookup().getValue()),
+                            search.getLookup().getField(),
+                            search.getLookup().getOperator().getLabel(),
+                            search.getPagination().getLimit(),
+                            search.getPagination().getStart(),
+                            search.getPagination().getSort().getField(),
+                            search.getPagination().getSort().getDirection()
+                    );
+            }
+            throw new BadRequestException();
         }
     }
 

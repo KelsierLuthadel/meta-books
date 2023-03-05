@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.model.bookshelf.AuthorLookup;
-import net.kelsier.bookshelf.api.model.bookshelf.BookLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.framework.db.dao.bookshelf.AuthorDAO;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Author;
@@ -70,13 +69,20 @@ public class Authors {
         if (null == search.getLookup()) {
             return databaseConnection.onDemand(AuthorDAO.class).get(
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         } else {
             return databaseConnection.onDemand(AuthorDAO.class).find(
-                    search.getLookup().getWildcardValue(),
+                    search.getLookup().getLookupValue(),
                     search.getLookup().getField(),
+                    search.getLookup().getOperator().getLabel(),
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         }
     }
 
@@ -99,5 +105,4 @@ public class Authors {
     public Author author(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId)  {
         return databaseConnection.onDemand(AuthorDAO.class).get(authorId);
     }
-
 }

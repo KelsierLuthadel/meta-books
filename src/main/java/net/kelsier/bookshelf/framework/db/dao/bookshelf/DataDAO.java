@@ -54,14 +54,36 @@ public interface DataDAO {
     @SqlQuery("SELECT * FROM data WHERE ID = :id")
     BookData get(@Bind("id") int id);
 
-    @SqlQuery("SELECT * FROM data LIMIT :limit OFFSET :offset")
-    List<BookData> find(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM data ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<BookData> find(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM data WHERE data.format ILIKE :format LIMIT :limit OFFSET :offset")
-    List<BookData> findByFormat(@Bind("format") String format, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM data WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<BookData> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM data WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<BookData> find(@Bind("text") String name, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM data WHERE <column> <clause> :value ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<BookData> find(
+            @Bind("value") Integer value,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("INSERT INTO data (book, format, uncompressed_size, name) " +
             "values (:book, :format, :uncompressedSize, :name)")

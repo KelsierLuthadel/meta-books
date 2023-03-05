@@ -69,13 +69,20 @@ public class Languages {
         if (null == search.getLookup()) {
             return databaseConnection.onDemand(LanguageDAO.class).find(
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         } else {
             return databaseConnection.onDemand(LanguageDAO.class).find(
-                    search.getLookup().getWildcardValue(),
+                    search.getLookup().getLookupValue(),
                     search.getLookup().getField(),
+                    search.getLookup().getOperator().getLabel(),
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         }
     }
 

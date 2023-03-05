@@ -69,13 +69,37 @@ public class Books {
         if (null == search.getLookup()) {
             return databaseConnection.onDemand(BookDAO.class).get(
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         } else {
-            return databaseConnection.onDemand(BookDAO.class).find(
-                    search.getLookup().getWildcardValue(),
-                    search.getLookup().getField(),
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+            switch(search.getLookup().getField()) {
+                case "title":
+                case "isbn":
+                    return databaseConnection.onDemand(BookDAO.class).find(
+                            search.getLookup().getLookupValue(),
+                            search.getLookup().getField(),
+                            search.getLookup().getOperator().getLabel(),
+                            search.getPagination().getLimit(),
+                            search.getPagination().getStart(),
+                            search.getPagination().getSort().getField(),
+                            search.getPagination().getSort().getDirection()
+                    );
+                case "has_cover":
+                    return databaseConnection.onDemand(BookDAO.class).find(
+                            Boolean.parseBoolean(search.getLookup().getValue()),
+                            search.getLookup().getField(),
+                            search.getLookup().getOperator().getLabel(),
+                            search.getPagination().getLimit(),
+                            search.getPagination().getStart(),
+                            search.getPagination().getSort().getField(),
+                            search.getPagination().getSort().getDirection()
+                    );
+            }
+
+            throw new BadRequestException();
+
         }
     }
 

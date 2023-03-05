@@ -21,7 +21,7 @@ public class Rating {
     @Max(10)
     private final Integer rating;
 
-    public Rating(final Integer id, final Integer rating) {
+    public Rating(@JsonProperty("id") final Integer id, @JsonProperty("rating") final Integer rating) {
         this.id = id;
         this.rating = rating;
     }

@@ -72,13 +72,20 @@ public class Ratings {
         if (null == search.getLookup()) {
             return databaseConnection.onDemand(RatingDAO.class).find(
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         } else {
             return databaseConnection.onDemand(RatingDAO.class).find(
-                    search.getLookup().getWildcardValue(),
+                    Integer.parseInt(search.getLookup().getValue()),
                     search.getLookup().getField(),
+                    search.getLookup().getOperator().getLabel(),
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         }
     }
 

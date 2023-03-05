@@ -59,11 +59,23 @@ public interface RatingDAO {
     @GetGeneratedKeys
     long insert(@BindBean Rating rating);
 
-    @SqlQuery("SELECT * FROM ratings LIMIT :limit OFFSET :offset")
-    List<Rating> find(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM ratings ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Rating> find(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM ratings WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Rating> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM ratings WHERE <column> <clause> :value ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Rating> find(@Bind("value") int value,
+                      @Define("column") final String column,
+                      @Define("clause") final String clause,
+                      @Bind("limit") int limit,
+                      @Bind("offset") int offset,
+                      @Define("order") String order,
+                      @Define("direction") String direction
+    );
 
     @SqlUpdate("DELETE FROM ratings")
     void purge();

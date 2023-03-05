@@ -59,11 +59,24 @@ public interface LanguageDAO {
     @GetGeneratedKeys
     long insert(@BindBean Language author);
 
-    @SqlQuery("SELECT * FROM languages LIMIT :limit OFFSET :offset")
-    List<Language> find(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM languages ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Language> find
+            (@Bind("limit") int limit,
+             @Bind("offset") int offset,
+             @Define("order") String order,
+             @Define("direction") String direction
+            );
 
-    @SqlQuery("SELECT * FROM languages WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Language> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM languages WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Language> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("DELETE FROM languages")
     void purge();

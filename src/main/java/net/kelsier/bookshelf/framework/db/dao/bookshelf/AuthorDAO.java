@@ -54,14 +54,26 @@ public interface AuthorDAO {
     @GetGeneratedKeys
     long insert(@BindBean Author author);
 
-    @SqlQuery("SELECT * FROM authors LIMIT :limit OFFSET :offset")
-    List<Author> get(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM authors ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Author> get(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlQuery("SELECT * FROM authors WHERE authors.name ILIKE :name LIMIT :limit OFFSET :offset")
     List<Author> findByTitle(@Bind("name") String name, @Bind("limit") int limit, @Bind("offset") int offset);
 
-    @SqlQuery("SELECT * FROM authors WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Author> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM authors WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Author> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit, @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("DELETE FROM authors")
     void purge();

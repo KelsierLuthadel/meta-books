@@ -56,14 +56,33 @@ public interface CommentDAO {
     @SqlQuery("SELECT * FROM comments WHERE ID = :id")
     Comment get(@Bind("id") int id);
 
-    @SqlQuery("SELECT * FROM comments LIMIT :limit OFFSET :offset")
-    List<Comment> find(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM comments ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Comment> find(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM comments WHERE comments.text ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Comment> find(@Bind("text") String text, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM comments WHERE comments.text ILIKE :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Comment> find(
+            @Bind("text") String text,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM comments WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Comment> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM comments WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Comment> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("INSERT INTO comments (book, text) " +
             "values (:book, :text)")

@@ -59,14 +59,33 @@ public interface BookDAO {
     @SqlQuery("SELECT * FROM books WHERE ID = :id")
     Book get(@Bind("id") int id);
 
-    @SqlQuery("SELECT * FROM books LIMIT :limit OFFSET :offset")
-    List<Book> get(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM books ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Book> get(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM books WHERE books.title ILIKE :title LIMIT :limit OFFSET :offset")
-    List<Book> findByTitle(@Bind("title") String title, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM books WHERE <column> <clause> :text  ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Book> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit, @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM books WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Book> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM books WHERE <column> <clause> :value  ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Book> find(
+            @Bind("value") Boolean value,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit, @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("INSERT INTO books (title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
             "values (:title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")

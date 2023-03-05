@@ -23,7 +23,10 @@ public class Author {
     @JsonProperty("sort")
     private final String sort;
 
-    public Author(final Integer id, final String name, final String sort) {
+    public Author(
+            @NotNull @JsonProperty("id") @Min(1) final Integer id,
+            @NotNull @JsonProperty("name") final String name,
+            @JsonProperty("sort") final String sort) {
         this.id = id;
         this.name = name;
         this.sort = sort;

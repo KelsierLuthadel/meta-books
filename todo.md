@@ -4,8 +4,6 @@
 Return previous/next link  
 min - max values  
 REST default values  
-implement sorting  
-
 
 ## Books
 get book needs to return BookDetails object instead of Book  
@@ -16,8 +14,8 @@ XSS testing
 
 ## Searching
 Custom fields   
-Integer values  
-Desired response body  
+Desired response body
+Date search, including ranges
 
 ## Admin
 roles, users: Set constraints and add swagger API details (from books)

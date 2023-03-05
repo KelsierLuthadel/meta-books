@@ -60,11 +60,24 @@ public interface SeriesDAO {
     @GetGeneratedKeys
     long insert(@BindBean Series series);
 
-    @SqlQuery("SELECT * FROM series LIMIT :limit OFFSET :offset")
-    List<Series> find(@Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM series ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Series> find(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
-    @SqlQuery("SELECT * FROM series WHERE <column> ILIKE :text LIMIT :limit OFFSET :offset")
-    List<Series> find(@Bind("text") String text, @Define("column") final String column, @Bind("limit") int limit, @Bind("offset") int offset);
+    @SqlQuery("SELECT * FROM series WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Series> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("DELETE FROM series")
     void purge();

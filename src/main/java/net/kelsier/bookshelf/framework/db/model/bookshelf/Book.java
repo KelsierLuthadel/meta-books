@@ -67,16 +67,16 @@ public class Book {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp lastModified;
 
-    public Book(final Integer id,
-                final String title,
-                final String sort,
-                final Timestamp dateAdded,
-                final Timestamp publicationDate,
-                final Double seriesIndex,
-                final String isbn,
-                final String path,
-                final Boolean hasCover,
-                final Timestamp lastModified) {
+    public Book(@JsonProperty("id") final Integer id,
+                @JsonProperty("title") final String title,
+                @JsonProperty("sort") final String sort,
+                @JsonProperty("dateAdded") final Timestamp dateAdded,
+                @JsonProperty("publicationDate") final Timestamp publicationDate,
+                @JsonProperty("seriesIndex") final Double seriesIndex,
+                @JsonProperty("isbn") final String isbn,
+                @JsonProperty("path") final String path,
+                @JsonProperty("hasCover") final Boolean hasCover,
+                @JsonProperty("lastModified") final Timestamp lastModified) {
         this.id = id;
         this.title = title;
         this.sort = sort;

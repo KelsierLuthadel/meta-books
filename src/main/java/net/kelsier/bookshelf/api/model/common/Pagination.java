@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 public class Pagination {
     @NotNull
     @JsonProperty("start")
+    @Min(0)
     final Integer start;
 
     @NotNull
@@ -34,7 +35,12 @@ public class Pagination {
                       @JsonProperty("sort") final Sort sort) {
         this.start = start;
         this.limit = limit;
-        this.sort = sort;
+
+        if ( null == sort) {
+            this.sort = new Sort("id", "asc");
+        } else {
+            this.sort = sort;
+        }
     }
 
     public Integer getStart() {

@@ -22,7 +22,9 @@ public class Publisher {
     @JsonProperty("sort")
     private final String sort;
 
-    public Publisher(final Integer id, final String name, final String sort) {
+    public Publisher(@JsonProperty("id") final Integer id,
+                     @JsonProperty("name") final String name,
+                     @JsonProperty("sort") final String sort) {
         this.id = id;
         this.name = name;
         this.sort = sort;

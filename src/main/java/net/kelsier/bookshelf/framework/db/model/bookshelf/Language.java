@@ -19,7 +19,7 @@ public class Language {
     @JsonProperty("languageCode")
     private final String languageCode;
 
-    public Language(final Integer id, final String languageCode) {
+    public Language(@JsonProperty("id") final Integer id, @JsonProperty("languageCode") final String languageCode) {
         this.id = id;
         this.languageCode = languageCode;
     }

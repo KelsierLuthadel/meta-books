@@ -72,13 +72,20 @@ public class Tags {
         if (null == search.getLookup()) {
             return databaseConnection.onDemand(TagDAO.class).find(
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         } else {
             return databaseConnection.onDemand(TagDAO.class).find(
-                    search.getLookup().getWildcardValue(),
+                    search.getLookup().getLookupValue(),
                     search.getLookup().getField(),
+                    search.getLookup().getOperator().getLabel(),
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         }
     }
 

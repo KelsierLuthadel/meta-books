@@ -70,13 +70,20 @@ public class Comments {
         if (null == search.getLookup()) {
             return databaseConnection.onDemand(CommentDAO.class).find(
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         } else {
             return databaseConnection.onDemand(CommentDAO.class).find(
-                    search.getLookup().getWildcardValue(),
+                    search.getLookup().getLookupValue(),
                     search.getLookup().getField(),
+                    search.getLookup().getOperator().getLabel(),
                     search.getPagination().getLimit(),
-                    search.getPagination().getStart());
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+            );
         }
     }
 
