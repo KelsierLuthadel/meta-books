@@ -1,4 +1,4 @@
-package net.kelsier.bookshelf.api.model.bookshelf;
+package net.kelsier.bookshelf.api.model.bookshelf.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,18 +11,21 @@ import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 
 /*
-    public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)
+ * CREATE TABLE series (
+ *     id SERIAL PRIMARY KEY,
+ *     name TEXT NOT NULL ,
+ *     sort TEXT ,
+ *     UNIQUE (name)
+ * );
  */
-
-
-@Schema(name = "AuthorLookup", title = "Author lookup")
-public final class AuthorLookup implements ColumnLookup {
+public class SeriesLookup implements ColumnLookup {
     private static final String DEFAULT_FIELD = "name";
     private static final String DEFAULT_OPERATOR = "LIKE";
+
     @NotNull
     @JsonProperty("field")
     @OneOf({"name"})
-    @Schema(name ="field", description = "Search query field", defaultValue = DEFAULT_FIELD)
+    @Schema(description = "Search query field", defaultValue = DEFAULT_FIELD)
     final String field;
 
     @NotNull
@@ -35,7 +38,7 @@ public final class AuthorLookup implements ColumnLookup {
     @JsonProperty("value")
     final String value;
 
-    public AuthorLookup(@JsonProperty("field") final String field,
+    public SeriesLookup(@JsonProperty("field") final String field,
                         @JsonProperty("operator") final Operator operator,
                         @JsonProperty("value") final String value) {
         this.field = field;

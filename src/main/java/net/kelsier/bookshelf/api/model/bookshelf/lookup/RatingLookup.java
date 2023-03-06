@@ -1,4 +1,4 @@
-package net.kelsier.bookshelf.api.model.bookshelf;
+package net.kelsier.bookshelf.api.model.bookshelf.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,25 +11,25 @@ import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 
 /*
- * CREATE TABLE tags (
+ * CREATE TABLE ratings (
  *     id SERIAL PRIMARY KEY,
- *     name TEXT NOT NULL ,
- *     UNIQUE (name)
+ *     rating INTEGER CHECK(rating > -1 AND rating < 11),
+ *     UNIQUE (rating)
  * );
  */
+public class RatingLookup implements ColumnLookup {
+    private static final String DEFAULT_FIELD = "rating";
+    private static final String DEFAULT_OPERATOR = "EQ";
 
-public final class TagLookup implements ColumnLookup {
-    private static final String DEFAULT_FIELD = "name";
-    private static final String DEFAULT_OPERATOR = "LIKE";
     @NotNull
     @JsonProperty("field")
-    @OneOf({"name"})
-    @Schema(name ="field", description = "Search query field", defaultValue = DEFAULT_FIELD)
+    @OneOf({"rating"})
+    @Schema(description = "Search query field", defaultValue = DEFAULT_FIELD)
     final String field;
 
     @NotNull
     @JsonProperty("operator")
-    @OneOf({"EQ", "NEQ", "LIKE", "UNLIKE"})
+    @OneOf({"EQ", "NEQ", "GT", "LT", "GTE", "LTE"})
     @Schema(description = "Search operator", defaultValue = DEFAULT_OPERATOR)
     final Operator operator;
 
@@ -37,9 +37,10 @@ public final class TagLookup implements ColumnLookup {
     @JsonProperty("value")
     final String value;
 
-    public TagLookup(@JsonProperty("field") final String field,
-                     @JsonProperty("operator") final Operator operator,
-                     @JsonProperty("value") final String value) {
+
+    public RatingLookup(@JsonProperty("field") final String field,
+                        @JsonProperty("operator") final Operator operator,
+                        @JsonProperty("value") final String value) {
         this.field = field;
         this.operator = operator;
         this.value = value;
@@ -72,5 +73,4 @@ public final class TagLookup implements ColumnLookup {
     private String getWildcardValue() {
         return MessageFormat.format("%{0}%", value);
     }
-
 }

@@ -8,12 +8,9 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import net.kelsier.bookshelf.api.model.bookshelf.SeriesLookup;
-import net.kelsier.bookshelf.api.model.bookshelf.TagLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.TagLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
-import net.kelsier.bookshelf.framework.db.dao.bookshelf.SeriesDAO;
 import net.kelsier.bookshelf.framework.db.dao.bookshelf.TagDAO;
-import net.kelsier.bookshelf.framework.db.model.bookshelf.Series;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Tag;
 import org.jdbi.v3.core.Jdbi;
 

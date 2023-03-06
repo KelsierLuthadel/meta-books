@@ -1,4 +1,4 @@
-package net.kelsier.bookshelf.api.model.bookshelf;
+package net.kelsier.bookshelf.api.model.bookshelf.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

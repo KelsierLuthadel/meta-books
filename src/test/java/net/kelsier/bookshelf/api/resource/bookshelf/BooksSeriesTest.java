@@ -2,14 +2,12 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.SeriesLookup;
-import net.kelsier.bookshelf.api.model.bookshelf.SeriesLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.SeriesLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.api.model.common.Sort;
 import net.kelsier.bookshelf.framework.db.dao.bookshelf.SeriesDAO;
-import net.kelsier.bookshelf.framework.db.model.bookshelf.Book;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Series;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;

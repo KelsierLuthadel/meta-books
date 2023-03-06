@@ -2,8 +2,7 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.AuthorLookup;
-import net.kelsier.bookshelf.api.model.bookshelf.SeriesLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.AuthorLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
@@ -12,7 +11,6 @@ import net.kelsier.bookshelf.framework.db.dao.bookshelf.AuthorDAO;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Author;
 import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
 
-import net.kelsier.bookshelf.framework.db.model.bookshelf.Series;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

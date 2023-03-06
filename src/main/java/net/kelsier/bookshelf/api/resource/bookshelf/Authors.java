@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import net.kelsier.bookshelf.api.model.bookshelf.AuthorLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.AuthorLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.framework.db.dao.bookshelf.AuthorDAO;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Author;

@@ -3,9 +3,8 @@ package net.kelsier.bookshelf.api.model.bookshelf;
 import io.dropwizard.testing.junit5.DropwizardClientExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import net.kelsier.bookshelf.MetaBooks;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.AuthorLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
-import net.kelsier.bookshelf.framework.db.model.bookshelf.Author;
-import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

@@ -1,4 +1,4 @@
-package net.kelsier.bookshelf.api.model.bookshelf;
+package net.kelsier.bookshelf.api.model.bookshelf.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,20 +11,20 @@ import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 
 /*
- * CREATE TABLE series (
+ * CREATE TABLE languages (
  *     id SERIAL PRIMARY KEY,
- *     name TEXT NOT NULL ,
- *     sort TEXT ,
- *     UNIQUE (name)
+ *     lang_code TEXT NOT NULL ,
+ *     UNIQUE(lang_code)
  * );
  */
-public class SeriesLookup implements ColumnLookup {
-    private static final String DEFAULT_FIELD = "name";
-    private static final String DEFAULT_OPERATOR = "LIKE";
+
+public class LanguageLookup implements ColumnLookup {
+    private static final String DEFAULT_FIELD = "lang_code";
+    private static final String DEFAULT_OPERATOR = "EQ";
 
     @NotNull
     @JsonProperty("field")
-    @OneOf({"name"})
+    @OneOf({"lang_code"})
     @Schema(description = "Search query field", defaultValue = DEFAULT_FIELD)
     final String field;
 
@@ -38,9 +38,9 @@ public class SeriesLookup implements ColumnLookup {
     @JsonProperty("value")
     final String value;
 
-    public SeriesLookup(@JsonProperty("field") final String field,
-                        @JsonProperty("operator") final Operator operator,
-                        @JsonProperty("value") final String value) {
+    public LanguageLookup(@JsonProperty("field") final String field,
+                          @JsonProperty("operator") final Operator operator,
+                          @JsonProperty("value") final String value) {
         this.field = field;
         this.operator = operator;
         this.value = value;
@@ -71,6 +71,6 @@ public class SeriesLookup implements ColumnLookup {
 
     @JsonIgnore
     private String getWildcardValue() {
-        return MessageFormat.format("%{0}%", value);
+        return MessageFormat.format("%{0}%",value);
     }
 }

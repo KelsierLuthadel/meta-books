@@ -1,4 +1,4 @@
-package net.kelsier.bookshelf.api.model.bookshelf;
+package net.kelsier.bookshelf.api.model.bookshelf.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,25 +11,26 @@ import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 
 /*
- * CREATE TABLE ratings (
- *     id SERIAL PRIMARY KEY,
- *     rating INTEGER CHECK(rating > -1 AND rating < 11),
- *     UNIQUE (rating)
- * );
+id  SERIAL PRIMARY KEY,
+    book INTEGER NOT NULL,
+    format TEXT NOT NULL ,
+    uncompressed_size INTEGER NOT NULL,
+    name TEXT NOT NULL,
  */
-public class RatingLookup implements ColumnLookup {
-    private static final String DEFAULT_FIELD = "rating";
+
+public class DataLookup implements ColumnLookup {
+    private static final String DEFAULT_FIELD = "name";
     private static final String DEFAULT_OPERATOR = "EQ";
 
     @NotNull
     @JsonProperty("field")
-    @OneOf({"rating"})
+    @OneOf({"format", "name", "uncompressed_size"})
     @Schema(description = "Search query field", defaultValue = DEFAULT_FIELD)
     final String field;
 
     @NotNull
     @JsonProperty("operator")
-    @OneOf({"EQ", "NEQ", "GT", "LT", "GTE", "LTE"})
+    @OneOf({"EQ", "NEQ", "GT", "LT", "GTE", "LTE", "LIKE", "UNLIKE"})
     @Schema(description = "Search operator", defaultValue = DEFAULT_OPERATOR)
     final Operator operator;
 
@@ -37,10 +38,9 @@ public class RatingLookup implements ColumnLookup {
     @JsonProperty("value")
     final String value;
 
-
-    public RatingLookup(@JsonProperty("field") final String field,
-                        @JsonProperty("operator") final Operator operator,
-                        @JsonProperty("value") final String value) {
+    public DataLookup(@JsonProperty("field") final String field,
+                      @JsonProperty("operator") final Operator operator,
+                      @JsonProperty("value") final String value) {
         this.field = field;
         this.operator = operator;
         this.value = value;

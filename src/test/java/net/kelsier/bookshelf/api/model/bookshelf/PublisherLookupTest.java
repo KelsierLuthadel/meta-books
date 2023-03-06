@@ -3,6 +3,8 @@ package net.kelsier.bookshelf.api.model.bookshelf;
 import io.dropwizard.testing.junit5.DropwizardClientExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import net.kelsier.bookshelf.MetaBooks;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.BookLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.PublisherLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

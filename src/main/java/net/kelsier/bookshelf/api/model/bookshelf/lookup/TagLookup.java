@@ -1,4 +1,4 @@
-package net.kelsier.bookshelf.api.model.bookshelf;
+package net.kelsier.bookshelf.api.model.bookshelf.lookup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,33 +11,25 @@ import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 
 /*
-CREATE TABLE books (
-    id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL DEFAULT 'Unknown',
-    sort TEXT ,
-    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    publication_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    series_index REAL NOT NULL DEFAULT 1.0,
-    isbn TEXT DEFAULT '' ,
-    path TEXT NOT NULL DEFAULT '',
-    has_cover BOOL DEFAULT false,
-    last_modified TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00+00:00'
-)
+ * CREATE TABLE tags (
+ *     id SERIAL PRIMARY KEY,
+ *     name TEXT NOT NULL ,
+ *     UNIQUE (name)
+ * );
  */
 
-public class BookLookup implements ColumnLookup {
-    private static final String DEFAULT_FIELD = "title";
+public final class TagLookup implements ColumnLookup {
+    private static final String DEFAULT_FIELD = "name";
     private static final String DEFAULT_OPERATOR = "LIKE";
-
     @NotNull
     @JsonProperty("field")
-    @OneOf({"title", "isbn", "has_cover"})
-    @Schema(description = "Search query field", defaultValue = DEFAULT_FIELD)
+    @OneOf({"name"})
+    @Schema(name ="field", description = "Search query field", defaultValue = DEFAULT_FIELD)
     final String field;
 
     @NotNull
     @JsonProperty("operator")
-    @OneOf({"EQ", "NEQ", "GT", "LT", "GTE", "LTE", "LIKE", "UNLIKE"})
+    @OneOf({"EQ", "NEQ", "LIKE", "UNLIKE"})
     @Schema(description = "Search operator", defaultValue = DEFAULT_OPERATOR)
     final Operator operator;
 
@@ -45,9 +37,9 @@ public class BookLookup implements ColumnLookup {
     @JsonProperty("value")
     final String value;
 
-    public BookLookup(@JsonProperty("field") final String field,
-                      @JsonProperty("operator") final Operator operator,
-                      @JsonProperty("value") final String value) {
+    public TagLookup(@JsonProperty("field") final String field,
+                     @JsonProperty("operator") final Operator operator,
+                     @JsonProperty("value") final String value) {
         this.field = field;
         this.operator = operator;
         this.value = value;
@@ -80,4 +72,5 @@ public class BookLookup implements ColumnLookup {
     private String getWildcardValue() {
         return MessageFormat.format("%{0}%", value);
     }
+
 }

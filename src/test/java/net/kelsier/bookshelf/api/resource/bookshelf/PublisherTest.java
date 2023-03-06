@@ -2,16 +2,13 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.PublisherLookup;
-import net.kelsier.bookshelf.api.model.bookshelf.LanguageLookup;
-import net.kelsier.bookshelf.api.model.bookshelf.PublisherLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.PublisherLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.api.model.common.Sort;
-import net.kelsier.bookshelf.framework.db.dao.bookshelf.LanguageDAO;
 import net.kelsier.bookshelf.framework.db.dao.bookshelf.PublisherDAO;
-import net.kelsier.bookshelf.framework.db.model.bookshelf.Language;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Publisher;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
