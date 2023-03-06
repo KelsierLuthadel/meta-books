@@ -23,13 +23,18 @@
 package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
 import net.kelsier.bookshelf.framework.db.mapper.bookshelf.CommentMapper;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Book;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.BookData;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Comment;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+import java.util.List;
 
 /*
 CREATE TABLE comments (
@@ -50,6 +55,34 @@ CREATE TABLE comments (
 public interface CommentDAO {
     @SqlQuery("SELECT * FROM comments WHERE ID = :id")
     Comment get(@Bind("id") int id);
+
+    @SqlQuery("SELECT * FROM comments ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Comment> find(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
+
+    @SqlQuery("SELECT * FROM comments WHERE comments.text ILIKE :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Comment> find(
+            @Bind("text") String text,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
+
+    @SqlQuery("SELECT * FROM comments WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Comment> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("INSERT INTO comments (book, text) " +
             "values (:book, :text)")

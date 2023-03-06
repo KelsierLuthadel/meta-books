@@ -1,6 +1,9 @@
 package net.kelsier.bookshelf.framework.db.model.bookshelf;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -22,6 +25,7 @@ import java.sql.Timestamp;
         last_modified TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00+00:00'
     )
  */
+@JsonPropertyOrder({"id", "title", "sort", "seriesIndex", "isbn", "hasCover", "publicationDate", "dateAdded", "lastModified"})
 public class Book {
     @NotNull
     @JsonProperty("id")
@@ -36,9 +40,11 @@ public class Book {
     private final String sort;
 
     @JsonProperty("dateAdded")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp dateAdded;
 
     @JsonProperty("publicationDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp publicationDate;
 
     @NotNull
@@ -50,6 +56,7 @@ public class Book {
 
     @NotNull
     @JsonProperty("path")
+    @JsonIgnore
     private final String path;
 
     @JsonProperty("hasCover")
@@ -57,18 +64,19 @@ public class Book {
 
     @NotNull
     @JsonProperty("lastModified")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp lastModified;
 
-    public Book(final Integer id,
-                final String title,
-                final String sort,
-                final Timestamp dateAdded,
-                final Timestamp publicationDate,
-                final Double seriesIndex,
-                final String isbn,
-                final String path,
-                final Boolean hasCover,
-                final Timestamp lastModified) {
+    public Book(@JsonProperty("id") final Integer id,
+                @JsonProperty("title") final String title,
+                @JsonProperty("sort") final String sort,
+                @JsonProperty("dateAdded") final Timestamp dateAdded,
+                @JsonProperty("publicationDate") final Timestamp publicationDate,
+                @JsonProperty("seriesIndex") final Double seriesIndex,
+                @JsonProperty("isbn") final String isbn,
+                @JsonProperty("path") final String path,
+                @JsonProperty("hasCover") final Boolean hasCover,
+                @JsonProperty("lastModified") final Timestamp lastModified) {
         this.id = id;
         this.title = title;
         this.sort = sort;

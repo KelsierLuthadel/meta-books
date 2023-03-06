@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import net.kelsier.bookshelf.api.model.Role;
-import net.kelsier.bookshelf.api.model.RoleModel;
+import net.kelsier.bookshelf.api.model.database.Role;
+import net.kelsier.bookshelf.api.model.database.RoleModel;
 import net.kelsier.bookshelf.framework.db.model.users.DatabaseUserRole;
 import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
 import org.slf4j.Logger;
@@ -61,11 +61,12 @@ public class RoleAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        tags = {"Roles"},
-        description = "Get Roles",
-        responses = {
-            @ApiResponse(responseCode = "200")
-        })
+            summary = "Get list of roles",
+            tags = {"Roles"},
+            description = "Get Roles",
+            responses = {
+                @ApiResponse(responseCode = "200")
+            })
 
     public List<RoleModel> getRoles()  {
         final List<DatabaseUserRole> roles = roleDAO.getAll();
@@ -90,12 +91,12 @@ public class RoleAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        tags = {"Roles"},
-        description = "Get Role",
-        responses = {
-            @ApiResponse(responseCode = "200")
-        })
-
+            summary = "Get role details",
+            tags = {"Roles"},
+            description = "Get Role",
+            responses = {
+                @ApiResponse(responseCode = "200")
+            })
     public RoleModel getRole(@Parameter(name = "id", required = true) @PathParam("id") final Integer id)  {
         final DatabaseUserRole role = roleDAO.findById(id);
         if (null == role) {
@@ -110,6 +111,7 @@ public class RoleAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
+            summary = "Create new role",
             tags = {"Roles"},
             description = "Create role",
             responses = {
@@ -140,12 +142,12 @@ public class RoleAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        tags = {"Roles"},
-        description = "Update role",
-        responses = {
-            @ApiResponse(responseCode = "200")
-        })
-
+            summary = "Update role details",
+            tags = {"Roles"},
+            description = "Update role",
+            responses = {
+                @ApiResponse(responseCode = "200")
+            })
     public RoleModel updateRole(@Parameter(name = "id", required = true) @PathParam("id") final Integer id,
                                 @Parameter(name = "role", required = true) @Valid final Role role) {
         DatabaseUserRole existingRole = roleDAO.findById(id);
@@ -178,12 +180,12 @@ public class RoleAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        tags = {"Roles"},
-        description = "Delete role",
-        responses = {
-            @ApiResponse(responseCode = "200")
-        })
-
+            summary = "",
+            tags = {"Roles"},
+            description = "Delete role",
+            responses = {
+                @ApiResponse(responseCode = "200")
+            })
     public Response deleteRole(@Parameter(name = "id", required = true) @PathParam("id") final Integer id) {
         final DatabaseUserRole role = roleDAO.findById(id);
         if (null == role) {

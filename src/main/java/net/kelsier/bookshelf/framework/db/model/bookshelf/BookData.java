@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
       name TEXT NOT NULL, UNIQUE(book, format))
 */
 
-public class Data {
+public class BookData {
     @NotNull
     @JsonProperty("id")
     @Min(1)
@@ -30,10 +30,14 @@ public class Data {
     private final Integer uncompressedSize;
 
     @NotNull
-    @JsonProperty("text")
+    @JsonProperty("name")
     private final String name;
 
-    public Data(final Integer id, final Integer book, final String format, final Integer uncompressedSize, final String name) {
+    public BookData(@JsonProperty("id") final Integer id,
+                    @JsonProperty("book") final Integer book,
+                    @JsonProperty("format") final String format,
+                    @JsonProperty("uncompressedSize") final Integer uncompressedSize,
+                    @JsonProperty("name") final String name) {
         this.id = id;
         this.book = book;
         this.format = format;

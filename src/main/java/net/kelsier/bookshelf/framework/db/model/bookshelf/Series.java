@@ -19,10 +19,10 @@ public class Series {
     @JsonProperty("name")
     private final String name;
 
-    @JsonProperty("text")
+    @JsonProperty("sort")
     private final String sort;
 
-    public Series(final Integer id, final String name, final String sort) {
+    public Series(@JsonProperty("id") final Integer id, @JsonProperty("name") final String name, @JsonProperty("sort") final String sort) {
         this.id = id;
         this.name = name;
         this.sort = sort;

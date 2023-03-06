@@ -24,12 +24,16 @@ package net.kelsier.bookshelf.framework.db.dao.bookshelf;
 
 import net.kelsier.bookshelf.framework.db.mapper.bookshelf.AuthorMapper;
 import net.kelsier.bookshelf.framework.db.model.bookshelf.Author;
+import net.kelsier.bookshelf.framework.db.model.bookshelf.Book;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+
+import java.util.List;
 /*
     public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)
  */
@@ -49,6 +53,27 @@ public interface AuthorDAO {
             "values (:name, :sort)")
     @GetGeneratedKeys
     long insert(@BindBean Author author);
+
+    @SqlQuery("SELECT * FROM authors ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Author> get(
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
+
+    @SqlQuery("SELECT * FROM authors WHERE authors.name ILIKE :name LIMIT :limit OFFSET :offset")
+    List<Author> findByTitle(@Bind("name") String name, @Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM authors WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<Author> find(
+            @Bind("text") String text,
+            @Define("column") final String column,
+            @Define("clause") final String clause,
+            @Bind("limit") int limit, @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
     @SqlUpdate("DELETE FROM authors")
     void purge();

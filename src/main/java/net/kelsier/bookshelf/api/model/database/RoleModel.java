@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.api.model;
+package net.kelsier.bookshelf.api.model.database;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,15 +38,22 @@ import javax.validation.constraints.Size;
  */
 @Schema(description = "Role Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"role", "description"})
-public class Role {
+@JsonPropertyOrder({"id", "role", "description"})
+public class RoleModel {
+    /**
+     * Role id
+     */
+    @NotNull
+    @JsonProperty("id")
+    private final Integer id;
+
     /**
      * Role
      */
     @NotNull
     @Size(min = 3, max = 30)
     @JsonProperty("role")
-    private final String roleName;
+    private final String role;
 
     /**
      * Role description
@@ -59,21 +66,32 @@ public class Role {
     /**
      * Constructor
      *
-     * @param roleName - Unique role
+     * @param id - User id associated with the user in the Users table
+     * @param role - Unique role
      * @param description - role description
      */
-    public Role(@JsonProperty("role") final String roleName,
-                @JsonProperty("description") final String description) {
-        this.roleName = roleName;
+    public RoleModel(@JsonProperty("id") final int id,
+                     @JsonProperty("role") final String role,
+                     @JsonProperty("description") final String description) {
+        this.id = id;
+        this.role = role;
         this.description = description;
+    }
+
+    /**
+     *
+     * @return Role id
+     */
+    public Integer getId() {
+        return id;
     }
 
     /**
      *
      * @return A string containing the role
      */
-    public String getRoleName() {
-        return roleName;
+    public String getRole() {
+        return role;
     }
 
     /**

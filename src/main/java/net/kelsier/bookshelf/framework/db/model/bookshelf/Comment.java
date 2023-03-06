@@ -24,7 +24,7 @@ public class Comment {
     @JsonProperty("text")
     private final String text;
 
-    public Comment(final Integer id, final Integer book, final String text) {
+    public Comment(@JsonProperty("id") final Integer id, @JsonProperty("book") final Integer book, @JsonProperty("text") final String text) {
         this.id = id;
         this.book = book;
         this.text = text;

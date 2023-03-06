@@ -337,7 +337,7 @@ public class MigrateSQLite {
             final DataDAO dataDAO = databaseConnection.onDemand(DataDAO.class);
 
             while (rs.next()) {
-                dataDAO.insert(new Data(0,
+                dataDAO.insert(new BookData(0,
                         rs.getInt("book"),
                         rs.getString("format"),
                         rs.getInt("uncompressed_size"),
