@@ -33,16 +33,6 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
-/*
-    public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)
- */
-/**
- * API to retrieve authors from the database.
- * Authors are stored in the following schema:
- * <p>
- * {@code public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)}
- * </p>
- */
 
 /**
  * DAO to map an author object in the database to a Java object so that it can be returned RESTfully.
