@@ -36,23 +36,45 @@ import java.util.List;
 /*
     public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)
  */
+/**
+ * API to retrieve authors from the database.
+ * Authors are stored in the following schema:
+ * <p>
+ * {@code public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)}
+ * </p>
+ */
 
 /**
- *
+ * DAO to map an author object in the database to a Java object so that it can be returned RESTfully.
+ * Authors are stored in the following schema:
+ * <p>
+ * {@code public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)}
+ * </p>
  *
  * @author Kelsier Luthadel
  * @version 1.0.2
  */
 @RegisterRowMapper(AuthorMapper.class)
 public interface AuthorDAO {
+
+    /**
+     * Get a single author from the database
+     *
+     * @param id - Author ID
+     * @return - An object representing an author
+     */
     @SqlQuery("SELECT * FROM authors WHERE ID = :id")
     Author get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO authors (name, sort) " +
-            "values (:name, :sort)")
-    @GetGeneratedKeys
-    void insert(@BindBean Author author);
-
+    /**
+     * Get all authors from the database using pagination and sorting.
+     *
+     * @param limit - Total number of authors to return
+     * @param offset - Starting position
+     * @param order - Tolumn used for ordering
+     * @param direction - sort direction applies
+     * @return - A list of authors
+     */
     @SqlQuery("SELECT * FROM authors ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Author> get(
             @Bind("limit") int limit,
@@ -61,6 +83,30 @@ public interface AuthorDAO {
             @Define("direction") String direction
     );
 
+    /**
+     * Geta list of authors based on a search clause from the database using pagination and sorting.
+     * The search clause is represented by column and operator, where the operator is one of:
+     *
+     * <ul>
+     *     <li>=</li>
+     *     <li>!=</li>
+     *     <li>&lt;</li>
+     *     <li>&lt;=</li>
+     *     <li>&gt;</li>
+     *     <li>&gt;=</li>
+     *     <li>ILIKE</li>
+     *     <li>NOT ILIKE</li>
+     * </ul>
+     *
+     * @param text - The text used for searching
+     * @param column - The column used for searching
+     * @param clause - The search clause
+     * @param limit - Total number of authors to return
+     * @param offset - Starting position
+     * @param order - Tolumn used for ordering
+     * @param direction - sort direction applies
+     * @return - A list of authors
+     */
     @SqlQuery("SELECT * FROM authors WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Author> find(
             @Bind("text") String text,
@@ -71,6 +117,19 @@ public interface AuthorDAO {
             @Define("direction") String direction
     );
 
+    /**
+     * Insert a new author into the database
+     * @param author - An object representing an author
+     */
+    @SqlUpdate("INSERT INTO authors (name, sort) " +
+        "values (:name, :sort)")
+    @GetGeneratedKeys
+    void insert(@BindBean Author author);
+
+    /**
+     * Delete all authors from the database, this is used when re-creating the database contents.
+     * Use with cuation.
+     */
     @SqlUpdate("DELETE FROM authors")
     void purge();
 }
