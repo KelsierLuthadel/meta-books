@@ -96,9 +96,7 @@ class BooksSeriesTest {
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
-            response = post.readEntity((
-                new GenericType<>() {
-                }));
+            response = post.readEntity(new GenericType<>() {});
         }
         assertEquals(seriesList.size(), response.size(), "The correct number of results should be returned");
 
@@ -121,9 +119,7 @@ class BooksSeriesTest {
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
-            response = post.readEntity((
-                new GenericType<>() {
-                }));
+            response = post.readEntity(new GenericType<>() {});
         }
         assertEquals(seriesList.size(), response.size(), "The correct number of results should be returned");
 
@@ -146,9 +142,7 @@ class BooksSeriesTest {
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
-            response = post.readEntity((
-                new GenericType<>() {
-                }));
+            response = post.readEntity(new GenericType<>() {});
         }
         assertEquals(seriesList.size(), response.size(), "The correct number of results should be returned");
 

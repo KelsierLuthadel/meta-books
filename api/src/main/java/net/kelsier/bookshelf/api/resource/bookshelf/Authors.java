@@ -63,9 +63,8 @@ public final class Authors {
      *
      * @param search: A {@link Search} object, consisting of an {@link AuthorLookup} query and  {@link Pagination}
      * @return A paginated list of authors
-     * <p></p>
-     * Example request:
-     * <pre>{@code
+     *
+     * <pre>Example request:{@code
      * "lookup": {
      *     "field": "name",
      *     "operator": "LIKE",
@@ -79,6 +78,21 @@ public final class Authors {
      *       "direction": "asc"
      *     }
      *   }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *     "id": 1,
+     *     "name": "Stephen King",
+     *     "sort": "King, Stephen"
+     *   },
+     *   {
+     *     "id": 2,
+     *     "name": "Stephen Kingston",
+     *     "sort": "Kingston, Stephen"
+     *   }
+     * ]
      * }</pre>
      */
     @POST
@@ -117,7 +131,19 @@ public final class Authors {
         }
     }
 
-
+    /**
+     * Get Author details
+     * @param authorId - Author ID
+     * @return - An object containing author details
+     * 
+     * <pre>Example response:{@code
+     * {
+     *   "id": 1,
+     *   "name": "Stephen King",
+     *   "sort": "King, Stephen"
+     * }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
