@@ -1,6 +1,6 @@
 # Bookshelf
 
-![Build](https://github.com/KelsierLuthadel/meta-books/workflows/Build/badge.svg) ![Tests](https://github.com/KelsierLuthadel/meta-books/.github/badges/unit-tests.svg)
+![Build](https://github.com/KelsierLuthadel/meta-books/workflows/Build/badge.svg) ![Tests](https://github.com/KelsierLuthadel/meta-books/blob/main/.github/badges/unit-tests.svg)
 
 ## Encryption
 The recommended approach to storing sensitive bookData is by using encryption at rest. 
