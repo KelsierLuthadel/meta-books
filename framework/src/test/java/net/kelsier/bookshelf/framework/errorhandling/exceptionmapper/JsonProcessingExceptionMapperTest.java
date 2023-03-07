@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import net.kelsier.bookshelf.framework.error.exception.JsonProcessingExceptionMapper;
 import net.kelsier.bookshelf.framework.error.response.ResponseErrorFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.ws.rs.core.Response;
@@ -14,11 +14,11 @@ import javax.ws.rs.core.Response;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES;
 import static org.eclipse.jetty.http.HttpStatus.Code.BAD_REQUEST;
 import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JsonProcessingExceptionMapperTest {
+class JsonProcessingExceptionMapperTest {
     @Test
-    public void testUnrecognizedPropertyException() throws Exception {
+    void testUnrecognizedPropertyException() throws Exception {
         try {
             new ObjectMapper().readValue("{\"unknown\":\"\"}", TestObject.class);
         } catch (final UnrecognizedPropertyException exception) {
@@ -37,7 +37,7 @@ public class JsonProcessingExceptionMapperTest {
     }
 
     @Test
-    public void testJsonParseException() throws Exception {
+    void testJsonParseException() throws Exception {
         try {
             new ObjectMapper().readValue("{\"test\": [", TestObject.class);
         } catch (final JsonParseException exception) {
@@ -49,7 +49,7 @@ public class JsonProcessingExceptionMapperTest {
     }
 
     @Test
-    public void testException() {
+    void testException() {
         final ObjectMapper mapper = new ObjectMapper();
         mapper.configure(FAIL_ON_IGNORED_PROPERTIES, true);
 
@@ -64,7 +64,7 @@ public class JsonProcessingExceptionMapperTest {
     }
 
     @Test
-    public void testExceptionNoLocation() {
+    void testExceptionNoLocation() {
         final JsonParseException exception = Mockito.mock(JsonParseException.class);
         final ResponseErrorFormat responseErrorFormat = getResponseErrorFormat(exception);
 

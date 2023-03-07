@@ -11,6 +11,10 @@ public class DatasourceConfiguration extends DataSourceFactory {
     @JsonProperty("password")
     private String password;
 
+    DatasourceConfiguration() {
+        super();
+    }
+
     @Override
     public void setPassword(final String password) {
         this.password = password;

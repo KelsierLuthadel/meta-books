@@ -1,5 +1,8 @@
 package net.kelsier.bookshelf.framework;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +15,7 @@ import java.io.InputStreamReader;
  * @version 1.0.0
  */
 public final class Helper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Helper.class);
     private Helper() {
         throw new IllegalStateException("Utility class, should not be instantiated.");
     }
@@ -37,7 +41,8 @@ public final class Helper {
                 }
             }
             return resultStringBuilder.toString();
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            LOGGER.warn("Unable to read from input stream", e);
             return "";
         }
     }

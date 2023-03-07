@@ -59,35 +59,35 @@ public class DatabaseUser {
     @NotBlank
     @JsonProperty("username")
     @Size(max = 20)
-    private String username;
+    private final String username;
 
     /**
      * User's first name
      */
     @JsonProperty("firstName")
     @Size(max = 20)
-    private String firstName;
+    private final String firstName;
 
     /**
      * User's last name
      */
     @JsonProperty("lastName")
     @Size(max = 20)
-    private String lastName;
+    private final String lastName;
 
     /**
      * User's email
      */
     @JsonProperty("email")
     @Pattern(regexp = RegexPatterns.EMAIL_REGEX, message = "invalid format")
-    private String email;
+    private final String email;
 
     /**
      * Enabled
      */
     @NotNull
     @JsonProperty("enabled")
-    private Boolean enabled;
+    private final Boolean enabled;
 
 
     /**
@@ -96,13 +96,13 @@ public class DatabaseUser {
     @NotNull
     @JsonProperty("password")
     @Pattern(regexp = RegexPatterns.PASSWORD_REGEX, message = "does not meet minimum requirements")
-    private String password;
+    private final String password;
 
     /**
      * roles
      */
     @JsonProperty("roles")
-    private List<Integer> roles;
+    private final List<Integer> roles;
 
 
     /**
@@ -174,33 +174,5 @@ public class DatabaseUser {
      */
     public List<Integer> getRoles() {
         return roles;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRoles(List<Integer> roles) {
-        this.roles = roles;
     }
 }

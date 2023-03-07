@@ -2,15 +2,15 @@ package net.kelsier.bookshelf.framework.errorhandling.exceptionmapper;
 
 import net.kelsier.bookshelf.framework.error.exception.RuntimeExceptionMapper;
 import net.kelsier.bookshelf.framework.error.response.ResponseErrorFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class RuntimeExceptionMapperTest {
+class RuntimeExceptionMapperTest {
     @Test
-    public void testToResponse() {
+    void testToResponse() {
         final RuntimeExceptionMapper mapper = new RuntimeExceptionMapper();
         final Throwable thrown = assertThrows(Throwable.class, this::throwException);
 

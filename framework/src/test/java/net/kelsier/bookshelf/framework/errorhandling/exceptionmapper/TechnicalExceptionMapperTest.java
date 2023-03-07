@@ -2,16 +2,16 @@ package net.kelsier.bookshelf.framework.errorhandling.exceptionmapper;
 
 import net.kelsier.bookshelf.framework.error.exception.TechnicalExceptionMapper;
 import net.kelsier.bookshelf.framework.error.response.ResponseErrorFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.pac4j.core.exception.TechnicalException;
 
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TechnicalExceptionMapperTest {
+class TechnicalExceptionMapperTest {
     @Test
-    public void testToResponse() {
+    void testToResponse() {
         final TechnicalExceptionMapper mapper = new TechnicalExceptionMapper();
         final TechnicalException thrown = assertThrows(TechnicalException.class, this::throwException);
         try(final Response response = mapper.toResponse(thrown)) {

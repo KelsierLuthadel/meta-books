@@ -102,7 +102,7 @@ public final class ExceptionToResponse {
         return Response
             .status(status)
             .entity(responseErrorFormat)
-            .type(Utf8MediaType.APPLICATION_JSON)
+            .type(Utf8MediaType.APPLICATION_JSON_UTF8)
             .build();
     }
 

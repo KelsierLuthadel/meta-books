@@ -3,21 +3,21 @@ package net.kelsier.bookshelf.framework.errorhandling;
 
 import net.kelsier.bookshelf.framework.error.APIResponseError;
 import net.kelsier.bookshelf.framework.error.exception.ResponseException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
-public class ResponseExceptionTest {
+class ResponseExceptionTest {
     @Test
-    public void testException() {
+    void testException() {
         final ResponseException responseException = assertThrows(ResponseException.class,
             () -> throwException(null));
 
@@ -25,22 +25,22 @@ public class ResponseExceptionTest {
         assertEquals("Error", responseException.getMessage());
         assertEquals(2, (int) responseException.getErrorCode());
         assertEquals("help-url", responseException.getHelpUrl());
-        Assert.assertNotNull(responseException.getErrors());
+        assertNotNull(responseException.getErrors());
     }
 
     @Test
-    public void testExceptionWithNoErrorCode() {
+    void testExceptionWithNoErrorCode() {
         final ResponseException responseException = assertThrows(ResponseException.class,
             () -> throwExceptionWithNoErrorCode(null));
 
         assertEquals(responseException.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         assertEquals("Error", responseException.getMessage());
         assertEquals("help-url", responseException.getHelpUrl());
-        Assert.assertNotNull(responseException.getErrors());
+        assertNotNull(responseException.getErrors());
     }
 
     @Test
-    public void testExceptionWithNoErrorCodeAndResponseErrors() {
+    void testExceptionWithNoErrorCodeAndResponseErrors() {
         final ResponseException responseException = assertThrows(ResponseException.class,
             () -> throwExceptionWithNoErrorCode(new ArrayList<>(Arrays.asList(
                 new APIResponseError("First Error"),
@@ -52,7 +52,7 @@ public class ResponseExceptionTest {
         assertEquals(responseException.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         assertEquals("Error", responseException.getMessage());
         assertEquals("help-url", responseException.getHelpUrl());
-        Assert.assertNotNull(responseException.getErrors());
+        assertNotNull(responseException.getErrors());
 
         checkResponseError(responseException);
     }
@@ -68,7 +68,7 @@ public class ResponseExceptionTest {
     }
 
     @Test
-    public void testExceptionErrors() {
+    void testExceptionErrors() {
         final ResponseException responseException = assertThrows(ResponseException.class,
             () -> throwException(new ArrayList<>(Arrays.asList(
                 new APIResponseError("First Error"),
@@ -81,18 +81,18 @@ public class ResponseExceptionTest {
     }
 
     private void checkResponseError(final ResponseException responseException) {
-        Assert.assertNotNull(responseException.getErrors());
+        assertNotNull(responseException.getErrors());
         assertEquals(4, responseException.getErrors().size());
         assertEquals("First Error", responseException.getErrors().get(0).getDetail());
-        Assert.assertNull(responseException.getErrors().get(0).getCause());
-        Assert.assertNull(responseException.getErrors().get(0).getErrorCode());
+        assertNull(responseException.getErrors().get(0).getCause());
+        assertNull(responseException.getErrors().get(0).getErrorCode());
 
         assertEquals("Second Error", responseException.getErrors().get(1).getDetail());
         assertEquals("EOF missing", responseException.getErrors().get(1).getCause());
-        Assert.assertNull(responseException.getErrors().get(1).getErrorCode());
+        assertNull(responseException.getErrors().get(1).getErrorCode());
 
         assertEquals("Third Error", responseException.getErrors().get(2).getDetail());
-        Assert.assertNull(responseException.getErrors().get(2).getCause());
+        assertNull(responseException.getErrors().get(2).getCause());
         assertEquals(2, (int) responseException.getErrors().get(2).getErrorCode());
 
         assertEquals("Fourth Error", responseException.getErrors().get(3).getDetail());
@@ -101,7 +101,7 @@ public class ResponseExceptionTest {
     }
 
     @Test
-    public final void testDeepCopyOfResponseErrors() {
+    final void testDeepCopyOfResponseErrors() {
         final List<APIResponseError> errors = new ArrayList<>();
         errors.add(new APIResponseError("Hi"));
         final ResponseException exception = new ResponseException(1, null, null, errors);

@@ -2,7 +2,7 @@ package net.kelsier.bookshelf.framework.filter;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.servlet.FilterChain;
@@ -11,10 +11,10 @@ import javax.servlet.ServletResponse;
 
 import static org.mockito.Mockito.times;
 
-public class CacheControlFilterTest {
+class CacheControlFilterTest {
     @Test
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public void testDoFilter() throws Exception {
+    void testDoFilter() throws Exception {
         final Request request = Mockito.mock(Request.class);
         final Response response = Mockito.mock(Response.class);
         final ServletRequest servletRequest = request;

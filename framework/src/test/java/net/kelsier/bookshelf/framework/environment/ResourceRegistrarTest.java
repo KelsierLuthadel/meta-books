@@ -2,7 +2,7 @@ package net.kelsier.bookshelf.framework.environment;
 
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Environment;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -11,9 +11,9 @@ import javax.ws.rs.core.MediaType;
 
 import static org.mockito.Mockito.*;
 
-public class ResourceRegistrarTest {
+class ResourceRegistrarTest {
     @Test
-    public void testRegisterObject() {
+    void testRegisterObject() {
         final Environment environment = mock(Environment.class);
         final JerseyEnvironment jerseyEnv = mock(JerseyEnvironment.class);
 

@@ -446,12 +446,18 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
             return;
         }
 
-        environment.jersey().register(new AuthDynamicFeature(
+        // For now, only basic auth is supported
+        if ("basic".equalsIgnoreCase(configuration.getAuthType())) {
+            environment.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<UserAuth>()
-                        .setAuthenticator(new BasicAuthenticator(getUserDao(), cipherConfiguration))
-                        .setAuthorizer(new BasicAuthorizer(getUserDao(), getRoleDao()))
-                        .setRealm(configuration.getRealm())
-                        .buildAuthFilter()));
+                    .setAuthenticator(new BasicAuthenticator(getUserDao(), cipherConfiguration))
+                    .setAuthorizer(new BasicAuthorizer(getUserDao(), getRoleDao()))
+                    .setRealm(configuration.getRealm())
+                    .buildAuthFilter()));
+        } else {
+            LOGGER.warn("Auth type not specified, no authentication possible");
+        }
+
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserAuth.class));
     }
