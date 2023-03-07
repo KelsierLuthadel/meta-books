@@ -1,6 +1,6 @@
 # Bookshelf
 
-![Build](https://github.com/KelsierLuthadel/meta-books/workflows/Build/badge.svg) ![Tests](https://github.com/KelsierLuthadel/meta-books/blob/main/.github/badges/unit-tests.svg) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=KelsierLuthadel_meta-books&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=KelsierLuthadel_meta-books)
+![Build](https://github.com/KelsierLuthadel/meta-books/workflows/Build/badge.svg) ![Tests](https://github.com/KelsierLuthadel/meta-books/blob/main/.github/badges/unit-tests.svg) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=KelsierLuthadel_meta-books&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=KelsierLuthadel_meta-books) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=KelsierLuthadel_meta-books&metric=bugs)](https://sonarcloud.io/summary/new_code?id=KelsierLuthadel_meta-books)
 
 ## Encryption
 The recommended approach to storing sensitive bookData is by using encryption at rest. 
