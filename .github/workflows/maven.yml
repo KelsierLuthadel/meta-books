@@ -61,7 +61,7 @@ jobs:
       id: test-results
       if: always()
       with:
-        files: "**/Test*.xml"
+        files: "**/*Test.xml"
 
     - name: Set badge color
       shell: bash
