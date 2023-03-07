@@ -72,7 +72,7 @@ public final class Books {
             @ApiResponse(responseCode = "404", description = "No books found"),
         })
     public List<Book> books(@Parameter(name="search", required = true) @NotNull @Valid final Search<BookLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(BookDAO.class).get(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
@@ -80,13 +80,13 @@ public final class Books {
                     search.getPagination().getSort().getDirection()
             );
         } else {
-            switch(search.getLookup().getField()) {
+            switch(search.getQuery().getField()) {
                 case "title":
                 case "isbn":
                     return databaseConnection.onDemand(BookDAO.class).find(
-                            search.getLookup().getLookupValue(),
-                            search.getLookup().getField(),
-                            search.getLookup().getOperator().getLabel(),
+                            search.getQuery().getLookupValue(),
+                            search.getQuery().getField(),
+                            search.getQuery().getOperator().getLabel(),
                             search.getPagination().getLimit(),
                             search.getPagination().getStart(),
                             search.getPagination().getSort().getField(),
@@ -94,9 +94,9 @@ public final class Books {
                     );
                 case "has_cover":
                     return databaseConnection.onDemand(BookDAO.class).find(
-                            Boolean.parseBoolean(search.getLookup().getValue()),
-                            search.getLookup().getField(),
-                            search.getLookup().getOperator().getLabel(),
+                            Boolean.parseBoolean(search.getQuery().getValue()),
+                            search.getQuery().getField(),
+                            search.getQuery().getOperator().getLabel(),
                             search.getPagination().getLimit(),
                             search.getPagination().getStart(),
                             search.getPagination().getSort().getField(),

@@ -71,7 +71,7 @@ public class Ratings {
             @ApiResponse(responseCode = "404", description = "No ratings found"),
         })
     public List<Rating> ratings(@Parameter(name="data", required = true) @NotNull @Valid final Search<RatingLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(RatingDAO.class).find(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
@@ -80,9 +80,9 @@ public class Ratings {
             );
         } else {
             return databaseConnection.onDemand(RatingDAO.class).find(
-                    Integer.parseInt(search.getLookup().getValue()),
-                    search.getLookup().getField(),
-                    search.getLookup().getOperator().getLabel(),
+                    Integer.parseInt(search.getQuery().getValue()),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
                     search.getPagination().getSort().getField(),

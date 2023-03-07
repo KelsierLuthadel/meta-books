@@ -72,20 +72,20 @@ public class Data {
             @ApiResponse(responseCode = "404", description = "No data found"),
         })
     public List<BookData> authors(@Parameter(name="data", required = true) @NotNull @Valid final Search<DataLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(DataDAO.class).find(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
                     search.getPagination().getSort().getField(),
                     search.getPagination().getSort().getDirection());
         } else {
-            switch(search.getLookup().getField()) {
+            switch(search.getQuery().getField()) {
                 case "format":
                 case "name":
                     return databaseConnection.onDemand(DataDAO.class).find(
-                            search.getLookup().getLookupValue(),
-                            search.getLookup().getField(),
-                            search.getLookup().getOperator().getLabel(),
+                            search.getQuery().getLookupValue(),
+                            search.getQuery().getField(),
+                            search.getQuery().getOperator().getLabel(),
                             search.getPagination().getLimit(),
                             search.getPagination().getStart(),
                             search.getPagination().getSort().getField(),
@@ -93,9 +93,9 @@ public class Data {
                     );
                 case "uncompressed_size":
                     return databaseConnection.onDemand(DataDAO.class).find(
-                            Integer.parseInt(search.getLookup().getValue()),
-                            search.getLookup().getField(),
-                            search.getLookup().getOperator().getLabel(),
+                            Integer.parseInt(search.getQuery().getValue()),
+                            search.getQuery().getField(),
+                            search.getQuery().getOperator().getLabel(),
                             search.getPagination().getLimit(),
                             search.getPagination().getStart(),
                             search.getPagination().getSort().getField(),

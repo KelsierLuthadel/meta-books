@@ -61,7 +61,7 @@ public final class Authors {
      * Search for authors
      * Restricted to the following roles: admin:r, user:r
      *
-     * @param search: A {@link Search} object, consisting of an {@link AuthorLookup} query and  {@link Pagination}
+     * @param search A {@link Search} object, consisting of an {@link AuthorLookup} query and  {@link Pagination}
      * @return A paginated list of authors
      *
      * <pre>Example request:{@code
@@ -111,7 +111,7 @@ public final class Authors {
             @ApiResponse(responseCode = "404", description = "No authors found"),
         })
     public List<Author> authors(@Parameter(name="search", required = true) @NotNull @Valid final Search<AuthorLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(AuthorDAO.class).get(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
@@ -120,9 +120,9 @@ public final class Authors {
             );
         } else {
             return databaseConnection.onDemand(AuthorDAO.class).find(
-                    search.getLookup().getLookupValue(),
-                    search.getLookup().getField(),
-                    search.getLookup().getOperator().getLabel(),
+                    search.getQuery().getLookupValue(),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
                     search.getPagination().getSort().getField(),

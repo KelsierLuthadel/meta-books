@@ -71,7 +71,7 @@ public class BookSeries {
             @ApiResponse(responseCode = "404", description = "No series found"),
         })
     public List<Series> series(@Parameter(name="data", required = true) @NotNull @Valid final Search<SeriesLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(SeriesDAO.class).find(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
@@ -80,9 +80,9 @@ public class BookSeries {
             );
         } else {
             return databaseConnection.onDemand(SeriesDAO.class).find(
-                    search.getLookup().getLookupValue(),
-                    search.getLookup().getField(),
-                    search.getLookup().getOperator().getLabel(),
+                    search.getQuery().getLookupValue(),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
                     search.getPagination().getSort().getField(),

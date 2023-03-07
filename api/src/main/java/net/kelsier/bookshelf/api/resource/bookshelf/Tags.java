@@ -71,7 +71,7 @@ public class Tags {
             @ApiResponse(responseCode = "404", description = "No tags found"),
         })
     public List<Tag> tags(@Parameter(name="data", required = true) @NotNull @Valid final Search<TagLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(TagDAO.class).find(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
@@ -80,9 +80,9 @@ public class Tags {
             );
         } else {
             return databaseConnection.onDemand(TagDAO.class).find(
-                    search.getLookup().getLookupValue(),
-                    search.getLookup().getField(),
-                    search.getLookup().getOperator().getLabel(),
+                    search.getQuery().getLookupValue(),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
                     search.getPagination().getSort().getField(),

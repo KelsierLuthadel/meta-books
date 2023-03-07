@@ -71,7 +71,7 @@ public class Publishers {
             @ApiResponse(responseCode = "404", description = "No publishers found"),
         })
     public List<Publisher> authors(@Parameter(name="data", required = true) @NotNull @Valid final Search<PublisherLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(PublisherDAO.class).find(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
@@ -80,9 +80,9 @@ public class Publishers {
             );
         } else {
             return databaseConnection.onDemand(PublisherDAO.class).find(
-                    search.getLookup().getLookupValue(),
-                    search.getLookup().getField(),
-                    search.getLookup().getOperator().getLabel(),
+                    search.getQuery().getLookupValue(),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
                     search.getPagination().getSort().getField(),

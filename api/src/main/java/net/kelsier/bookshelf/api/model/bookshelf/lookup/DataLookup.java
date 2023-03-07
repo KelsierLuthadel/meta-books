@@ -10,34 +10,53 @@ import net.kelsier.bookshelf.api.model.common.Operator;
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 
-/*
-id  SERIAL PRIMARY KEY,
-    book INTEGER NOT NULL,
-    format TEXT NOT NULL ,
-    uncompressed_size INTEGER NOT NULL,
-    name TEXT NOT NULL,
+/**
+ * Model for database lookup in the data table.
+ *
  */
-
 public class DataLookup implements ColumnLookup {
+    /**
+     * Default column lookup that will be used in the OpenAPI example
+     */
+
+    /**
+     * Default search constraint that will be used in the OpenAPI example
+     */
     private static final String DEFAULT_FIELD = "name";
     private static final String DEFAULT_OPERATOR = "EQ";
 
+    /**
+     * Search query field mapped to a database column
+     */
     @NotNull
     @JsonProperty("field")
     @OneOf({"format", "name", "uncompressed_size"})
     @Schema(description = "Search query field", defaultValue = DEFAULT_FIELD)
     private final String field;
 
+    /**
+     * Allowed search operators
+     */
     @NotNull
     @JsonProperty("operator")
     @OneOf({"EQ", "NEQ", "GT", "LT", "GTE", "LTE", "LIKE", "UNLIKE"})
     @Schema(description = "Search operator", defaultValue = DEFAULT_OPERATOR)
     private final Operator operator;
 
+    /**
+     * Value used for a database query
+     */
     @NotNull
     @JsonProperty("value")
     private final String value;
 
+    /**
+     * Constructor used to perform a search query on a database table
+     *
+     * @param field Query column
+     * @param operator Query operator
+     * @param value Query value
+     */
     public DataLookup(@JsonProperty("field") final String field,
                       @JsonProperty("operator") final Operator operator,
                       @JsonProperty("value") final String value) {
@@ -46,21 +65,41 @@ public class DataLookup implements ColumnLookup {
         this.value = value;
     }
 
+    /**
+     * Query column
+     *
+     * @return String containing the column used in a query
+     */
     @Override
     public String getField() {
         return field;
     }
 
+    /**
+     * Query operator
+     *
+     * @return String containing the operator used in a query
+     */
     @Override
     public Operator getOperator() {
         return operator;
     }
 
+    /**
+     * Query value
+     *
+     * @return String containing the value used in a query
+     */
     @Override
     public String getValue() {
         return value;
     }
 
+    /**
+     * Database lookup value
+     *
+     * @return String containing the value used in a query. If the lookup requires a wildcard, this value will contain the wildcard
+     */
     public String getLookupValue() {
         if (Operator.LIKE == operator || Operator.UNLIKE == operator) {
             return getWildcardValue();
@@ -69,6 +108,11 @@ public class DataLookup implements ColumnLookup {
         return value;
     }
 
+    /**
+     * Apply wildcard to query
+     *
+     * @return String containing the initial query value with a wildcard
+     */
     @JsonIgnore
     private String getWildcardValue() {
         return MessageFormat.format("%{0}%", value);

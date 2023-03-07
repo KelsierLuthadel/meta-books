@@ -71,7 +71,7 @@ public class Comments {
             @ApiResponse(responseCode = "404", description = "No comments found"),
         })
     public List<Comment> comments(@Parameter(name="comment", required = true) @NotNull @Valid final Search<CommentLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(CommentDAO.class).find(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
@@ -80,9 +80,9 @@ public class Comments {
             );
         } else {
             return databaseConnection.onDemand(CommentDAO.class).find(
-                    search.getLookup().getLookupValue(),
-                    search.getLookup().getField(),
-                    search.getLookup().getOperator().getLabel(),
+                    search.getQuery().getLookupValue(),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
                     search.getPagination().getSort().getField(),

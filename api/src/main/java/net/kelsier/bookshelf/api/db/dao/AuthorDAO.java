@@ -124,7 +124,7 @@ public interface AuthorDAO {
 
     /**
      * Delete all authors from the database, this is used when re-creating the database contents.
-     * Use with cuation.
+     * Use with caution.
      */
     @SqlUpdate("DELETE FROM authors")
     void purge();
