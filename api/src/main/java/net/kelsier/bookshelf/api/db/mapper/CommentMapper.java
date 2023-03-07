@@ -23,7 +23,6 @@
 package net.kelsier.bookshelf.api.db.mapper;
 
 
-import net.kelsier.bookshelf.api.db.model.BookTagLink;
 import net.kelsier.bookshelf.api.db.model.Comment;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;

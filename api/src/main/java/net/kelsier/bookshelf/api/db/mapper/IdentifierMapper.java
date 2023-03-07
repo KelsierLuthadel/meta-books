@@ -23,7 +23,6 @@
 package net.kelsier.bookshelf.api.db.mapper;
 
 
-import net.kelsier.bookshelf.api.db.model.BookData;
 import net.kelsier.bookshelf.api.db.model.Identifier;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;

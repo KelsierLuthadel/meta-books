@@ -23,7 +23,6 @@
 package net.kelsier.bookshelf.api.db.mapper;
 
 
-import net.kelsier.bookshelf.api.db.model.Author;
 import net.kelsier.bookshelf.api.db.model.Book;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -33,7 +32,6 @@ import java.sql.SQLException;
 
 /**
  * Map a database query to a {@link Book class
- *
  * @author Kelsier Luthadel
  * @version 1.0.0
  */
@@ -41,7 +39,6 @@ public class BookMapper implements RowMapper<Book> {
 
     /**
      * Map a database query to a {@link Book class
-     *
      * @param resultSet results from a query
      * @param statementContext context
      * @return {@link Book} object representing the results of a query
