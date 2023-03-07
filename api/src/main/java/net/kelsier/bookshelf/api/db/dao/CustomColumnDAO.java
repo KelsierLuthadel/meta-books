@@ -39,8 +39,16 @@ CREATE TABLE custom_column_(
  */
 
 /**
- * DAO for users in a database
- *
+ * DAO to map a custom colummn object in the database to a Java object so that it can be returned RESTfully.
+ * <p>Custom colummns are stored in the following schema:</p>
+ * <style>table, th, td {border: 1px solid black;  border-collapse: collapse; padding: 5px 5px 5px 5px;} th {background-color:#DEDEDE}</style>
+ * <table>
+ *   <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+ *   <tbody>
+ *     <tr><td>id</td><td>PRIMARY KEY</td><td>Custom column ID</td></tr>
+ *     <tr><td>value</td><td>TEXT</td><td>Custom column value</td></tr>
+ *   </tbody>
+ * </table>
  * @author Kelsier Luthadel
  * @version 1.0.0
  */
@@ -48,23 +56,47 @@ CREATE TABLE custom_column_(
 public interface CustomColumnDAO {
 
     /**
+     * Get a single custom column from the database
      *
-     * @return
+     * @param table - custom column table
+     * @return - An object representing a custom column
      */
     @SqlQuery("select * from <table>")
     CustomColumn get(@Define("table") String table);
 
-    @SqlUpdate("create table if not exists <table> (id SERIAL PRIMARY KEY, value TEXT NOT NULL, UNIQUE(value))")
-    void create(@Define("table") String table);
-
-    @SqlUpdate("INSERT INTO <table> (value) " +
-            "values (:value)")
+    /**
+     * Add a new row into a custom column table
+     *
+     * @param table - custom column table
+     * @param customColumn - Data to add to the table
+     */
+    @SqlUpdate("INSERT INTO <table> (value) values (:value)")
     @GetGeneratedKeys
     void insert(@Define("table") String table, @BindBean CustomColumn customColumn);
 
+    /**
+     * Create a new custom column table
+     *
+     * @param table name of the table to create
+     */
+    @SqlUpdate("create table if not exists <table> (id SERIAL PRIMARY KEY, value TEXT NOT NULL, UNIQUE(value))")
+    void create(@Define("table") String table);
+
+    /**
+     * Delete all data from the custom column table, this is used when re-creating the database contents.
+     * Use with caution.
+     *
+     * @param table Name of the table to clear
+     */
     @SqlUpdate("DELETE FROM <table>")
     void purge(@Define("table") String table);
 
+    /**
+     * Drop the custom column table, this is used when re-creating the database contents.
+     * Use with caution.
+     *
+     * @param table Name of the table to drop
+     */
     @SqlUpdate("DROP TABLE <table>")
     void drop(@Define("table") String table);
 

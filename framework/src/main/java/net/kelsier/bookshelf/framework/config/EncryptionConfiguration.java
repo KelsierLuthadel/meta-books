@@ -30,7 +30,6 @@ import io.dropwizard.validation.OneOf;
 import net.kelsier.bookshelf.framework.encryption.Encrypted;
 import net.kelsier.bookshelf.framework.validator.IntegerOneOf;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -88,7 +87,6 @@ public final class EncryptionConfiguration {
      * Note: This is not implemented
      */
     @JsonSetter(value = "key", nulls = Nulls.SKIP)
-    @Nullable
     @Encrypted
     private final String key;
 

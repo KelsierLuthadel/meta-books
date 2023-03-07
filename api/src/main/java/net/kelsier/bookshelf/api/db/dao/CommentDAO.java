@@ -45,7 +45,6 @@ import java.util.List;
  *     <tr><td>book</td><td>INTEGER</td><td>Book ID linking to this comments</td></tr>
  *     <tr><td>text</td><td>TEXT</td><td>Comment text</td></tr>
  *     <tr><td>sort</td><td>TEXT</td><td>Used for sorting comments</td></tr>
- *     <tr><td>sort</td><td>TEXT</td><td>Used for sorting comments</td></tr>
  *   </tbody>
  * </table>
  *

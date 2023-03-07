@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +22,36 @@ class BookTest {
 
         final Set<ConstraintViolation<Object>> violations = validate(book);
         assertEquals(0, violations.size());
+    }
+
+    @Test
+    void testDatesGMT() throws ParseException {
+        final Timestamp date = new Timestamp(getTime("2023-03-26 23:59:59"));
+
+        final Book book = new Book(1, "title", "sort", date, date,
+            1.0, "","path", true,date);
+
+        assertEquals(date,book.getDateAdded());
+        assertEquals(date,book.getPublicationDate());
+        assertEquals(date,book.getLastModified());
+    }
+
+    @Test
+    void testDatesBST() throws ParseException {
+        final Timestamp date = new Timestamp(getTime("2023-10-28 23:59:59"));
+
+        final Book book = new Book(1, "title", "sort", date, date,
+            1.0, "","path", true,date);
+
+        assertEquals(date,book.getDateAdded());
+        assertEquals(date,book.getPublicationDate());
+        assertEquals(date,book.getLastModified());
+    }
+
+    private static long getTime(final String dateTime) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormat.parse(dateTime);
+        return date.getTime();
     }
 
     @Test
