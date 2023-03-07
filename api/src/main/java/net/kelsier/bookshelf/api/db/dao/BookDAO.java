@@ -61,8 +61,8 @@ public interface BookDAO {
     /**
      * Get a single book from the database
      *
-     * @param id - Book ID
-     * @return - An object representing a book
+     * @param id Book ID
+     * @return An object representing a book
      */
     @SqlQuery("SELECT * FROM books WHERE ID = :id")
     Book get(@Bind("id") int id);
@@ -70,11 +70,11 @@ public interface BookDAO {
     /**
      * Get all books from the database using pagination and sorting.
      *
-     * @param limit - Total number of books to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of books
+     * @param limit Total number of books to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of books
      */
     @SqlQuery("SELECT * FROM books ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Book> get(
@@ -100,14 +100,14 @@ public interface BookDAO {
      *     <li>NOT ILIKE</li>
      * </ul>
      *
-     * @param text - The text used for searching
-     * @param column - The column used for searching
-     * @param clause - The search clause
-     * @param limit - Total number of books to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of books
+     * @param text The text used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of books to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of books
      */
     @SqlQuery("SELECT * FROM books WHERE <column> <clause> :text  ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Book> find(
@@ -134,14 +134,14 @@ public interface BookDAO {
      *     <li>NOT ILIKE</li>
      * </ul>
      *
-     * @param value - The integer used for searching
-     * @param column - The column used for searching
-     * @param clause - The search clause
-     * @param limit - Total number of books to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of books
+     * @param value The integer used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of books to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of books
      */
     @SqlQuery("SELECT * FROM books WHERE <column> <clause> :value  ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Book> find(
@@ -155,7 +155,7 @@ public interface BookDAO {
 
     /**
      * Insert a new book into the database
-     * @param book - An object representing a book
+     * @param book An object representing a book
      */
     @SqlUpdate("INSERT INTO books (title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
             "values (:title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")

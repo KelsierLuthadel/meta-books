@@ -63,8 +63,8 @@ public class UserAdministration {
     /**
      * User Administration
      *
-     * @param userDAO - User object represented in the database
-     * @param roleDAO - Role objected represented in the database
+     * @param userDAO User object represented in the database
+     * @param roleDAO Role objected represented in the database
      */
     public UserAdministration(final UserDAO userDAO, final RoleDAO roleDAO, final EncryptionConfiguration cipherConfiguration) {
         this.userDAO = userDAO;
@@ -106,7 +106,7 @@ public class UserAdministration {
      * Get a user from the database
      * Restricted to the following role: admin:r
      *
-     * @param id - An id representing a user in the database
+     * @param id An id representing a user in the database
      * @return HTTP response containing user details
      */
     @RolesAllowed({"admin:r"})
@@ -140,7 +140,7 @@ public class UserAdministration {
      * Create a new user
      * Restricted to the following role: admin:c
      *
-     * @param user - Object containing user details to persist to database
+     * @param user Object containing user details to persist to database
      *
      * @return HTTP response
      */
@@ -180,8 +180,8 @@ public class UserAdministration {
      * Update user details
      * Restricted to the following role: admin:c
      *
-     * @param id   - An id representing a user in the database
-     * @param user - Object containing user details to persist to database
+     * @param id   An id representing a user in the database
+     * @param user Object containing user details to persist to database
      * @return HTTP response
      */
     @RolesAllowed({"admin:u"})
@@ -228,7 +228,7 @@ public class UserAdministration {
      * Delete a user
      * Restricted to the following role: admin:d
      *
-     * @param id - The user ID
+     * @param id The user ID
      * @return HTTP response
      */
     @RolesAllowed({"admin:d"})
@@ -264,7 +264,7 @@ public class UserAdministration {
     /**
      * Validate that roles exist
      *
-     * @param roles - A list of roles to validate
+     * @param roles A list of roles to validate
      */
     private void validateRoles(final List<Integer> roles) {
         roles.forEach((Integer roleId) -> {

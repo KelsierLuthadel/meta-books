@@ -43,7 +43,7 @@ public class Publishers {
     /**
      * Bookshelf REST resource
      *
-     * @param databaseConnection - Connection to the database where book data is stored
+     * @param databaseConnection Connection to the database where book data is stored
      */
     public Publishers(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
@@ -53,7 +53,7 @@ public class Publishers {
      *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return
+     * @return A paginated list of publishers
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})

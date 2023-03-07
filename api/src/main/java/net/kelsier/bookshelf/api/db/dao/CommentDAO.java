@@ -56,8 +56,8 @@ public interface CommentDAO {
     /**
      * Get a single comment from the database
      *
-     * @param id - Comment ID
-     * @return - An object representing a comment
+     * @param id Comment ID
+     * @return An object representing a comment
      */
     @SqlQuery("SELECT * FROM comments WHERE ID = :id")
     Comment get(@Bind("id") int id);
@@ -65,11 +65,11 @@ public interface CommentDAO {
     /**
      * Get all comments from the database using pagination and sorting.
      *
-     * @param limit - Total number of comments to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of comments
+     * @param limit Total number of comments to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of comments
      */
     @SqlQuery("SELECT * FROM comments ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Comment> find(
@@ -94,14 +94,14 @@ public interface CommentDAO {
      *     <li>NOT ILIKE</li>
      * </ul>
      *
-     * @param text - The text used for searching
-     * @param column - The column used for searching
-     * @param clause - The search clause
-     * @param limit - Total number of comments to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of comments
+     * @param text The text used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of comments to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of comments
      */
     @SqlQuery("SELECT * FROM comments WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Comment> find(
@@ -116,7 +116,7 @@ public interface CommentDAO {
 
     /**
      * Insert a new comment into the database
-     * @param comment - An object representing a comment
+     * @param comment An object representing a comment
      */
     @SqlUpdate("INSERT INTO comments (book, text) values (:book, :text)")
     @GetGeneratedKeys

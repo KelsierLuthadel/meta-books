@@ -96,13 +96,13 @@ public class User {
     /**
      * Constructor
      *
-     * @param username  - Unique username
-     * @param firstName - User's first name
-     * @param lastName  - User's last name
-     * @param email     - Users associated email address
-     * @param enabled   - Enabled flag
-     * @param password  - User's password
-     * @param roles     - List of associated security roles
+     * @param username  Unique username
+     * @param firstName User's first name
+     * @param lastName  User's last name
+     * @param email     Users associated email address
+     * @param enabled   Enabled flag
+     * @param password  User's password
+     * @param roles     List of associated security roles
      */
     public User(@JsonProperty("username") final String username,
                 @JsonProperty("firstName") final String firstName,

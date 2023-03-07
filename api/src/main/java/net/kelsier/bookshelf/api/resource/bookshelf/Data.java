@@ -44,7 +44,7 @@ public class Data {
     /**
      * Bookshelf REST resource
      *
-     * @param databaseConnection - Connection to the database where book data is stored
+     * @param databaseConnection Connection to the database where book data is stored
      */
     public Data(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
@@ -54,7 +54,7 @@ public class Data {
      *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return
+     * @return A paginated list of data
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -83,8 +83,7 @@ public class Data {
                 case "format":
                 case "name":
                     return databaseConnection.onDemand(DataDAO.class).find(
-                            search.getQuery().getLookupValue(),
-                            search.getQuery().getField(),
+                            search.getQuery().getLookupValue(),search.getQuery().getField(),
                             search.getQuery().getOperator().getLabel(),
                             search.getPagination().getLimit(),
                             search.getPagination().getStart(),

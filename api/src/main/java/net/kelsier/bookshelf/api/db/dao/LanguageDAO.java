@@ -54,8 +54,8 @@ public interface LanguageDAO {
     /**
      * Get a single language from the database
      *
-     * @param id - Language ID
-     * @return - An object representing a language
+     * @param id Language ID
+     * @return An object representing a language
      */
     @SqlQuery("SELECT * FROM languages WHERE ID = :id")
     Language get(@Bind("id") int id);
@@ -65,11 +65,11 @@ public interface LanguageDAO {
     /**
      * Get all languages from the database using pagination and sorting.
      *
-     * @param limit - Total number of languages to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of languages
+     * @param limit Total number of languages to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of languages
      */
     @SqlQuery("SELECT * FROM languages ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Language> find
@@ -94,14 +94,14 @@ public interface LanguageDAO {
      *     <li>NOT ILIKE</li>
      * </ul>
      *
-     * @param text - The text used for searching
-     * @param column - The column used for searching
-     * @param clause - The search clause
-     * @param limit - Total number of languages to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of languages
+     * @param text The text used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of languages to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of languages
      */
     @SqlQuery("SELECT * FROM languages WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Language> find(
@@ -116,7 +116,7 @@ public interface LanguageDAO {
 
     /**
      * Insert a new language into the database
-     * @param language - An object representing a language
+     * @param language An object representing a language
      */
     @SqlUpdate("INSERT INTO languages (lang_code) values (:languageCode)")
     @GetGeneratedKeys

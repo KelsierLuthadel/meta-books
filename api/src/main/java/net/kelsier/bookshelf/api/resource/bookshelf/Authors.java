@@ -51,7 +51,7 @@ public final class Authors {
     /**
      * Constructor
      *
-     * @param databaseConnection - Connection to the database where book data is stored
+     * @param databaseConnection Connection to the database where book data is stored
      */
     public Authors(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
@@ -133,8 +133,8 @@ public final class Authors {
 
     /**
      * Get Author details
-     * @param authorId - Author ID
-     * @return - An object containing author details
+     * @param authorId Author ID
+     * @return An object containing author details
      * 
      * <pre>Example response:{@code
      * {

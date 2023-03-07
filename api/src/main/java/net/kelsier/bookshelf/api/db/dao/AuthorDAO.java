@@ -56,8 +56,8 @@ public interface AuthorDAO {
     /**
      * Get a single author from the database
      *
-     * @param id - Author ID
-     * @return - An object representing an author
+     * @param id Author ID
+     * @return An object representing an author
      */
     @SqlQuery("SELECT * FROM authors WHERE ID = :id")
     Author get(@Bind("id") int id);
@@ -65,11 +65,11 @@ public interface AuthorDAO {
     /**
      * Get all authors from the database using pagination and sorting.
      *
-     * @param limit - Total number of authors to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of authors
+     * @param limit Total number of authors to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of authors
      */
     @SqlQuery("SELECT * FROM authors ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Author> get(
@@ -94,14 +94,14 @@ public interface AuthorDAO {
      *     <li>NOT ILIKE</li>
      * </ul>
      *
-     * @param text - The text used for searching
-     * @param column - The column used for searching
-     * @param clause - The search clause
-     * @param limit - Total number of authors to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of authors
+     * @param text The text used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of authors to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of authors
      */
     @SqlQuery("SELECT * FROM authors WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Author> find(
@@ -115,7 +115,7 @@ public interface AuthorDAO {
 
     /**
      * Insert a new author into the database
-     * @param author - An object representing an author
+     * @param author An object representing an author
      */
     @SqlUpdate("INSERT INTO authors (name, sort) " +
         "values (:name, :sort)")

@@ -92,10 +92,10 @@ public final class EncryptionConfiguration {
 
 
     /**
-     * @param algorithm - Algorithm used for encryption
-     * @param saltSize - Salt size used for encryption
-     * @param iterations - Number of iterations used for encryption
-     * @param key - Key used for encryption
+     * @param algorithm Algorithm used for encryption
+     * @param saltSize Salt size used for encryption
+     * @param iterations Number of iterations used for encryption
+     * @param key Key used for encryption
 
      */
     @JsonCreator
@@ -111,7 +111,7 @@ public final class EncryptionConfiguration {
 
     /**
      * Algorithm used for encryption.
-     * @return - String representing the algorithm, this will be one of: SHA-256, SHA-384, SHA-512
+     * @return String representing the algorithm, this will be one of: SHA-256, SHA-384, SHA-512
      */
     public String getAlgorithm() {
         return algorithm;
@@ -119,7 +119,7 @@ public final class EncryptionConfiguration {
 
     /**
      * Salt size used for encryption
-     * @return - int representing the salt size, this will be one of: 16, 32
+     * @return int representing the salt size, this will be one of: 16, 32
      */
     public int getSaltSize() {
         return saltSize;
@@ -127,7 +127,7 @@ public final class EncryptionConfiguration {
 
     /**
      * Number of iterations used for encryption
-     * @return - int representing the number of iterations
+     * @return int representing the number of iterations
      */
     public int getIterations() {
         return iterations;

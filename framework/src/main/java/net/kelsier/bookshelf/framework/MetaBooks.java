@@ -398,8 +398,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     /**
      * Set up DoS filter.
      *
-     * @param environment - the application environment
-     * @param configLoader - mechanism for loading configuration
+     * @param environment the application environment
+     * @param configLoader mechanism for loading configuration
      * @throws ConfigurationException thrown if DoS configuration cannot be loaded.
      */
     private static void setUpDosFilter(final Environment environment, final ConfigLoader configLoader) throws ConfigurationException {
@@ -427,8 +427,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     /**
      * Set up CORS filter.
      *
-     * @param configuration - service application configuration
-     * @param environment - the application environment
+     * @param configuration service application configuration
+     * @param environment the application environment
      */
     private static void setUpCorsFilter(final MetaBooksConfiguration configuration, final Environment environment) {
         final FilterRegistration.Dynamic cors = environment.servlets()

@@ -54,8 +54,8 @@ public final class AuthConfiguration {
 
 
     /**
-     * @param authType - The auth type (only basic is supported)
-     * @param realm - The realm
+     * @param authType The auth type (only basic is supported)
+     * @param realm The realm
 
      */
     @JsonCreator

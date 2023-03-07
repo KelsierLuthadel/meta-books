@@ -57,8 +57,8 @@ public interface DataDAO {
     /**
      * Get a single data object from the database
      *
-     * @param id - Data ID
-     * @return - An object representing data
+     * @param id Data ID
+     * @return An object representing data
      */
     @SqlQuery("SELECT * FROM data WHERE ID = :id")
     BookData get(@Bind("id") int id);
@@ -66,11 +66,11 @@ public interface DataDAO {
     /**
      * Get all data objects from the database using pagination and sorting.
      *
-     * @param limit - Total number of data objects to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of data objects
+     * @param limit Total number of data objects to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of data objects
      */
     @SqlQuery("SELECT * FROM data ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<BookData> find(
@@ -95,14 +95,14 @@ public interface DataDAO {
      *     <li>NOT ILIKE</li>
      * </ul>
      *
-     * @param text - The text used for searching
-     * @param column - The column used for searching
-     * @param clause - The search clause
-     * @param limit - Total number of data objects to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of data objects
+     * @param text The text used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of data objects to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of data objects
      */
     @SqlQuery("SELECT * FROM data WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<BookData> find(
@@ -131,14 +131,14 @@ public interface DataDAO {
      *     <li>NOT ILIKE</li>
      * </ul>
      *
-     * @param value - The integer value used for searching
-     * @param column - The column used for searching
-     * @param clause - The search clause
-     * @param limit - Total number of data objects to return
-     * @param offset - Starting position
-     * @param order - Tolumn used for ordering
-     * @param direction - sort direction applies
-     * @return - A list of data objects
+     * @param value The integer value used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of data objects to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of data objects
      */
     @SqlQuery("SELECT * FROM data WHERE <column> <clause> :value ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<BookData> find(
@@ -153,7 +153,7 @@ public interface DataDAO {
 
     /**
      * Insert a new data objects into the database
-     * @param bookData - An object representing a data objects
+     * @param bookData An object representing a data objects
      */
     @SqlUpdate("INSERT INTO data (book, format, uncompressed_size, name) values (:book, :format, :uncompressedSize, :name)")
     @GetGeneratedKeys

@@ -66,9 +66,9 @@ public class RoleModel {
     /**
      * Constructor
      *
-     * @param id - User id associated with the user in the Users table
-     * @param role - Unique role
-     * @param description - role description
+     * @param id User id associated with the user in the Users table
+     * @param role Unique role
+     * @param description role description
      */
     public RoleModel(@JsonProperty("id") final int id,
                      @JsonProperty("role") final String role,

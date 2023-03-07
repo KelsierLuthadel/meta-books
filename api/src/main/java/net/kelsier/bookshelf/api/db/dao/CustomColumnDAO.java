@@ -58,8 +58,8 @@ public interface CustomColumnDAO {
     /**
      * Get a single custom column from the database
      *
-     * @param table - custom column table
-     * @return - An object representing a custom column
+     * @param table custom column table
+     * @return An object representing a custom column
      */
     @SqlQuery("select * from <table>")
     CustomColumn get(@Define("table") String table);
@@ -67,8 +67,8 @@ public interface CustomColumnDAO {
     /**
      * Add a new row into a custom column table
      *
-     * @param table - custom column table
-     * @param customColumn - Data to add to the table
+     * @param table custom column table
+     * @param customColumn Data to add to the table
      */
     @SqlUpdate("INSERT INTO <table> (value) values (:value)")
     @GetGeneratedKeys
