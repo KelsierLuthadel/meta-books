@@ -40,7 +40,6 @@ import org.jdbi.v3.core.Jdbi;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -103,29 +102,27 @@ public final class Books {
                     search.getPagination().getSort().getDirection()
             );
         } else {
-            switch(search.getQuery().getField()) {
-                case "title":
-                case "isbn":
-                    return databaseConnection.onDemand(BookDAO.class).find(
-                            search.getQuery().getLookupValue(),
-                            search.getQuery().getField(),
-                            search.getQuery().getOperator().getLabel(),
-                            search.getPagination().getLimit(),
-                            search.getPagination().getStart(),
-                            search.getPagination().getSort().getField(),
-                            search.getPagination().getSort().getDirection()
-                    );
-                case "has_cover":
-                default:
-                    return databaseConnection.onDemand(BookDAO.class).find(
-                            Boolean.parseBoolean(search.getQuery().getValue()),
-                            search.getQuery().getField(),
-                            search.getQuery().getOperator().getLabel(),
-                            search.getPagination().getLimit(),
-                            search.getPagination().getStart(),
-                            search.getPagination().getSort().getField(),
-                            search.getPagination().getSort().getDirection()
-                    );
+            if ("has_cover".equalsIgnoreCase(search.getQuery().getField())) {
+                return databaseConnection.onDemand(BookDAO.class).find(
+                    Boolean.parseBoolean(search.getQuery().getValue()),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
+                    search.getPagination().getLimit(),
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+                );
+            } else {
+                // title, isbn
+                return databaseConnection.onDemand(BookDAO.class).find(
+                    search.getQuery().getLookupValue(),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
+                    search.getPagination().getLimit(),
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+                );
             }
         }
     }
