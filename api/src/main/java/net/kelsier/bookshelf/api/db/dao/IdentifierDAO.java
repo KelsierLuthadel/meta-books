@@ -55,7 +55,7 @@ public interface IdentifierDAO {
     @SqlUpdate("INSERT INTO identifiers (book, type, val) " +
             "values (:book, :type, :val)")
     @GetGeneratedKeys
-    void insert(@BindBean Identifier author);
+    long insert(@BindBean Identifier author);
 
     @SqlUpdate("DELETE FROM identifiers")
     void purge();

@@ -64,7 +64,7 @@ public interface CustomColumnsDAO {
     @SqlUpdate("INSERT INTO custom_columns (label, name, datatype, display, is_multiple, normalized) " +
             "values (:label, :name, :dataType, :display, :multiple, :normalized)")
     @GetGeneratedKeys
-    void insert(@BindBean CustomColumns bookTagLink);
+    long insert(@BindBean CustomColumns bookTagLink);
 
     @SqlUpdate("DELETE FROM custom_columns")
     void purge();

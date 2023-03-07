@@ -100,6 +100,7 @@ public class CommentLookup implements ColumnLookup {
      *
      * @return String containing the value used in a query. If the lookup requires a wildcard, this value will contain the wildcard
      */
+    @JsonIgnore
     public String getLookupValue() {
         if (Operator.LIKE == operator || Operator.UNLIKE == operator) {
             return getWildcardValue();

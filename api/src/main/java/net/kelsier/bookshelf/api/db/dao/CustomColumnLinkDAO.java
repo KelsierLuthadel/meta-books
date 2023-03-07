@@ -67,7 +67,7 @@ public interface CustomColumnLinkDAO {
     @SqlUpdate("INSERT INTO <table> (book, value) " +
             "values (:book, :value)")
     @GetGeneratedKeys
-    void insert(@Define("table") String table, @BindBean CustomColumnLink customColumn);
+    long insert(@Define("table") String table, @BindBean CustomColumnLink customColumn);
 
     @SqlUpdate("DELETE FROM <table>")
     void purge(@Define("table") String table);

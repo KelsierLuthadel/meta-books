@@ -45,14 +45,7 @@ import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.JasyptCipher;
 import net.kelsier.bookshelf.framework.environment.ResourceRegistrar;
-import net.kelsier.bookshelf.framework.error.exception.JsonProcessingExceptionMapper;
-import net.kelsier.bookshelf.framework.error.exception.ResponseErrorExceptionMapper;
-import net.kelsier.bookshelf.framework.error.exception.RuntimeExceptionMapper;
-import net.kelsier.bookshelf.framework.error.exception.StartupException;
-import net.kelsier.bookshelf.framework.error.exception.TechnicalExceptionMapper;
-import net.kelsier.bookshelf.framework.error.exception.ValidationExceptionMapper;
-import net.kelsier.bookshelf.framework.error.exception.WebApplicationExceptionMapper;
-import net.kelsier.bookshelf.framework.error.exception.WebApplicationSilentExceptionMapper;
+import net.kelsier.bookshelf.framework.error.exception.*;
 import net.kelsier.bookshelf.framework.filter.CacheControlFilter;
 import net.kelsier.bookshelf.framework.filter.CsrfFilter;
 import net.kelsier.bookshelf.framework.health.DatabaseHealth;
@@ -296,6 +289,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         resourceRegistrar.registerResource(new TechnicalExceptionMapper());
         resourceRegistrar.registerResource(new RuntimeExceptionMapper());
         resourceRegistrar.registerResource(new ResponseErrorExceptionMapper());
+        resourceRegistrar.registerResource(new DatabaseExceptionMapper());
         resourceRegistrar.registerResource(new JsonProcessingExceptionMapper());
     }
 

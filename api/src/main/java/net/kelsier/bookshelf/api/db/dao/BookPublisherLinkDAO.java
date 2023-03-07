@@ -53,7 +53,7 @@ public interface BookPublisherLinkDAO {
 
     @SqlUpdate("INSERT INTO books_publishers_link (book, publisher) values (:book, :publisher)")
     @GetGeneratedKeys
-    void insert(@BindBean BookPublisherLink bookPublisherLink);
+    long insert(@BindBean BookPublisherLink bookPublisherLink);
 
     @SqlUpdate("DELETE FROM books_publishers_link")
     void purge();

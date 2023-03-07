@@ -55,6 +55,6 @@ exposedHeaders: "Content-Disposition"
 # Path to service configuration files. Each of these are mapped to a corresponding POJO
 configPath: ./config
 
-databaseEnabled: false
+databaseEnabled: true
 
 cipherPass: xyzzy

@@ -58,7 +58,7 @@ public interface PublisherDAO {
     @SqlUpdate("INSERT INTO publishers (name, sort) " +
             "values (:name, :sort)")
     @GetGeneratedKeys
-    void insert(@BindBean Publisher publisher);
+    long insert(@BindBean Publisher publisher);
 
     @SqlQuery("SELECT * FROM publishers ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Publisher> find(

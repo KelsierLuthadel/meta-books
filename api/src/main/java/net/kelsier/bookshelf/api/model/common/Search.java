@@ -35,7 +35,7 @@ public final class Search<T> {
      * @param query Search query
      * @param pagination Query pagination and sort criteria
      */
-    public Search(@JsonProperty("lookup") final T query,
+    public Search(@JsonProperty("query") final T query,
                   @JsonProperty("pagination") final Pagination pagination) {
         this.query = query;
         this.pagination = pagination;

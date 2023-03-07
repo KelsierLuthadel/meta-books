@@ -160,7 +160,7 @@ public interface BookDAO {
     @SqlUpdate("INSERT INTO books (title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
             "values (:title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")
     @GetGeneratedKeys
-    void insert(@BindBean Book book);
+    long insert(@BindBean Book book);
 
     @SqlUpdate("DELETE FROM books")
     void purge();

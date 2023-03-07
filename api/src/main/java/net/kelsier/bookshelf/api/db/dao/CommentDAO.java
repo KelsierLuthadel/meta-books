@@ -120,7 +120,7 @@ public interface CommentDAO {
      */
     @SqlUpdate("INSERT INTO comments (book, text) values (:book, :text)")
     @GetGeneratedKeys
-    void insert(@BindBean Comment comment);
+    long insert(@BindBean Comment comment);
 
     /**
      * Delete all comments from the database, this is used when re-creating the database contents.

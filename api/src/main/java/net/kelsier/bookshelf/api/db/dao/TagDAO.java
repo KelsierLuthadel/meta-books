@@ -57,7 +57,7 @@ public interface TagDAO {
     @SqlUpdate("INSERT INTO tags (name) " +
             "values (:name)")
     @GetGeneratedKeys
-    void insert(@BindBean Tag tag);
+    long insert(@BindBean Tag tag);
 
     @SqlQuery("SELECT * FROM tags ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Tag> find(
