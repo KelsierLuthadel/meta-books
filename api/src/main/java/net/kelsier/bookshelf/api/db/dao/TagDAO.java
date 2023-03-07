@@ -34,19 +34,20 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
 
-/*
- * CREATE TABLE tags (
- *     id SERIAL PRIMARY KEY,
- *     name TEXT NOT NULL ,
- *     UNIQUE (name)
- * )
- */
-
 /**
- *
+ * DAO to map a tag object in the database to a Java object so that it can be returned RESTfully.
+ * <p>Tags are stored in the following schema:</p>
+ * <style>table, th, td {border: 1px solid black;  border-collapse: collapse; padding: 5px 5px 5px 5px;} th {background-color:#DEDEDE}</style>
+ * <table>
+ *   <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+ *   <tbody>
+ *     <tr><td>id</td><td>PRIMARY KEY</td><td>Tag ID</td></tr>
+ *     <tr><td>name</td><td>TEXT</td><td>Tag name</td></tr>
+ *   </tbody>
+ * </table>
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(TagMapper.class)
 public interface TagDAO {

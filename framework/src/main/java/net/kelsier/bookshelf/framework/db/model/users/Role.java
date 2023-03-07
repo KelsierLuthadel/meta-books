@@ -59,8 +59,8 @@ public class Role {
     /**
      * Constructor
      *
-     * @param roleName - Unique role
-     * @param description - role description
+     * @param roleName Unique role
+     * @param description role description
      */
     public Role(@JsonProperty("role") final String roleName,
                 @JsonProperty("description") final String description) {

@@ -38,7 +38,7 @@ import java.io.IOException;
  * This class defines a jackson module which, when registered to an object mapper, adds support for the encryption annotation
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class EncryptedModule extends SimpleModule {
     private static final Logger LOGGER = LoggerFactory.getLogger(EncryptedModule.class);
@@ -58,7 +58,7 @@ public final class EncryptedModule extends SimpleModule {
      * Takes a SetupContext (interface for extending ObjectMapper functionality) and adds the {@link EncryptedAnnotationIntrospector}
      * so the ObjectMapper gains the ability to decrypt encrypted fields
      *
-     * @param context - Instance of SetupContext Jackson interface
+     * @param context Instance of SetupContext Jackson interface
      */
     @Override
     public void setupModule(final SetupContext context) {
@@ -92,8 +92,8 @@ public final class EncryptedModule extends SimpleModule {
          * attempts to deserialize it. If the type of the field is not a String then it should not have the encrypted
          * annotation and hence an error is thrown.
          *
-         * @param p       - An interface for reading content
-         * @param context - Context for the process of deserialization, contains settings and other high level components
+         * @param p       An interface for reading content
+         * @param context Context for the process of deserialization, contains settings and other high level components
          * @return The deserialized, decrypted value for the configuration
          * @throws IOException Thrown if the expected type was not a string or if an error occurred whilst decrypting
          */

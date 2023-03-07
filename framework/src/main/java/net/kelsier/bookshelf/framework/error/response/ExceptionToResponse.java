@@ -39,7 +39,7 @@ import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
  * Map exception messages to a Response message to be sent back with a response
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class ExceptionToResponse {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionToResponse.class);
@@ -102,7 +102,7 @@ public final class ExceptionToResponse {
         return Response
             .status(status)
             .entity(responseErrorFormat)
-            .type(Utf8MediaType.APPLICATION_JSON)
+            .type(Utf8MediaType.APPLICATION_JSON_UTF8)
             .build();
     }
 

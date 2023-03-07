@@ -45,7 +45,7 @@ CREATE TABLE books_custom_column_26_link(
  * DAO for users in a database
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(CustomColumnLinkMapper.class)
 public interface CustomColumnLinkDAO {

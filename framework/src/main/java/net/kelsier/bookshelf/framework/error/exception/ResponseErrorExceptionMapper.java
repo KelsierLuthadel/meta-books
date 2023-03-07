@@ -34,7 +34,7 @@ import java.util.UUID;
  * Map response errors to Response objects
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @Provider
 public class ResponseErrorExceptionMapper implements ExceptionMapper<ResponseException> {

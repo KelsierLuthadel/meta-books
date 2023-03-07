@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * Indicates an error with the response
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @JsonIgnoreProperties({ "cause", "stackTrace", "errorCode", "suppressed", "localizedMessage"})
 @XmlRootElement(name = "responseErrorException")
@@ -78,10 +78,10 @@ public final class ResponseException extends Exception {
     /**
      * Constructor
      * 
-     * @param status  - HTTP response code
-     * @param message - The reason for the error
-     * @param helpUrl - A url which can provide additional support or information
-     * @param errors  - A list of errors that resulted from an action. This optional array provides more information than the message
+     * @param status  HTTP response code
+     * @param message The reason for the error
+     * @param helpUrl A url which can provide additional support or information
+     * @param errors  A list of errors that resulted from an action. This optional array provides more information than the message
      */
     @JsonCreator
     public ResponseException(@JsonProperty("status") final int status,
@@ -94,8 +94,8 @@ public final class ResponseException extends Exception {
     /**
      * Constructor
      *
-     * @param status  - HTTP response code
-     * @param message - The reason for the error
+     * @param status  HTTP response code
+     * @param message The reason for the error
      */
     @JsonCreator
     public ResponseException(@JsonProperty("status") final int status,
@@ -106,11 +106,11 @@ public final class ResponseException extends Exception {
     /**
      * Constructor
      *
-     * @param status    - HTTP response code
-     * @param message   - The reason for the error
-     * @param errorCode - An optional error code
-     * @param helpUrl   - A url which can provide additional support or information
-     * @param errors    - A list of errors that resulted from an action. This optional array provides more information than the message
+     * @param status    HTTP response code
+     * @param message   The reason for the error
+     * @param errorCode An optional error code
+     * @param helpUrl   A url which can provide additional support or information
+     * @param errors    A list of errors that resulted from an action. This optional array provides more information than the message
      */
     @JsonCreator
     public ResponseException(@JsonProperty("status") final int status,
@@ -133,8 +133,8 @@ public final class ResponseException extends Exception {
     /**
      * Creates a deep copy of a list of ResponseErrors.
      * 
-     * @param errors - The list of errors to copy
-     * @return - A deep copy of the passed list of ResponseErrors
+     * @param errors The list of errors to copy
+     * @return A deep copy of the passed list of ResponseErrors
      */
     private static List<APIResponseError> copyErrors(final List<APIResponseError> errors) {
         return errors.stream().map(APIResponseError::new).collect(Collectors.toList());

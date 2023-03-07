@@ -1,3 +1,26 @@
+
+/*
+ * Copyright (c) 2023. Kelsier Luthadel
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -17,7 +40,6 @@ import org.jdbi.v3.core.Jdbi;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -44,7 +66,7 @@ public final class Books {
     /**
      * Bookshelf REST resource
      *
-     * @param databaseConnection - Connection to the database where book data is stored
+     * @param databaseConnection Connection to the database where book data is stored
      */
     public Books(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
@@ -72,7 +94,7 @@ public final class Books {
             @ApiResponse(responseCode = "404", description = "No books found"),
         })
     public List<Book> books(@Parameter(name="search", required = true) @NotNull @Valid final Search<BookLookup> search)  {
-        if (null == search.getLookup()) {
+        if (null == search.getQuery()) {
             return databaseConnection.onDemand(BookDAO.class).get(
                     search.getPagination().getLimit(),
                     search.getPagination().getStart(),
@@ -80,32 +102,28 @@ public final class Books {
                     search.getPagination().getSort().getDirection()
             );
         } else {
-            switch(search.getLookup().getField()) {
-                case "title":
-                case "isbn":
-                    return databaseConnection.onDemand(BookDAO.class).find(
-                            search.getLookup().getLookupValue(),
-                            search.getLookup().getField(),
-                            search.getLookup().getOperator().getLabel(),
-                            search.getPagination().getLimit(),
-                            search.getPagination().getStart(),
-                            search.getPagination().getSort().getField(),
-                            search.getPagination().getSort().getDirection()
-                    );
-                case "has_cover":
-                    return databaseConnection.onDemand(BookDAO.class).find(
-                            Boolean.parseBoolean(search.getLookup().getValue()),
-                            search.getLookup().getField(),
-                            search.getLookup().getOperator().getLabel(),
-                            search.getPagination().getLimit(),
-                            search.getPagination().getStart(),
-                            search.getPagination().getSort().getField(),
-                            search.getPagination().getSort().getDirection()
-                    );
+            if ("has_cover".equalsIgnoreCase(search.getQuery().getField())) {
+                return databaseConnection.onDemand(BookDAO.class).find(
+                    Boolean.parseBoolean(search.getQuery().getValue()),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
+                    search.getPagination().getLimit(),
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+                );
+            } else {
+                // title, isbn
+                return databaseConnection.onDemand(BookDAO.class).find(
+                    search.getQuery().getLookupValue(),
+                    search.getQuery().getField(),
+                    search.getQuery().getOperator().getLabel(),
+                    search.getPagination().getLimit(),
+                    search.getPagination().getStart(),
+                    search.getPagination().getSort().getField(),
+                    search.getPagination().getSort().getDirection()
+                );
             }
-
-            throw new BadRequestException();
-
         }
     }
 

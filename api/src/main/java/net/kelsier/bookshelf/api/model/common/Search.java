@@ -7,29 +7,54 @@ import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-
+/**
+ * Search parameters containing a query and pagination
+ *
+ * @param <T>
+ */
 @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 public final class Search<T> {
-    @Valid
-    private final T lookup;
 
+    /**
+     * Search query
+     */
+    @Valid
+    private final T query;
+
+    /**
+     * Query pagination and sort criteria
+     */
     @Valid
     @NotNull
     @JsonProperty("pagination")
     private final Pagination pagination;
 
-
-    public Search(@JsonProperty("lookup") final T lookup,
+    /**
+     * Constructor used for supplying a database query
+     *
+     * @param query Search query
+     * @param pagination Query pagination and sort criteria
+     */
+    public Search(@JsonProperty("lookup") final T query,
                   @JsonProperty("pagination") final Pagination pagination) {
-        this.lookup = lookup;
+        this.query = query;
         this.pagination = pagination;
     }
 
-
-    public T getLookup() {
-        return lookup;
+    /**
+     * Search query
+     *
+     * @return Object representing the search query
+     */
+    public T getQuery() {
+        return query;
     }
 
+    /**
+     * Query pagination
+     *
+     * @return Pagination and sort information
+     */
     public Pagination getPagination() {
         return pagination;
     }

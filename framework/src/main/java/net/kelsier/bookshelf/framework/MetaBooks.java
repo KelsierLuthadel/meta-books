@@ -398,8 +398,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     /**
      * Set up DoS filter.
      *
-     * @param environment - the application environment
-     * @param configLoader - mechanism for loading configuration
+     * @param environment the application environment
+     * @param configLoader mechanism for loading configuration
      * @throws ConfigurationException thrown if DoS configuration cannot be loaded.
      */
     private static void setUpDosFilter(final Environment environment, final ConfigLoader configLoader) throws ConfigurationException {
@@ -427,8 +427,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     /**
      * Set up CORS filter.
      *
-     * @param configuration - service application configuration
-     * @param environment - the application environment
+     * @param configuration service application configuration
+     * @param environment the application environment
      */
     private static void setUpCorsFilter(final MetaBooksConfiguration configuration, final Environment environment) {
         final FilterRegistration.Dynamic cors = environment.servlets()
@@ -446,12 +446,18 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
             return;
         }
 
-        environment.jersey().register(new AuthDynamicFeature(
+        // For now, only basic auth is supported
+        if ("basic".equalsIgnoreCase(configuration.getAuthType())) {
+            environment.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<UserAuth>()
-                        .setAuthenticator(new BasicAuthenticator(getUserDao(), cipherConfiguration))
-                        .setAuthorizer(new BasicAuthorizer(getUserDao(), getRoleDao()))
-                        .setRealm(configuration.getRealm())
-                        .buildAuthFilter()));
+                    .setAuthenticator(new BasicAuthenticator(getUserDao(), cipherConfiguration))
+                    .setAuthorizer(new BasicAuthorizer(getUserDao(), getRoleDao()))
+                    .setRealm(configuration.getRealm())
+                    .buildAuthFilter()));
+        } else {
+            LOGGER.warn("Auth type not specified, no authentication possible");
+        }
+
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserAuth.class));
     }

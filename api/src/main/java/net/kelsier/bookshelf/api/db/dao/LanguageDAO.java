@@ -34,30 +34,43 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
 
-/*
- * CREATE TABLE languages (
- *     id SERIAL PRIMARY KEY,
- *     lang_code TEXT NOT NULL ,
- *     UNIQUE(lang_code)
- * )
- */
-
 /**
- *
+ * DAO to map a language object in the database to a Java object so that it can be returned RESTfully.
+ * <p>Languages are stored in the following schema:</p>
+ * <style>table, th, td {border: 1px solid black;  border-collapse: collapse; padding: 5px 5px 5px 5px;} th {background-color:#DEDEDE}</style>
+ * <table>
+ *   <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+ *   <tbody>
+ *     <tr><td>id</td><td>PRIMARY KEY</td><td>Language ID</td></tr>
+ *     <tr><td>lang_code</td><td>TEXT</td><td>Language code</td></tr>
+ *   </tbody>
+ * </table>
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(LanguageMapper.class)
 public interface LanguageDAO {
+    /**
+     * Get a single language from the database
+     *
+     * @param id Language ID
+     * @return An object representing a language
+     */
     @SqlQuery("SELECT * FROM languages WHERE ID = :id")
     Language get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO languages (lang_code) " +
-            "values (:languageCode)")
-    @GetGeneratedKeys
-    void insert(@BindBean Language author);
 
+
+    /**
+     * Get all languages from the database using pagination and sorting.
+     *
+     * @param limit Total number of languages to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of languages
+     */
     @SqlQuery("SELECT * FROM languages ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Language> find
             (@Bind("limit") int limit,
@@ -66,6 +79,30 @@ public interface LanguageDAO {
              @Define("direction") String direction
             );
 
+    /**
+     * Geta list of languages based on a search clause from the database using pagination and sorting.
+     * The search clause is represented by column and operator, where the operator is one of:
+     *
+     * <ul>
+     *     <li>=</li>
+     *     <li>!=</li>
+     *     <li>&lt;</li>
+     *     <li>&lt;=</li>
+     *     <li>&gt;</li>
+     *     <li>&gt;=</li>
+     *     <li>ILIKE</li>
+     *     <li>NOT ILIKE</li>
+     * </ul>
+     *
+     * @param text The text used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of languages to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of languages
+     */
     @SqlQuery("SELECT * FROM languages WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Language> find(
             @Bind("text") String text,
@@ -77,6 +114,18 @@ public interface LanguageDAO {
             @Define("direction") String direction
     );
 
+    /**
+     * Insert a new language into the database
+     * @param language An object representing a language
+     */
+    @SqlUpdate("INSERT INTO languages (lang_code) values (:languageCode)")
+    @GetGeneratedKeys
+    void insert(@BindBean Language language);
+
+    /**
+     * Delete all data objects from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM languages")
     void purge();
 }

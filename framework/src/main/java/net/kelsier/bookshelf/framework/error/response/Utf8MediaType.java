@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
  * Exposes {@link MediaType} types with the utf-8 charset applied
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class Utf8MediaType {
     private static final String CHARSET = ";charset=utf-8";
@@ -36,7 +36,7 @@ public final class Utf8MediaType {
     /**
      * Applies the utf-8 charset to the application/json media type
      */
-    public static final String APPLICATION_JSON = MediaType.APPLICATION_JSON + CHARSET;
+    public static final String APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON + CHARSET;
 
     /**
      * Applies the utf-8 charset to the text/html media type

@@ -41,7 +41,7 @@ import static net.kelsier.bookshelf.framework.patterns.RegexPatterns.UUID_REGEX;
  * Definition of the response object for APIs
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class ResponseErrorFormat {
     /**

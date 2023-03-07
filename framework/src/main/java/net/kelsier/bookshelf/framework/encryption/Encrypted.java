@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * have the appropriate getter and setter methods that match Java convention.
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

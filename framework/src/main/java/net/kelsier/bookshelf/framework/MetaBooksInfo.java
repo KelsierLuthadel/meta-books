@@ -35,7 +35,7 @@ import java.util.jar.Manifest;
  * Manage and store data from the MANIFEST.MF resource
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class MetaBooksInfo {
     private static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";

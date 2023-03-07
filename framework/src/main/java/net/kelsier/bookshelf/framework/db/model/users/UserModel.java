@@ -38,7 +38,7 @@ import java.util.List;
  * User details
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @Schema(description = "User Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -100,13 +100,13 @@ public class UserModel {
     /**
      * Constructor
      *
-     * @param id - User id associated with the user in the Users table
-     * @param username - Unique username
-     * @param firstName - User's first name
-     * @param lastName - User's last name
-     * @param email - Users associated email address
-     * @param enabled - Enabled flag
-     * @param roles - List of associated security roles
+     * @param id User id associated with the user in the Users table
+     * @param username Unique username
+     * @param firstName User's first name
+     * @param lastName User's last name
+     * @param email Users associated email address
+     * @param enabled Enabled flag
+     * @param roles List of associated security roles
      */
     public UserModel(@JsonProperty("id") final int id,
                      @JsonProperty("username") final String username,

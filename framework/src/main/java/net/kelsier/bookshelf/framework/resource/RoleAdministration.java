@@ -50,7 +50,7 @@ public class RoleAdministration {
 
     /**
      *
-     * @param roleDAO
+     * @param roleDAO A role objected represented in the database
      */
     public RoleAdministration(final RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
@@ -82,8 +82,8 @@ public class RoleAdministration {
     /**
      * Get a role
      *
-     * @param id - id of the role to get
-     * @return - An object representing the role
+     * @param id id of the role to get
+     * @return An object representing the role
      */
     @GET
     @Path("{id}")
@@ -132,9 +132,9 @@ public class RoleAdministration {
     /**
      * Update role details
      *
-     * @param id - Role id to update
-     * @param role - Role details to update
-     * @return - HTTP 200 when successful
+     * @param id Role id to update
+     * @param role Role details to update
+     * @return HTTP 200 when successful
      */
     @PUT
     @RolesAllowed({"admin:u"})
@@ -171,8 +171,8 @@ public class RoleAdministration {
     /**
      * Delete a given role
      *
-     * @param id - Role id
-     * @return - HTTP 200 response when the role was deleted
+     * @param id Role id
+     * @return HTTP 200 response when the role was deleted
      */
     @DELETE
     @RolesAllowed({"admin:d"})

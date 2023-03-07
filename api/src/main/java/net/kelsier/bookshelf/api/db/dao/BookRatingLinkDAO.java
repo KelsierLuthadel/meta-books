@@ -44,7 +44,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
  *
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(BookRatingLinkMapper.class)
 public interface BookRatingLinkDAO {

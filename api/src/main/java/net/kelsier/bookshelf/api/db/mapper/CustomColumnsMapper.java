@@ -39,19 +39,19 @@ id  SERIAL PRIMARY KEY,
  */
 
 /**
- *
+ * Map a database query to am {@link CustomColumns} class
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class CustomColumnsMapper implements RowMapper<CustomColumns> {
 
     /**
-     *
+     * Map a database query to am {@link CustomColumns} class
      *
      * @param resultSet results from a query
      * @param statementContext context
-     * @return
+     * @return {@link CustomColumns} object representing the results of a query
      * @throws SQLException Thrown when there was a database error
      */
     public CustomColumns map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {

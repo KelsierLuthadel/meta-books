@@ -37,7 +37,7 @@ import java.util.List;
  * DAO for users in a database
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(UserMapper.class)
 public interface UserDAO {

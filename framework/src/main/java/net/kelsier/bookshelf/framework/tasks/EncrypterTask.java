@@ -3,7 +3,6 @@ package net.kelsier.bookshelf.framework.tasks;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.servlets.tasks.Task;
 import net.kelsier.bookshelf.framework.encryption.Cipher;
-import net.kelsier.bookshelf.framework.encryption.exception.CipherException;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ public final class EncrypterTask extends Task {
      * Constructor.
      * The name given to the parent class is used in the path at which the task will be accessible
      *
-     * @param cipher - The initialised Cipher to use when encrypting
+     * @param cipher The initialised Cipher to use when encrypting
      */
     public EncrypterTask(final Cipher cipher) {
         super("encrypt");
@@ -35,9 +34,9 @@ public final class EncrypterTask extends Task {
      * Execute is called when a POST request is received by Dropwizard for the task.
      * Any parameters with key "plaintext" are encrypted and returned with the plain text in a JSON structure
      *
-     * @param parameters - The POST parameters (x-www-form-urlencoded) in key-value form
-     * @param output     - Content written to this writer will be returned in the body of the POST response
-     * @throws IOException - Throws if there is an issue writing output
+     * @param parameters The POST parameters (x-www-form-urlencoded) in key-value form
+     * @param output     Content written to this writer will be returned in the body of the POST response
+     * @throws IOException Throws if there is an issue writing output
      */
     @Override
     public void execute(final Map<String, List<String>> parameters, final PrintWriter output) throws IOException {

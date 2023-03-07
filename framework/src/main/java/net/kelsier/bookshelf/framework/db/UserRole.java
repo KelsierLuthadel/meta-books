@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
  * Role details DAO
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @Schema(description = "Role Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

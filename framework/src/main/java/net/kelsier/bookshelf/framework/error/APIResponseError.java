@@ -29,7 +29,7 @@ import java.io.Serializable;
  * Use to return a response error
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class APIResponseError implements Serializable {
     private static final long serialVersionUID = -4876738904546026913L;
@@ -53,9 +53,9 @@ public final class APIResponseError implements Serializable {
     /**
      * Create a new response error.
      * 
-     * @param detail    - Details about one of potentially several errors caused by an action
-     * @param cause     - The specific element of a request or component in the backend causing this error
-     * @param errorCode - The error code for this error
+     * @param detail    Details about one of potentially several errors caused by an action
+     * @param cause     The specific element of a request or component in the backend causing this error
+     * @param errorCode The error code for this error
      */
     public APIResponseError(final String detail, final String cause, final Integer errorCode) {
         this.detail = detail;
@@ -66,8 +66,8 @@ public final class APIResponseError implements Serializable {
     /**
      * Create a new response error.
      * 
-     * @param detail    - Details about one of potentially several errors caused by an action
-     * @param errorCode - The error code for this error
+     * @param detail    Details about one of potentially several errors caused by an action
+     * @param errorCode The error code for this error
      */
     public APIResponseError(final String detail, final Integer errorCode) {
         this(detail, null, errorCode);
@@ -76,8 +76,8 @@ public final class APIResponseError implements Serializable {
     /**
      * Create a new response error.
      * 
-     * @param detail - Details about one of potentially several errors caused by an action
-     * @param cause  - The specific element of a request or component in the backend causing this error
+     * @param detail Details about one of potentially several errors caused by an action
+     * @param cause  The specific element of a request or component in the backend causing this error
      */
     public APIResponseError(final String detail, final String cause) {
         this(detail, cause, null);
@@ -86,7 +86,7 @@ public final class APIResponseError implements Serializable {
     /**
      * Create a new response error.
      * 
-     * @param detail - Details about one of potentially several errors caused by an action
+     * @param detail Details about one of potentially several errors caused by an action
      */
     public APIResponseError(final String detail) {
         this(detail, null, null);
@@ -95,7 +95,7 @@ public final class APIResponseError implements Serializable {
     /**
      * Create a new response error.
      * 
-     * @param apiResponseError - Takes an ResponseError to construct the new ResponseError. Used for cloning
+     * @param apiResponseError Takes an ResponseError to construct the new ResponseError. Used for cloning
      */
     public APIResponseError(final APIResponseError apiResponseError) {
         this(apiResponseError.detail, apiResponseError.cause, apiResponseError.errorCode);

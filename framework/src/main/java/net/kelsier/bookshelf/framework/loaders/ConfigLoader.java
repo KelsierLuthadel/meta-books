@@ -28,7 +28,7 @@ import net.kelsier.bookshelf.framework.config.exception.ConfigurationException;
  * Provides a mechanism to load configuration.
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @FunctionalInterface
 public interface ConfigLoader {

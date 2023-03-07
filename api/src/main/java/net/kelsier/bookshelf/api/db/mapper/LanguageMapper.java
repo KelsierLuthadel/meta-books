@@ -31,19 +31,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * Map a database query to am {@link Language} class
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class LanguageMapper implements RowMapper<Language> {
 
     /**
-     *
+     * Map a database query to am {@link Language} class
      *
      * @param resultSet results from a query
      * @param statementContext context
-     * @return
+     * @return {@link Language} object representing the results of a query
      * @throws SQLException Thrown when there was a database error
      */
     public Language map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {

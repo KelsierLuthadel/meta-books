@@ -31,19 +31,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Map a result set to a custom column object
+ * Map a database query to am {@link CustomColumn} class
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class CustomColumnMapper implements RowMapper<CustomColumn> {
 
     /**
-     * Map a result set to a custom column object
+     * Map a database query to am {@link CustomColumn} class
      *
      * @param resultSet results from a query
      * @param statementContext context
-     * @return A Custom Column
+     * @return {@link CustomColumn} object representing the results of a query
      * @throws SQLException Thrown when there was a database error
      */
     public CustomColumn map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {

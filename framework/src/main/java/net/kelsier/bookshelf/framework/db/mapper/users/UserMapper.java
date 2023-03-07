@@ -36,7 +36,7 @@ import java.util.Arrays;
  * Map a result set to a user object
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class UserMapper implements RowMapper<DatabaseUser> {
 

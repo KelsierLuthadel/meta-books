@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response;
  * out unwanted error output in ExceptionToResponse
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class WebApplicationSilentException extends WebApplicationException {
 

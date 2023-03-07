@@ -33,7 +33,7 @@ import java.sql.SQLException;
  * Map a role object to a role object
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class RoleMapper implements RowMapper<UserRole> {
 

@@ -238,6 +238,9 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.5.0</version>
+                <configuration>
+                    <doclint>none</doclint>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <id>default</id>
@@ -261,6 +264,15 @@
                 defined in https://docs.oracle.com/javase/8/docs/api/ are in the unnamed module."
                 -->
                 <maven.javadoc.skip>true</maven.javadoc.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>java8-doclint-disabled</id>
+            <activation>
+                <jdk>[1,11)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
             </properties>
         </profile>
     </profiles>

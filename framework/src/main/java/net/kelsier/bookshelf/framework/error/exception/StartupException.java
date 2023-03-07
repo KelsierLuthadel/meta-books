@@ -4,7 +4,7 @@ package net.kelsier.bookshelf.framework.error.exception;
  * Throw an exception without a stack trace
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class StartupException extends RuntimeException {
 

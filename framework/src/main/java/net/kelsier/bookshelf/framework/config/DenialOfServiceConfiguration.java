@@ -31,7 +31,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * Configuration for Denial of Service filter, which is a wrapper for {@link org.eclipse.jetty.servlets}
+ * Configuration for Denial of Service filter
  * <p>
  * The filter is useful for limiting resources from abuse or malicious attacks such as flooding.
  * <p>
@@ -75,7 +75,7 @@ import javax.validation.constraints.NotNull;
  * </dl>
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class DenialOfServiceConfiguration {
     @NotNull

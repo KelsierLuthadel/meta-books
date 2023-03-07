@@ -41,7 +41,7 @@ import java.util.Set;
  * Provides a mechanism to load YAML configuration files
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class YamlConfigLoader implements ConfigLoader {
     private final File configPath;
@@ -79,9 +79,9 @@ public final class YamlConfigLoader implements ConfigLoader {
      * Takes an input stream containing configuration data and a class representing the expected structure of the configuration
      * Attempts to parse the input data into the expected configuration class and returns an instance.
      *
-     * @param src         - Stream of configuration data
-     * @param configClass - The expected configuration class
-     * @param <T>         - The type of the configuration
+     * @param src         Stream of configuration data
+     * @param configClass The expected configuration class
+     * @param <T>         The type of the configuration
      * @return An instance of the specified class type populated with the configuration.
      * @throws ConfigurationException if the configuration cannot be loaded.
      */

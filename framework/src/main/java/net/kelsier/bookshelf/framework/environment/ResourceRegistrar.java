@@ -29,7 +29,7 @@ import org.glassfish.jersey.server.model.Resource;
  * A registrar for API resource registration to Jersey
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class ResourceRegistrar {
     private final Environment environment;
@@ -37,21 +37,21 @@ public class ResourceRegistrar {
     /**
      * Constructor
      *
-     * @param environment - The Dropwizard environment onto which resources should be registered
+     * @param environment The Dropwizard environment onto which resources should be registered
      */
     public ResourceRegistrar(final Environment environment) { this.environment = environment; }
 
     /**
      * Registers the passed object onto the Dropwizard environment
      *
-     * @param resource - A Jersey resource class
+     * @param resource A Jersey resource class
      */
     public void registerResource(final Resource resource) { environment.jersey().getResourceConfig().registerResources(resource); }
 
     /**
      * Registers the passed object onto the Dropwizard environment
      *
-     * @param resource - A Jersey resource class
+     * @param resource A Jersey resource class
      */
     public void registerResource(final Object resource) {
         environment.jersey().register(resource);

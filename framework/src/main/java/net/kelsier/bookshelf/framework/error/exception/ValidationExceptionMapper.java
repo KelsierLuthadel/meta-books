@@ -27,6 +27,7 @@ import io.dropwizard.jersey.validation.JerseyViolationException;
 import net.kelsier.bookshelf.framework.error.APIResponseError;
 import net.kelsier.bookshelf.framework.error.response.ExceptionToResponse;
 
+import javax.validation.ConstraintViolation;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -38,7 +39,7 @@ import java.util.UUID;
  * Transform a Jersey Violation Exception into a valid HTTP Response
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @Provider
 public class ValidationExceptionMapper implements ExceptionMapper<JerseyViolationException> {
@@ -52,7 +53,7 @@ public class ValidationExceptionMapper implements ExceptionMapper<JerseyViolatio
         final int responseStatus = ConstraintMessage.determineStatus(exception.getConstraintViolations(), exception.getInvocable());
 
         final List<APIResponseError> apiResponseErrors = new LinkedList<>();
-        exception.getConstraintViolations().forEach(constraintViolation -> {
+        exception.getConstraintViolations().forEach((ConstraintViolation<?> constraintViolation) -> {
             final String cause = constraintViolation.getPropertyPath().toString();
             apiResponseErrors.add(new APIResponseError(constraintViolation.getMessage(), cause));
         });

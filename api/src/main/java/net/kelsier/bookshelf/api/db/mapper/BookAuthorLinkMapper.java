@@ -31,19 +31,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * Map a database query to a {@link BookAuthorLink} class
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class BookAuthorLinkMapper implements RowMapper<BookAuthorLink> {
 
     /**
-     *
+     * Map a database query to a {@link BookAuthorLink} class
      *
      * @param resultSet results from a query
      * @param statementContext context
-     * @return
+     * @return {@link BookAuthorLink} object representing the results of a query
      * @throws SQLException Thrown when there was a database error
      */
     public BookAuthorLink map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {

@@ -7,6 +7,7 @@ import net.kelsier.bookshelf.framework.config.EncryptionConfiguration;
 import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.db.model.users.LoginModel;
+import net.kelsier.bookshelf.framework.db.model.users.UserResponse;
 import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
 
 import javax.validation.Valid;
@@ -45,8 +46,11 @@ public class Login {
     public Response login(@Parameter(name = "login", required = true) final @Valid LoginModel loginModel) {
         final DatabaseUser user = userDAO.find(loginModel.getUsername());
 
-        if (user.isEnabled() && new PasswordEncrypt(cipherConfiguration).checkPassword(loginModel.getPassword(), user.getPassword())) {
-            return Response.ok().build();
+        if (null != user && user.isEnabled() && new PasswordEncrypt(cipherConfiguration).checkPassword(loginModel.getPassword(), user.getPassword())) {
+            return Response.ok().entity(
+                new UserResponse(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), true,
+                    user.getRoles())
+            ).build();
         }
 
         return Response.status(Response.Status.UNAUTHORIZED).build();
