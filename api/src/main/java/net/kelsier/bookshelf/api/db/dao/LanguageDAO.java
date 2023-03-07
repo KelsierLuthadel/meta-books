@@ -120,7 +120,7 @@ public interface LanguageDAO {
      */
     @SqlUpdate("INSERT INTO languages (lang_code) values (:languageCode)")
     @GetGeneratedKeys
-    void insert(@BindBean Language language);
+    long insert(@BindBean Language language);
 
     /**
      * Delete all data objects from the database, this is used when re-creating the database contents.

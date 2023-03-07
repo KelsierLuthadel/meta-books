@@ -157,7 +157,7 @@ public interface DataDAO {
      */
     @SqlUpdate("INSERT INTO data (book, format, uncompressed_size, name) values (:book, :format, :uncompressedSize, :name)")
     @GetGeneratedKeys
-    void insert(@BindBean BookData bookData);
+    long insert(@BindBean BookData bookData);
 
     /**
      * Delete all data objects from the database, this is used when re-creating the database contents.

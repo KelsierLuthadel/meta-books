@@ -57,7 +57,7 @@ public interface RatingDAO {
     @SqlUpdate("INSERT INTO ratings (rating) " +
             "values (:rating)")
     @GetGeneratedKeys
-    void insert(@BindBean Rating rating);
+    long insert(@BindBean Rating rating);
 
     @SqlQuery("SELECT * FROM ratings ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Rating> find(

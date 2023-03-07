@@ -120,7 +120,7 @@ public interface AuthorDAO {
     @SqlUpdate("INSERT INTO authors (name, sort) " +
         "values (:name, :sort)")
     @GetGeneratedKeys
-    void insert(@BindBean Author author);
+    long insert(@BindBean Author author);
 
     /**
      * Delete all authors from the database, this is used when re-creating the database contents.

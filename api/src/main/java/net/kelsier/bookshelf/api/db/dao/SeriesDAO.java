@@ -58,7 +58,7 @@ public interface SeriesDAO {
     @SqlUpdate("INSERT INTO series (name, sort) " +
             "values (:name, :sort)")
     @GetGeneratedKeys
-    void insert(@BindBean Series series);
+    long insert(@BindBean Series series);
 
     @SqlQuery("SELECT * FROM series ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Series> find(

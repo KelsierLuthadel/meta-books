@@ -72,7 +72,7 @@ public interface CustomColumnDAO {
      */
     @SqlUpdate("INSERT INTO <table> (value) values (:value)")
     @GetGeneratedKeys
-    void insert(@Define("table") String table, @BindBean CustomColumn customColumn);
+    long insert(@Define("table") String table, @BindBean CustomColumn customColumn);
 
     /**
      * Create a new custom column table

@@ -88,6 +88,12 @@
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-core</artifactId>
             <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml </artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

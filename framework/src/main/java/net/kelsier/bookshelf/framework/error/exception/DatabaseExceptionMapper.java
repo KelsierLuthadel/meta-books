@@ -20,41 +20,38 @@
  * SOFTWARE.
  */
 
-package net.kelsier.bookshelf.api.db.dao;
+package net.kelsier.bookshelf.framework.error.exception;
 
-import net.kelsier.bookshelf.api.db.mapper.BookLanguageLinkMapper;
-import net.kelsier.bookshelf.api.db.model.BookLanguageLink;
-import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
-import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
-/*
- * CREATE TABLE books_languages_link (
- *     id SERIAL PRIMARY KEY,
- *     book INTEGER NOT NULL,
- *     lang_code INTEGER NOT NULL,
- *     UNIQUE(book, lang_code)
- * )
- */
+import net.kelsier.bookshelf.framework.error.response.ExceptionToResponse;
+import org.jdbi.v3.core.statement.StatementContext;
+import org.jdbi.v3.core.statement.StatementException;
+import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
+import org.postgresql.util.PSQLException;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+import java.util.UUID;
 
 /**
- *
+ * Transform ResponseErrorException into a valid HTTP Response
  *
  * @author Kelsier Luthadel
  * @version 1.0.0
  */
-@RegisterRowMapper(BookLanguageLinkMapper.class)
-public interface BookLanguageLinkDAO {
-    @SqlQuery("SELECT * FROM books_languages_link WHERE ID = :id")
-    BookLanguageLink get(@Bind("id") int id);
+@Provider
+public class DatabaseExceptionMapper implements ExceptionMapper<StatementException> {
+    /**
+     * Transform ResponseErrorException into a valid HTTP Response
+     *
+     * @param exception the thrown exception
+     * @return HTTP Response
+     */
+    @Override
+    public final Response toResponse(final StatementException exception) {
+        final String responseUuid = UUID.randomUUID().toString();
+        final int responseStatus = Response.Status.BAD_REQUEST.getStatusCode();
 
-    @SqlUpdate("INSERT INTO books_languages_link (book, lang_code) " +
-            "values (:book, :languageCode)")
-    @GetGeneratedKeys
-    long insert(@BindBean BookLanguageLink bookLanguageLink);
-
-    @SqlUpdate("DELETE FROM books_languages_link")
-    void purge();
+        return ExceptionToResponse.makeResponse(responseStatus, responseUuid, "Bad Request", exception, null, null);
+    }
 }
