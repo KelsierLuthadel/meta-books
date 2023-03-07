@@ -34,7 +34,7 @@ import java.sql.SQLException;
  * Map a result set to a custom column object
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class CustomColumnLinkMapper implements RowMapper<CustomColumnLink> {
 

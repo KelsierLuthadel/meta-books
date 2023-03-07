@@ -29,7 +29,7 @@ import org.glassfish.jersey.server.model.Resource;
  * A registrar for API resource registration to Jersey
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class ResourceRegistrar {
     private final Environment environment;

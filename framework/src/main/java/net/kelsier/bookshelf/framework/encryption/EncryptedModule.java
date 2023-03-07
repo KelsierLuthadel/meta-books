@@ -38,7 +38,7 @@ import java.io.IOException;
  * This class defines a jackson module which, when registered to an object mapper, adds support for the encryption annotation
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class EncryptedModule extends SimpleModule {
     private static final Logger LOGGER = LoggerFactory.getLogger(EncryptedModule.class);

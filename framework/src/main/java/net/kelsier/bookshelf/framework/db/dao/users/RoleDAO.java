@@ -37,7 +37,7 @@ import java.util.List;
  * DAO for user roles in a database
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(RoleMapper.class)
 public interface RoleDAO {

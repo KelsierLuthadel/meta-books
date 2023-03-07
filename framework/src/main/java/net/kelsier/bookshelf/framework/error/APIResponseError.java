@@ -29,7 +29,7 @@ import java.io.Serializable;
  * Use to return a response error
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class APIResponseError implements Serializable {
     private static final long serialVersionUID = -4876738904546026913L;

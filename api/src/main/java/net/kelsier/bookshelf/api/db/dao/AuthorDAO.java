@@ -36,13 +36,19 @@ import java.util.List;
 
 /**
  * DAO to map an author object in the database to a Java object so that it can be returned RESTfully.
- * Authors are stored in the following schema:
- * <p>
- * {@code public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)}
- * </p>
+ * <p>Authors are stored in the following schema:</p>
+ * <style>table, th, td {border: 1px solid black;  border-collapse: collapse; padding: 5px 5px 5px 5px;} th {background-color:#DEDEDE}</style>
+ * <table>
+ *   <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+ *   <tbody>
+ *     <tr><td>id</td><td>PRIMARY KEY</td><td>Author ID</td></tr>
+ *     <tr><td>name</td><td>TEXT</td><td>Display name for Author</td></tr>
+ *     <tr><td>sort</td><td>TEXT</td><td>Used for sorting authors</td></tr>
+ *   </tbody>
+ * </table>
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(AuthorMapper.class)
 public interface AuthorDAO {

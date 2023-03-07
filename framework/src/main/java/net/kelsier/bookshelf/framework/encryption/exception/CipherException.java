@@ -26,7 +26,7 @@ package net.kelsier.bookshelf.framework.encryption.exception;
  * Thrown when a Cipher encounters an error when encrypting or decrypting .
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class CipherException extends Exception {
     /**

@@ -37,7 +37,7 @@ import java.util.List;
  * User details
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @Schema(description = "User Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

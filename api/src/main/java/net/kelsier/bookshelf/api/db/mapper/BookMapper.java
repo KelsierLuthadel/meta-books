@@ -34,7 +34,7 @@ import java.sql.SQLException;
  *
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class BookMapper implements RowMapper<Book> {
 

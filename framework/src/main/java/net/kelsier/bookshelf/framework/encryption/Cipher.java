@@ -30,7 +30,7 @@ import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
  * Provides methods for encrypting and decrypting strings.
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public interface Cipher {
     /**

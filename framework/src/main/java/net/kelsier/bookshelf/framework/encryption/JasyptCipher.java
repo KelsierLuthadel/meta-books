@@ -31,7 +31,7 @@ import org.jasypt.util.text.StrongTextEncryptor;
  * text encryption/decryption capabilities.
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class JasyptCipher implements Cipher {
     /**

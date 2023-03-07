@@ -27,7 +27,7 @@ package net.kelsier.bookshelf.framework.config.exception;
  * ConfigurationException
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class ConfigurationException extends RuntimeException {
     /**

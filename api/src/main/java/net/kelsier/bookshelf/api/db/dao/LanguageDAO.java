@@ -46,7 +46,7 @@ import java.util.List;
  *
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(LanguageMapper.class)
 public interface LanguageDAO {

@@ -47,7 +47,7 @@ import java.util.List;
  *
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @RegisterRowMapper(SeriesMapper.class)
 public interface SeriesDAO {

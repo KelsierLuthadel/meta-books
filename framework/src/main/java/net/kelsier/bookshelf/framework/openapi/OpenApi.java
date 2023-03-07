@@ -41,7 +41,7 @@ import java.util.Set;
  * Register resources for swagger using scanning
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class OpenApi {
 

@@ -35,7 +35,7 @@ import java.io.IOException;
  * A Filter to allow caching or non-caching of response data
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class CacheControlFilter implements Filter {
     /**

@@ -33,7 +33,7 @@ import java.util.UUID;
  * Transform ResponseErrorException into a valid HTTP Response
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @Provider
 public class RuntimeExceptionMapper implements ExceptionMapper<Throwable> {

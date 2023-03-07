@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * Database health check for Dropwizard
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class DatabaseHealth extends HealthCheck {
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealth.class);

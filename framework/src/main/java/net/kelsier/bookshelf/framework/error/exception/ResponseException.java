@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * Indicates an error with the response
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 @JsonIgnoreProperties({ "cause", "stackTrace", "errorCode", "suppressed", "localizedMessage"})
 @XmlRootElement(name = "responseErrorException")

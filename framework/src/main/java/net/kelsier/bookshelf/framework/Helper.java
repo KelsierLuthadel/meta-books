@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
  * Helper class to provide common shared functionality
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class Helper {
     private Helper() {

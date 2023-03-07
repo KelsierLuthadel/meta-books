@@ -41,7 +41,7 @@ import java.util.Set;
  * Provides a mechanism to load YAML configuration files
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class YamlConfigLoader implements ConfigLoader {
     private final File configPath;

@@ -26,7 +26,7 @@ package net.kelsier.bookshelf.api.patterns;
  * This class holds useful Regex Patterns for reuse
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public final class RegexPatterns {
     /**

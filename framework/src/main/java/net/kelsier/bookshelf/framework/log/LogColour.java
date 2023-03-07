@@ -26,7 +26,7 @@ package net.kelsier.bookshelf.framework.log;
  * Use ANSI colours in log output
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public enum LogColour {
     /**

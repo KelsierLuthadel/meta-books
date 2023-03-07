@@ -42,7 +42,7 @@ id  SERIAL PRIMARY KEY,
  *
  *
  * @author Kelsier Luthadel
- * @version 1.0.2
+ * @version 1.0.0
  */
 public class DataMapper implements RowMapper<BookData> {
 
