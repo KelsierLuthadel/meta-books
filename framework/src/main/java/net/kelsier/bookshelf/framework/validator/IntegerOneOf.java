@@ -23,8 +23,6 @@
 
 package net.kelsier.bookshelf.framework.validator;
 
-import io.dropwizard.validation.OneOfValidator;
-
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

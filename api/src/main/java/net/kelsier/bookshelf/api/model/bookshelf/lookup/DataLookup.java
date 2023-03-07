@@ -18,11 +18,11 @@ public class DataLookup implements ColumnLookup {
     /**
      * Default column lookup that will be used in the OpenAPI example
      */
+    private static final String DEFAULT_FIELD = "name";
 
     /**
      * Default search constraint that will be used in the OpenAPI example
      */
-    private static final String DEFAULT_FIELD = "name";
     private static final String DEFAULT_OPERATOR = "EQ";
 
     /**

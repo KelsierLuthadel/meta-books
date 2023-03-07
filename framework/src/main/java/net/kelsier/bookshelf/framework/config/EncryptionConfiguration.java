@@ -29,15 +29,11 @@ import com.fasterxml.jackson.annotation.Nulls;
 import io.dropwizard.validation.OneOf;
 import net.kelsier.bookshelf.framework.encryption.Encrypted;
 import net.kelsier.bookshelf.framework.validator.IntegerOneOf;
-import org.hibernate.validator.constraints.Range;
 
 import javax.annotation.Nullable;
-import javax.annotation.RegEx;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 /**
  * Configuration for authentication

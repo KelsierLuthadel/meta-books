@@ -3,7 +3,6 @@ package net.kelsier.bookshelf.framework.tasks;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.servlets.tasks.Task;
 import net.kelsier.bookshelf.framework.encryption.Cipher;
-import net.kelsier.bookshelf.framework.encryption.exception.CipherException;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -23,6 +23,7 @@
 package net.kelsier.bookshelf.api.db.mapper;
 
 
+import net.kelsier.bookshelf.api.db.model.BookData;
 import net.kelsier.bookshelf.api.db.model.Identifier;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -31,7 +32,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * Map a database query to am {@link Identifier} class
  *
  * @author Kelsier Luthadel
  * @version 1.0.0
@@ -39,11 +40,11 @@ import java.sql.SQLException;
 public class IdentifierMapper implements RowMapper<Identifier> {
 
     /**
-     *
+     * Map a database query to am {@link Identifier} class
      *
      * @param resultSet results from a query
      * @param statementContext context
-     * @return
+     * @return {@link Identifier} object representing the results of a query
      * @throws SQLException Thrown when there was a database error
      */
     public Identifier map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {

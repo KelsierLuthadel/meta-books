@@ -23,7 +23,6 @@
 package net.kelsier.bookshelf.framework.encryption;
 
 import net.kelsier.bookshelf.framework.encryption.exception.CipherException;
-import org.jasypt.exceptions.EncryptionInitializationException;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 
 /**

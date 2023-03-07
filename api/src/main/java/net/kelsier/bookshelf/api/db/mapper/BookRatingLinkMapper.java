@@ -23,6 +23,7 @@
 package net.kelsier.bookshelf.api.db.mapper;
 
 
+import net.kelsier.bookshelf.api.db.model.Author;
 import net.kelsier.bookshelf.api.db.model.BookRatingLink;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -31,7 +32,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * Map a database query to am {@link BookRatingLink} class
  *
  * @author Kelsier Luthadel
  * @version 1.0.0
@@ -39,11 +40,11 @@ import java.sql.SQLException;
 public class BookRatingLinkMapper implements RowMapper<BookRatingLink> {
 
     /**
-     *
+     * Map a database query to am {@link BookRatingLink} class
      *
      * @param resultSet results from a query
      * @param statementContext context
-     * @return
+     * @return {@link BookRatingLink} object representing the results of a query
      * @throws SQLException Thrown when there was a database error
      */
     public BookRatingLink map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
