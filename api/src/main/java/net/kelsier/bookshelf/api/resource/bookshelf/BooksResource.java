@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.SeriesLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.BookLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -50,9 +50,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.*;
+import static net.kelsier.bookshelf.api.db.tables.Table.BOOKS;
 
-@Path("api/1/bookshelf/series")
+@Path("api/1/bookshelf/books")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -63,8 +63,8 @@ import static net.kelsier.bookshelf.api.db.tables.Table.*;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class BookSeries {
-    private static final Table TABLE_TYPE = SERIES;
+public final class BooksResource {
+    private static final Table TABLE_TYPE = BOOKS;
     private final Jdbi databaseConnection;
 
     /**
@@ -72,15 +72,15 @@ public class BookSeries {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public BookSeries(final Jdbi databaseConnection) {
+    public BooksResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
     /**
-     *
+     * Get a list of books in the database based on the title
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of series
+     * @return A paginated list of books
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -88,16 +88,16 @@ public class BookSeries {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Search for a series",
+        summary = "Search for books",
         tags = {"Bookshelf"},
-        description = "Search for a series",
+        description = "Get a list of books",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No series found"),
+            @ApiResponse(responseCode = "404", description = "No books found"),
         })
-    public List<Entity> series(@Parameter(name="data", required = true) @NotNull @Valid final Search<SeriesLookup> search)  {
+    public List<Entity> books(@Parameter(name="search", required = true) @NotNull @Valid final Search<BookLookup> search)  {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
@@ -108,17 +108,17 @@ public class BookSeries {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get series details",
+            summary = "Get book details",
             tags = {"Bookshelf"},
-            description = "Get series details",
+            description = "Get book details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No series found"),
+                    @ApiResponse(responseCode = "404", description = "No books found"),
             })
-    public Entity series(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer seriesId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, seriesId);
+    public Entity book(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer bookId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, bookId);
     }
 
 }

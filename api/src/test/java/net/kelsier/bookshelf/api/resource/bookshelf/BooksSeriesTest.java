@@ -42,7 +42,7 @@ class BooksSeriesTest {
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new BookSeries(databaseConnection))
+            .addResource(new BookSeriesResource(databaseConnection))
             .build();
 
     @BeforeEach
