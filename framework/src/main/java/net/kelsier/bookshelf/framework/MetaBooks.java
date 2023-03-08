@@ -318,8 +318,13 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     }
 
     private void registerOpenAPI(final Environment environment) {
-        OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf.api.resource").collect(
-            Collectors.toSet()));
+        //Stream.of("net.kelsier.bookshelf.migration.resource")
+
+        OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf").collect(
+                Collectors.toSet()));
+
+//        OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf.api.resource").collect(
+//            Collectors.toSet()));
 
         final OpenAPI oas = new OpenAPI();
         final Info info = new Info()

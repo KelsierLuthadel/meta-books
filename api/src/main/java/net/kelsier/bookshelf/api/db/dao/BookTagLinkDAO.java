@@ -51,7 +51,7 @@ public interface BookTagLinkDAO {
     @SqlQuery("SELECT * FROM books_tags_link WHERE ID = :id")
     BookTagLink get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO books_tags_link (book, tag) values (:book, :tag)")
+    @SqlUpdate("INSERT INTO books_tags_link (id, book, tag) values (:id, :book, :tag)")
     @GetGeneratedKeys
     long insert(@BindBean BookTagLink bookTagLink);
 

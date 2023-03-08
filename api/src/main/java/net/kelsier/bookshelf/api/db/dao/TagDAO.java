@@ -54,8 +54,8 @@ public interface TagDAO {
     @SqlQuery("SELECT * FROM tags WHERE ID = :id")
     Tag get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO tags (name) " +
-            "values (:name)")
+    @SqlUpdate("INSERT INTO tags (id, name) " +
+            "values (:id, :name)")
     @GetGeneratedKeys
     long insert(@BindBean Tag tag);
 

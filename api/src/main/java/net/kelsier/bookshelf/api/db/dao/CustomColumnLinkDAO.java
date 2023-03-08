@@ -64,8 +64,8 @@ public interface CustomColumnLinkDAO {
             "UNIQUE(book, value))")
     void create(@Define("table") String table);
 
-    @SqlUpdate("INSERT INTO <table> (book, value) " +
-            "values (:book, :value)")
+    @SqlUpdate("INSERT INTO <table> (id, book, value) " +
+            "values (:id, :book, :value)")
     @GetGeneratedKeys
     long insert(@Define("table") String table, @BindBean CustomColumnLink customColumn);
 

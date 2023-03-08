@@ -78,9 +78,9 @@ public class BookDetails {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get tag details",
-            tags = {"Bookshelf"},
-            description = "Get tag details",
+            summary = "Get Book details",
+            tags = {"Book Details"},
+            description = "Get Book details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),

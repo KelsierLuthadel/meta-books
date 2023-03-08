@@ -54,8 +54,8 @@ public interface RatingDAO {
     @SqlQuery("SELECT * FROM ratings WHERE ID = :id")
     Rating get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO ratings (rating) " +
-            "values (:rating)")
+    @SqlUpdate("INSERT INTO ratings (id, rating) " +
+            "values (:id, :rating)")
     @GetGeneratedKeys
     long insert(@BindBean Rating rating);
 

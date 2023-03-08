@@ -55,8 +55,8 @@ public interface SeriesDAO {
     @SqlQuery("SELECT * FROM series WHERE ID = :id")
     Series get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO series (name, sort) " +
-            "values (:name, :sort)")
+    @SqlUpdate("INSERT INTO series (id, name, sort) " +
+            "values (:id, :name, :sort)")
     @GetGeneratedKeys
     long insert(@BindBean Series series);
 

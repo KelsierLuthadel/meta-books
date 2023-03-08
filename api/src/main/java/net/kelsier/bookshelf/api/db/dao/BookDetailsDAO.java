@@ -23,6 +23,7 @@
 package net.kelsier.bookshelf.api.db.dao;
 
 import net.kelsier.bookshelf.api.db.mapper.BookDetailsMapper;
+import net.kelsier.bookshelf.api.db.model.BookDetails;
 import net.kelsier.bookshelf.api.db.model.Tag;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -44,21 +45,20 @@ public interface BookDetailsDAO {
         "books.has_cover," +
         "books.date_added," +
         "books.publication_date," +
-        "books.last_modified" +
+        "books.last_modified," +
         "books.path," +
-        "comments.text AS comments," +
-        "FROM books\n" +
-        "INNER JOIN books_authors_link ON books_authors_link.book=books.id\n" +
-        "INNER JOIN authors ON authors.id=books_authors_link.author\n" +
-        "INNER JOIN books_languages_link ON books_languages_link.book=books.id\n" +
-        "INNER JOIN languages ON languages.id=books_languages_link.lang_code\n" +
-        "INNER JOIN books_publishers_link ON books_publishers_link.book=books.id\n" +
-        "INNER JOIN publishers ON publishers.id=books_publishers_link.publisher\n" +
-        "INNER JOIN books_series_link ON books_series_link.book=books.id\n" +
-        "INNER JOIN series ON series.id=books_series_link.series\n" +
-        "INNER JOIN data ON data.id=books.id\n" +
-        "INNER JOIN comments ON comments.book=books.id\n" +
-        "WHERE books.id = :id;")
-    Tag get(@Bind("id") int id);
+        "comments.text AS comments " +
+        "FROM books INNER JOIN books_authors_link ON books_authors_link.book=books.id " +
+        "INNER JOIN authors ON authors.id=books_authors_link.author " +
+        "INNER JOIN books_languages_link ON books_languages_link.book=books.id " +
+        "INNER JOIN languages ON languages.id=books_languages_link.lang_code " +
+        "INNER JOIN books_publishers_link ON books_publishers_link.book=books.id " +
+        "INNER JOIN publishers ON publishers.id=books_publishers_link.publisher " +
+        "INNER JOIN books_series_link ON books_series_link.book=books.id " +
+        "INNER JOIN series ON series.id=books_series_link.series " +
+        "INNER JOIN data ON data.id=books.id " +
+        "INNER JOIN comments ON comments.book=books.id " +
+        "WHERE books.id = :id")
+    BookDetails get(@Bind("id") int id);
 
 }

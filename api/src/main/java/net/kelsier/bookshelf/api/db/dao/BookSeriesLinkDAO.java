@@ -51,7 +51,7 @@ public interface BookSeriesLinkDAO {
     @SqlQuery("SELECT * FROM books_series_link WHERE ID = :id")
     BookSeriesLink get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO books_series_link (book, series) values (:book, :series)")
+    @SqlUpdate("INSERT INTO books_series_link (id, book, series) values (:id, :book, :series)")
     @GetGeneratedKeys
     long insert(@BindBean BookSeriesLink bookSeriesLink);
 

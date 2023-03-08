@@ -158,8 +158,8 @@ public interface BookDAO {
      * @param book An object representing a book
      * @return row id for the newly created data
      */
-    @SqlUpdate("INSERT INTO books (title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
-            "values (:title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")
+    @SqlUpdate("INSERT INTO books (id, title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
+            "values (:id, :title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")
     @GetGeneratedKeys
     long insert(@BindBean Book book);
 
