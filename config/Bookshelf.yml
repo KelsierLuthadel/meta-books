@@ -14,11 +14,11 @@ server:
         logFormat: "%-5level [%date{ISO8601}] %-4relative %mdc %logger - %msg%n"
   applicationConnectors:
     - type: http
-      port: 1310
+      port: 2330
       maxRequestHeaderSize: 8KiB
   adminConnectors:
     - type: http
-      port: 1311
+      port: 2331
 
 logging:
   level: INFO

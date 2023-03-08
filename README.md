@@ -1,93 +1,72 @@
-# Bookshelf
+# About
 
 ![Build](https://github.com/KelsierLuthadel/meta-books/workflows/Build/badge.svg) ![Tests](https://github.com/KelsierLuthadel/meta-books/blob/main/.github/badges/unit-tests.svg)
 
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=KelsierLuthadel_meta-books&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=KelsierLuthadel_meta-books) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=KelsierLuthadel_meta-books&metric=bugs)](https://sonarcloud.io/summary/new_code?id=KelsierLuthadel_meta-books) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=KelsierLuthadel_meta-books&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=KelsierLuthadel_meta-books) [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=KelsierLuthadel_meta-books&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=KelsierLuthadel_meta-books)
 
-## Encryption
-The recommended approach to storing sensitive bookData is by using encryption at rest. 
+## Overview
 
-### Encrypting passwords in a configuration file
-When a class defines a password field as `@Encrypted`, the associated yaml field can be used to either store the password 
-as an encrypted value, or in plain text format.
+This repository is split into two modules, the main module is a REST API framework built upon [DropWizard](https://www.dropwizard.io). 
+The reason DropWizard was chosen was that it provides direct exposure to health checks, metrics and a high performant HTTP server. More information
+about the framework can be viewed in the [Framework readme](framework/README.md)
 
-The default algorithm used for encryption here is PBE with MD5 and Triple DES.
+## Features
 
-**Example**
+## Installation
 
-The following example shows an encrypted database password in `DatasourceConfiguration.yaml`
-```yaml
-# the name of your JDBC driver
-driverClass: org.postgresql.Driver
+#### Installation via maven (recommended)
 
-# the username
-user: bookshelf
-
-# the password
-password: ya8ftMwhAAhn1/dxuQtENf7bNJij7rle
-
-# the JDBC URL
-url: jdbc:postgresql://localhost:5432/bookshelf
+First you need to checkout this repo:
+```bash
+git clone https://github.com/KelsierLuthadel/meta-books.git
 ```
 
-The above example can also be used, but with the password in plain text format
-```yaml
-# the name of your JDBC driver
-driverClass: org.postgresql.Driver
-
-# the username
-user: bookshelf
-
-# the password
-password: password
-
-# the JDBC URL
-url: jdbc:postgresql://localhost:5432/bookshelf
-```
- 
-#### Encrypting a password
-The admin port (default: 1310) provides `tasks/encrypt` so that a password can be encrypted for use in a config field.
-
-**Example**
-
-request:
-```
-curl --location --request POST 'http://localhost:1311/tasks/encrypt?plaintext=password'
+Once you have the code, you should use Maven to build the project:
+```bash
+cd meta-books
+mvn clean install
 ```
 
-response:
-```
-[{"Ciphertext":"VIQ6gOOJ57hdAfocHT2DIgpAOaeGGG8s"}]
-```
-*Note: Providing the same plain-text password multiple times will produce a different password each time*
+## Quick Start
 
-#### Encryption password
-By default, the master encryption password is stored in `bookshelf.yaml` and this is used for encryption and decryption, 
-however this is not considered safe. Therefore, this can be overridden by supplying the following system property when 
-starting the server:
+The server can be started by running the jar and providing a path to the server config (Bookshelf.yaml)
+```bash
+cd meta-books
+java -jar framework/target/framework-1.0-SNAPSHOT.jar server ./config/Bookshelf.yml
+```
+
+You can view the APIs by pointing your browser at: http://localhost:2330/swagger/index.html
+
+### Database
+The book server requires a database to store book metadata, the recommended database is Postgres. 
+
+#### Creating the database
+Stop the bookshelf server, and edit the file `config/Bookshelf.yaml`. Set `databaseEnabled` to be true on line 58:
+```bash
+databaseEnabled: true
+```
+Save this file.
+
+Create both a user and a database called `bookshelf`, the default password is `password`. You can change these values
+by editing `DatasourceConfiguration.yaml`.
+
+Start the migration process with the following command:
+```bash
+java -jar framework/target/framework-1.0-SNAPSHOT.jar db migrate ./config/Bookshelf.yml
+```
+
+This will populate the database with the default tables.
+
+The bookshelf server can be started again with the following command:
 
 ```bash
-java -DCIPHER=cipher-password -jar target/metabooks.jar server ./config/bookshelf.yaml
+java -jar framework/target/framework-1.0-SNAPSHOT.jar server ./config/Bookshelf.yml
 ```
 
-### Encrypting passwords in the database
-By default, all passwords that are stored in the database are encrypted using one-way encryption. One-way encryption provides 
-a stronger encryption method with no way to decrypt the password. Passwords can be verified, but never decrypted. The 
-configuration for database password encryption is in `EncryptionConfiguration.yaml`
+## Requirements
+Maven - to build the code locally   
+Java - To run the server
+Database - To store book metadata (Postgres)
 
-**Example:**
-```yaml
-algorithm: SHA-256
-saltSize: 16
-iterations: 100000
-```
 
-## Recreate database
-```
-drop database bookshelf
-UPDATE databasechangelog SET MD5SUM = NULL;
-create database bookshelf
-\c bookshelf
-GRANT ALL ON SCHEMA public TO bookshelf;
-```
 

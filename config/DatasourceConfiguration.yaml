@@ -5,7 +5,7 @@ driverClass: org.postgresql.Driver
 user: bookshelf
 
 # the password
-password: UaheyOZ5U16yV0xNc3FgaR/wm0crGXJL
+password: admin
 
 # the JDBC URL
 url: jdbc:postgresql://localhost:5432/bookshelf

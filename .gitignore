@@ -27,3 +27,7 @@ hs_err_pid*
 
 # Maven
 target/
+
+local-config/
+dependency-reduced-pom.xml
+
