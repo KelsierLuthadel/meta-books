@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  * Book details as represented by the books table
  */
 @JsonPropertyOrder({"id", "title", "sort", "seriesIndex", "isbn", "hasCover", "publicationDate", "dateAdded", "lastModified"})
-public class Book {
+public class Book implements Entity {
     /**
      * Unique id
      */

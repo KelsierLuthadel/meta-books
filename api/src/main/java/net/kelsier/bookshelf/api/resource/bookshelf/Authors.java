@@ -183,7 +183,6 @@ public final class Authors {
                     @ApiResponse(responseCode = "404", description = "No author found"),
             })
     public Author author(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId)  {
-//        return databaseConnection.onDemand(AuthorDAO.class).get(authorId);
         return (Author)Connection.get(databaseConnection, AUTHORS, authorId);
     }
 }
