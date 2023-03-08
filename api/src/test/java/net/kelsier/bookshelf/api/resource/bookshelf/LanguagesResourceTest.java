@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class LanguagesTest {
+class LanguagesResourceTest {
 
     public static final String API = "/api/1/bookshelf/languages";
     public static final String LOOKUP = "lang_code";
@@ -43,7 +43,7 @@ class LanguagesTest {
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Languages(databaseConnection))
+            .addResource(new LanguagesResource(databaseConnection))
             .build();
 
     @BeforeEach

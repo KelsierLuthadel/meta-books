@@ -34,8 +34,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.AuthorLookup;
-import net.kelsier.bookshelf.api.model.common.Pagination;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.CommentLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -51,16 +50,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
+import static net.kelsier.bookshelf.api.db.tables.Table.COMMENTS;
 
-/**
- * API to retrieve authors from the database.
- * Authors are stored in the following schema:
- * <p>
- * {@code public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)}
- * </p>
- */
-@Path("api/1/bookshelf/authors")
+@Path("api/1/bookshelf/comments")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -71,56 +63,24 @@ import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public final class Authors {
-    private static final Table TABLE_TYPE = AUTHORS;
+public class CommentsResource {
+    private static final Table TABLE_TYPE = COMMENTS;
     private final Jdbi databaseConnection;
 
     /**
-     * Constructor
+     * Bookshelf REST resource
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public Authors(final Jdbi databaseConnection) {
+    public CommentsResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
     /**
-     * Search for authors
+     *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @param search A {@link Search} object, consisting of an {@link AuthorLookup} query and  {@link Pagination}
-     * @return A paginated list of authors
-     *
-     * <pre>Example request:{@code
-     * "lookup": {
-     *     "field": "name",
-     *     "operator": "LIKE",
-     *     "value": "Stephen King"
-     *   },
-     *   "pagination": {
-     *     "start": 0,
-     *     "limit": 10,
-     *     "sort": {
-     *       "field": "name",
-     *       "direction": "asc"
-     *     }
-     *   }
-     * }</pre>
-     *
-     * <pre>Example response:{@code
-     * [
-     *   {
-     *     "id": 1,
-     *     "name": "Stephen King",
-     *     "sort": "King, Stephen"
-     *   },
-     *   {
-     *     "id": 2,
-     *     "name": "Stephen Kingston",
-     *     "sort": "Kingston, Stephen"
-     *   }
-     * ]
-     * }</pre>
+     * @return A paginated list of comments
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -128,32 +88,19 @@ public final class Authors {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Search for authors",
+        summary = "Search within comments",
         tags = {"Bookshelf"},
-        description = "Search for authors",
+        description = "Search within comments",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No authors found"),
+            @ApiResponse(responseCode = "404", description = "No comments found"),
         })
-    public List<Entity> authors(@Parameter(name="search", required = true) @NotNull @Valid final Search<AuthorLookup> search)  {
+    public List<Entity> comments(@Parameter(name="comment", required = true) @NotNull @Valid final Search<CommentLookup> search)  {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
-    /**
-     * Get Author details
-     * @param authorId Author ID
-     * @return An object containing author details
-     * 
-     * <pre>Example response:{@code
-     * {
-     *   "id": 1,
-     *   "name": "Stephen King",
-     *   "sort": "King, Stephen"
-     * }
-     * }</pre>
-     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -161,16 +108,17 @@ public final class Authors {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get author details",
+            summary = "Get comments",
             tags = {"Bookshelf"},
-            description = "Get author details",
+            description = "Get comments for a book",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No author found"),
+                    @ApiResponse(responseCode = "404", description = "No comments found"),
             })
-    public Entity author(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, authorId);
+    public Entity comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer commentId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, commentId);
     }
+
 }

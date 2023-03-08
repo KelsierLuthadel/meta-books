@@ -23,16 +23,8 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
-import net.kelsier.bookshelf.api.resource.bookshelf.Authors;
-import net.kelsier.bookshelf.api.resource.bookshelf.BookDetails;
-import net.kelsier.bookshelf.api.resource.bookshelf.BookSeries;
-import net.kelsier.bookshelf.api.resource.bookshelf.Books;
-import net.kelsier.bookshelf.api.resource.bookshelf.Comments;
-import net.kelsier.bookshelf.api.resource.bookshelf.Data;
-import net.kelsier.bookshelf.api.resource.bookshelf.Languages;
-import net.kelsier.bookshelf.api.resource.bookshelf.Publishers;
-import net.kelsier.bookshelf.api.resource.bookshelf.Ratings;
-import net.kelsier.bookshelf.api.resource.bookshelf.Tags;
+import net.kelsier.bookshelf.api.resource.bookshelf.*;
+import net.kelsier.bookshelf.api.resource.bookshelf.BooksResource;
 import net.kelsier.bookshelf.framework.auth.BasicAuthenticator;
 import net.kelsier.bookshelf.framework.auth.BasicAuthorizer;
 import net.kelsier.bookshelf.framework.auth.UserAuth;
@@ -318,13 +310,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     }
 
     private void registerOpenAPI(final Environment environment) {
-        //Stream.of("net.kelsier.bookshelf.migration.resource")
-
         OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf").collect(
                 Collectors.toSet()));
-
-//        OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf.api.resource").collect(
-//            Collectors.toSet()));
 
         final OpenAPI oas = new OpenAPI();
         final Info info = new Info()
@@ -347,7 +334,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         final SwaggerConfiguration oasConfig = new SwaggerConfiguration()
             .openAPI(oas)
             .prettyPrint(true)
-            .resourcePackages(Stream.of("net.kelsier.bookserver.api.rest")
+            .resourcePackages(Stream.of("net.kelsier.bookshelf")
                 .collect(Collectors.toSet()));
 
         environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -367,16 +354,16 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
                 getRoleDao(),
                 encryptionConfiguration));
             resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
-            resourceRegistrar.registerResource(new Books(databaseConnection));
-            resourceRegistrar.registerResource(new Authors(databaseConnection));
-            resourceRegistrar.registerResource(new Comments(databaseConnection));
-            resourceRegistrar.registerResource(new Data(databaseConnection));
-            resourceRegistrar.registerResource(new Languages(databaseConnection));
-            resourceRegistrar.registerResource(new Publishers(databaseConnection));
-            resourceRegistrar.registerResource(new BookSeries(databaseConnection));
-            resourceRegistrar.registerResource(new Ratings(databaseConnection));
-            resourceRegistrar.registerResource(new Tags(databaseConnection));
-            resourceRegistrar.registerResource(new BookDetails(databaseConnection));
+            resourceRegistrar.registerResource(new BooksResource(databaseConnection));
+            resourceRegistrar.registerResource(new AuthorsResource(databaseConnection));
+            resourceRegistrar.registerResource(new CommentsResource(databaseConnection));
+            resourceRegistrar.registerResource(new DataResource(databaseConnection));
+            resourceRegistrar.registerResource(new LanguagesResource(databaseConnection));
+            resourceRegistrar.registerResource(new PublishersResource(databaseConnection));
+            resourceRegistrar.registerResource(new BookSeriesResource(databaseConnection));
+            resourceRegistrar.registerResource(new RatingsResource(databaseConnection));
+            resourceRegistrar.registerResource(new TagsResource(databaseConnection));
+            resourceRegistrar.registerResource(new BookDetailsResource(databaseConnection));
 
             resourceRegistrar.registerResource(new BookshelfAdministration(databaseConnection));
         }

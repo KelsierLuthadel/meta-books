@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2023. Kelsier Luthadel
  *
@@ -33,7 +34,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.TagLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.AuthorLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -49,9 +51,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.TAGS;
+import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
 
-@Path("api/1/bookshelf/tags")
+/**
+ * API to retrieve authors from the database.
+ * Authors are stored in the following schema:
+ * <p>
+ * {@code public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)}
+ * </p>
+ */
+@Path("api/1/bookshelf/authors")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -62,24 +71,56 @@ import static net.kelsier.bookshelf.api.db.tables.Table.TAGS;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class Tags {
-    private static final Table TABLE_TYPE = TAGS;
+public final class AuthorsResource {
+    private static final Table TABLE_TYPE = AUTHORS;
     private final Jdbi databaseConnection;
 
     /**
-     * Bookshelf REST resource
+     * Constructor
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public Tags(final Jdbi databaseConnection) {
+    public AuthorsResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
     /**
-     *
+     * Search for authors
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of tags
+     * @param search A {@link Search} object, consisting of an {@link AuthorLookup} query and  {@link Pagination}
+     * @return A paginated list of authors
+     *
+     * <pre>Example request:{@code
+     * "lookup": {
+     *     "field": "name",
+     *     "operator": "LIKE",
+     *     "value": "Stephen King"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 10,
+     *     "sort": {
+     *       "field": "name",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *     "id": 1,
+     *     "name": "Stephen King",
+     *     "sort": "King, Stephen"
+     *   },
+     *   {
+     *     "id": 2,
+     *     "name": "Stephen Kingston",
+     *     "sort": "Kingston, Stephen"
+     *   }
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -87,19 +128,32 @@ public class Tags {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Search tags",
+        summary = "Search for authors",
         tags = {"Bookshelf"},
-        description = "Search tags",
+        description = "Search for authors",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No tags found"),
+            @ApiResponse(responseCode = "404", description = "No authors found"),
         })
-    public List<Entity> tags(@Parameter(name="data", required = true) @NotNull @Valid final Search<TagLookup> search)  {
+    public List<Entity> authors(@Parameter(name="search", required = true) @NotNull @Valid final Search<AuthorLookup> search)  {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get Author details
+     * @param authorId Author ID
+     * @return An object containing author details
+     * 
+     * <pre>Example response:{@code
+     * {
+     *   "id": 1,
+     *   "name": "Stephen King",
+     *   "sort": "King, Stephen"
+     * }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -107,17 +161,16 @@ public class Tags {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get tag details",
+            summary = "Get author details",
             tags = {"Bookshelf"},
-            description = "Get tag details",
+            description = "Get author details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No tags found"),
+                    @ApiResponse(responseCode = "404", description = "No author found"),
             })
-    public Entity tag(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer tagId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, tagId);
+    public Entity author(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, authorId);
     }
-
 }

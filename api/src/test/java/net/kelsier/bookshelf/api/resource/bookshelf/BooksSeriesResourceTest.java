@@ -2,14 +2,13 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.TagLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.SeriesLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.api.model.common.Sort;
-import net.kelsier.bookshelf.api.db.dao.TagDAO;
-import net.kelsier.bookshelf.api.db.model.Tag;
+import net.kelsier.bookshelf.api.db.dao.SeriesDAO;
+import net.kelsier.bookshelf.api.db.model.Series;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,134 +29,134 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class TagsTest {
+class BooksSeriesResourceTest {
 
-    public static final String API = "/api/1/bookshelf/tags";
-    public static final String LOOKUP = "name";
-    private Tag tag;
-    private List<Tag> tags;
+    public static final String API = "/api/1/bookshelf/series";
+    private Series series;
+    private List<Series> seriesList;
 
     @Spy
-    private TagDAO tagDAO;
+    private SeriesDAO seriesDAO;
 
     @Mock
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Tags(databaseConnection))
+            .addResource(new BookSeriesResource(databaseConnection))
             .build();
 
     @BeforeEach
     void setup() {
-        tag = new Tag(1, "code");
+        series = new Series(1, "Book name", "Book name");
 
-        tags = new ArrayList<>();
+        seriesList = new ArrayList<>();
 
-        tags.add(new Tag(1,  "code 1"));
-        tags.add(new Tag(2,  "code 2"));
-        tags.add(new Tag(3,  "code 3"));
+        seriesList.add(new Series(1, "Name 1", "1, Name"));
+        seriesList.add(new Series(2, "Name 2", "2, Name"));
+        seriesList.add(new Series(3, "Name 3", "3, Name"));
 
-        tagDAO = spy(TagDAO.class);
+        seriesDAO = spy(SeriesDAO.class);
 
-        when(databaseConnection.onDemand(TagDAO.class)).thenReturn(tagDAO);
+        when(databaseConnection.onDemand(SeriesDAO.class)).thenReturn(seriesDAO);
 
-        when(tagDAO.get(anyInt())).thenReturn(tag);
+        when(seriesDAO.get(anyInt())).thenReturn(series);
 
         // limit, start, field, direction
-        when(tagDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(tags);
+        when(seriesDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(seriesList);
 
         // value, field, operator, limit, start, field, direction
-        when(tagDAO.find(anyString(), anyString(), anyString(),
-                anyInt(), anyInt(), anyString(), anyString())).thenReturn(tags);
+        when(seriesDAO.find(anyString(), anyString(), anyString(),
+                anyInt(), anyInt(), anyString(), anyString())).thenReturn(seriesList);
     }
 
     @Test
-    void testGet() {
+    void testGetBook() {
         final Response post = resources.target(MessageFormat.format("{0}/1", API)).request().get();
 
-        final Tag response = post.readEntity(Tag.class);
+        final Series response = post.readEntity(Series.class);
         assertEquals(Response.Status.OK.getStatusCode(),post.getStatus(),"Status should be 200 OK");
 
-        validateComment(response, tag);
+        validateSeries(response, series);
     }
 
-    private void validateComment(final Tag actual, final Tag expected) {
+    private void validateSeries(final Series actual, final Series expected) {
         assertEquals(expected.getId(), actual.getId(), "id should match");
+        assertEquals(expected.getSort(), actual.getSort(), "sort should match");
         assertEquals(expected.getName(), actual.getName(), "name should match");
     }
 
     @Test
-    void testSearch() {
-        final Search<LanguageLookup> search = new Search<>(
-                new LanguageLookup(LOOKUP, Operator.LIKE, "value"),
+    void testSearchBooks() {
+        final Search<SeriesLookup> search = new Search<>(
+                new SeriesLookup("name", Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Tag> response;
+        final List<Series> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(seriesList.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < tags.size(); i++) {
-            validateComment(response.get(i), tags.get(i));
+        for (int i = 0; i < seriesList.size(); i++) {
+            validateSeries(response.get(i), seriesList.get(i));
         }
 
-        verify(tagDAO, times(1)).find("%value%", LOOKUP, "ILIKE",
+        verify(seriesDAO, times(1)).find("%value%", "name", "ILIKE",
                 10, 0, "id", "asc");
     }
 
     @Test
-    void testGetAll() {
-        final Search<TagLookup> search = new Search<>(
+    void testSearchBooksEquality() {
+        final Search<SeriesLookup> search = new Search<>(
+                new SeriesLookup("name", Operator.EQ, "value"),
+                new Pagination(0, 10, new Sort("id", "asc"))
+        );
+
+        final List<Series> response;
+        try (Response post = resources.target(API).request().post(Entity.json(search))) {
+            assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
+
+            response = post.readEntity(new GenericType<>() {});
+        }
+        assertEquals(seriesList.size(), response.size(), "The correct number of results should be returned");
+
+        for (int i = 0; i < seriesList.size(); i++) {
+            validateSeries(response.get(i), seriesList.get(i));
+        }
+
+        verify(seriesDAO, times(1)).find("value", "name", "=",
+                10, 0, "id", "asc");
+    }
+
+    @Test
+    void testGetBooks() {
+        final Search<SeriesLookup> search = new Search<>(
                 null,
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Tag> response;
+        final List<Series> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(seriesList.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < tags.size(); i++) {
-            validateComment(response.get(i), tags.get(i));
+        for (int i = 0; i < seriesList.size(); i++) {
+            validateSeries(response.get(i), seriesList.get(i));
         }
 
-        verify(tagDAO, times(1)).find(10, 0, "id", "asc");
-    }
-
-    @Test
-    void testSearchEquality() {
-        final Search<TagLookup> search = new Search<>(
-                new TagLookup("name", Operator.EQ, "value"),
-                new Pagination(0, 10, new Sort("id", "asc"))
-        );
-
-        final List<Tag> response;
-        try (Response post = resources.target(API).request().post(Entity.json(search))) {
-            assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
-
-            response = post.readEntity(new GenericType<>() {});
-        }
-        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
-
-        for (int i = 0; i < tags.size(); i++) {
-            validateComment(response.get(i), tags.get(i));
-        }
-
-        verify(tagDAO, times(1)).find("value", "name", "=",
-                10, 0, "id", "asc");
+        verify(seriesDAO, times(1)).find(10, 0, "id", "asc");
     }
 
     @Test
     void testValidationForField() {
-        final Search<TagLookup> search = new Search<>(
-                new TagLookup("bad field", Operator.LIKE, "value"),
+        final Search<SeriesLookup> search = new Search<>(
+                new SeriesLookup("bad field", Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -168,8 +167,8 @@ class TagsTest {
 
     @Test
     void testValidationForOperator() {
-        final Search<TagLookup> search = new Search<>(
-                new TagLookup(LOOKUP, null, "value"),
+        final Search<SeriesLookup> search = new Search<>(
+                new SeriesLookup("name", null, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -180,8 +179,8 @@ class TagsTest {
 
     @Test
     void testValidationForPaginationStart() {
-        final Search<TagLookup> search = new Search<>(
-                new TagLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<SeriesLookup> search = new Search<>(
+                new SeriesLookup("name", Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "asc"))
         );
 
@@ -192,8 +191,8 @@ class TagsTest {
 
     @Test
     void testValidationForPaginationLimit() {
-        final Search<TagLookup> search = new Search<>(
-                new TagLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<SeriesLookup> search = new Search<>(
+                new SeriesLookup("name", Operator.LIKE, "value"),
                 new Pagination(0, 101, new Sort("id", "asc"))
         );
 
@@ -204,8 +203,8 @@ class TagsTest {
 
     @Test
     void testValidationForPaginationSort() {
-        final Search<TagLookup> search = new Search<>(
-                new TagLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<SeriesLookup> search = new Search<>(
+                new SeriesLookup("name", Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "random"))
         );
 
@@ -213,4 +212,6 @@ class TagsTest {
             assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be 422 UNPROCESSABLE_ENTITY");
         }
     }
+
+
 }

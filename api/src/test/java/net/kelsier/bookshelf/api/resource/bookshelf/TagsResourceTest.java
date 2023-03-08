@@ -2,14 +2,14 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.PublisherLookup;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.TagLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.api.model.common.Sort;
-import net.kelsier.bookshelf.api.db.dao.PublisherDAO;
-import net.kelsier.bookshelf.api.db.model.Publisher;
+import net.kelsier.bookshelf.api.db.dao.TagDAO;
+import net.kelsier.bookshelf.api.db.model.Tag;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,61 +30,60 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class PublisherTest {
+class TagsResourceTest {
 
-    public static final String API = "/api/1/bookshelf/publishers";
+    public static final String API = "/api/1/bookshelf/tags";
     public static final String LOOKUP = "name";
-    private Publisher publisher;
-    private List<Publisher> publishers;
+    private Tag tag;
+    private List<Tag> tags;
 
     @Spy
-    private PublisherDAO publisherDAO;
+    private TagDAO tagDAO;
 
     @Mock
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Publishers(databaseConnection))
+            .addResource(new TagsResource(databaseConnection))
             .build();
 
     @BeforeEach
     void setup() {
-        publisher = new Publisher(1, "code", "code");
+        tag = new Tag(1, "code");
 
-        publishers = new ArrayList<>();
+        tags = new ArrayList<>();
 
-        publishers.add(new Publisher(1,  "code 1", "1, code"));
-        publishers.add(new Publisher(2,  "code 2", "2, code"));
-        publishers.add(new Publisher(3,  "code 3", "3, code"));
+        tags.add(new Tag(1,  "code 1"));
+        tags.add(new Tag(2,  "code 2"));
+        tags.add(new Tag(3,  "code 3"));
 
-        publisherDAO = spy(PublisherDAO.class);
+        tagDAO = spy(TagDAO.class);
 
-        when(databaseConnection.onDemand(PublisherDAO.class)).thenReturn(publisherDAO);
+        when(databaseConnection.onDemand(TagDAO.class)).thenReturn(tagDAO);
 
-        when(publisherDAO.get(anyInt())).thenReturn(publisher);
+        when(tagDAO.get(anyInt())).thenReturn(tag);
 
         // limit, start, field, direction
-        when(publisherDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(publishers);
+        when(tagDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(tags);
 
         // value, field, operator, limit, start, field, direction
-        when(publisherDAO.find(anyString(), anyString(), anyString(),
-                anyInt(), anyInt(), anyString(), anyString())).thenReturn(publishers);
+        when(tagDAO.find(anyString(), anyString(), anyString(),
+                anyInt(), anyInt(), anyString(), anyString())).thenReturn(tags);
     }
 
     @Test
     void testGet() {
         final Response post = resources.target(MessageFormat.format("{0}/1", API)).request().get();
 
-        final Publisher  response = post.readEntity(Publisher.class);
+        final Tag response = post.readEntity(Tag.class);
         assertEquals(Response.Status.OK.getStatusCode(),post.getStatus(),"Status should be 200 OK");
 
-        validateComment(response, publisher);
+        validateComment(response, tag);
     }
 
-    private void validateComment(final Publisher actual, final Publisher expected) {
+    private void validateComment(final Tag actual, final Tag expected) {
         assertEquals(expected.getId(), actual.getId(), "id should match");
         assertEquals(expected.getName(), actual.getName(), "name should match");
-        assertEquals(expected.getSort(), actual.getSort(), "sort should match");
     }
 
     @Test
@@ -94,71 +93,71 @@ class PublisherTest {
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Publisher> response;
+        final List<Tag> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < publishers.size(); i++) {
-            validateComment(response.get(i), publishers.get(i));
+        for (int i = 0; i < tags.size(); i++) {
+            validateComment(response.get(i), tags.get(i));
         }
 
-        verify(publisherDAO, times(1)).find("%value%", LOOKUP, "ILIKE",
+        verify(tagDAO, times(1)).find("%value%", LOOKUP, "ILIKE",
                 10, 0, "id", "asc");
     }
 
     @Test
     void testGetAll() {
-        final Search<PublisherLookup> search = new Search<>(
+        final Search<TagLookup> search = new Search<>(
                 null,
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Publisher> response;
+        final List<Tag> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < publishers.size(); i++) {
-            validateComment(response.get(i), publishers.get(i));
+        for (int i = 0; i < tags.size(); i++) {
+            validateComment(response.get(i), tags.get(i));
         }
 
-        verify(publisherDAO, times(1)).find(10, 0, "id", "asc");
+        verify(tagDAO, times(1)).find(10, 0, "id", "asc");
     }
 
     @Test
     void testSearchEquality() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup("name", Operator.EQ, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup("name", Operator.EQ, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Publisher> response;
+        final List<Tag> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < publishers.size(); i++) {
-            validateComment(response.get(i), publishers.get(i));
+        for (int i = 0; i < tags.size(); i++) {
+            validateComment(response.get(i), tags.get(i));
         }
 
-        verify(publisherDAO, times(1)).find("value", "name", "=",
+        verify(tagDAO, times(1)).find("value", "name", "=",
                 10, 0, "id", "asc");
     }
 
     @Test
     void testValidationForField() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup("bad field", Operator.LIKE, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup("bad field", Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -169,8 +168,8 @@ class PublisherTest {
 
     @Test
     void testValidationForOperator() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup(LOOKUP, null, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup(LOOKUP, null, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -181,8 +180,8 @@ class PublisherTest {
 
     @Test
     void testValidationForPaginationStart() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "asc"))
         );
 
@@ -193,8 +192,8 @@ class PublisherTest {
 
     @Test
     void testValidationForPaginationLimit() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(0, 101, new Sort("id", "asc"))
         );
 
@@ -205,8 +204,8 @@ class PublisherTest {
 
     @Test
     void testValidationForPaginationSort() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "random"))
         );
 

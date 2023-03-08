@@ -14,13 +14,16 @@ add: tags + ratings to BookDetails
 ## Testing
 SQLi testing  
 XSS testing  
+unit tests for BookDetails  
+test 404 for api tests /{id}
 
 ## Searching
 Custom fields   
 Desired response body
-Date search, including ranges
+Date search, including ranges  
 
 ## Admin
-roles, users: Set constraints and add swagger API details (from books)
+roles, users: Set constraints and add swagger API details (from books)  
+
 
 

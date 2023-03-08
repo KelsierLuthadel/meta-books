@@ -2,13 +2,14 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.RatingLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.CommentLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.SeriesLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.api.model.common.Sort;
-import net.kelsier.bookshelf.api.db.dao.RatingDAO;
-import net.kelsier.bookshelf.api.db.model.Rating;
+import net.kelsier.bookshelf.api.db.dao.CommentDAO;
+import net.kelsier.bookshelf.api.db.model.Comment;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,170 +30,174 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class RatingTest {
+class CommentsResourceTest {
 
-    public static final String API = "/api/1/bookshelf/ratings";
-    public static final String LOOKUP = "rating";
-    private Rating rating;
-    private List<Rating> ratings;
+    public static final String API = "/api/1/bookshelf/comments";
+    public static final String LOOKUP = "text";
+    private Comment comment;
+    private List<Comment> comments;
 
     @Spy
-    private RatingDAO ratingDAO;
+    private CommentDAO commentDAO;
 
     @Mock
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Ratings(databaseConnection))
+            .addResource(new CommentsResource(databaseConnection))
             .build();
 
     @BeforeEach
     void setup() {
-        rating = new Rating(1, 1);
+        comment = new Comment(1, 1, "Book name");
 
-        ratings = new ArrayList<>();
+        comments = new ArrayList<>();
 
-        ratings.add(new Rating(1,  1));
-        ratings.add(new Rating(2,  10));
-        ratings.add(new Rating(3,  5));
+        comments.add(new Comment(1, 1, "1, Name"));
+        comments.add(new Comment(2, 1, "2, Name"));
+        comments.add(new Comment(3, 3, "3, Name"));
 
-        ratingDAO = spy(RatingDAO.class);
+        commentDAO = spy(CommentDAO.class);
 
-        when(databaseConnection.onDemand(RatingDAO.class)).thenReturn(ratingDAO);
+        when(databaseConnection.onDemand(CommentDAO.class)).thenReturn(commentDAO);
 
-        when(ratingDAO.get(anyInt())).thenReturn(rating);
+        when(commentDAO.get(anyInt())).thenReturn(comment);
 
         // limit, start, field, direction
-        when(ratingDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
+        when(commentDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(comments);
 
         // value, field, operator, limit, start, field, direction
-        when(ratingDAO.find(anyDouble(), anyString(), anyString(),
-                anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
+        when(commentDAO.find(anyString(), anyString(), anyString(),
+                anyInt(), anyInt(), anyString(), anyString())).thenReturn(comments);
     }
 
     @Test
-    void testGet() {
+    void testGetComment() {
         final Response post = resources.target(MessageFormat.format("{0}/1", API)).request().get();
 
-        final Rating response = post.readEntity(Rating.class);
+        final Comment response = post.readEntity(Comment.class);
         assertEquals(Response.Status.OK.getStatusCode(),post.getStatus(),"Status should be 200 OK");
 
-        validateComment(response, rating);
+        validateComment(response, comment);
     }
 
-    private void validateComment(final Rating actual, final Rating expected) {
+    private void validateComment(final Comment actual, final Comment expected) {
         assertEquals(expected.getId(), actual.getId(), "id should match");
-        assertEquals(expected.getRating(), actual.getRating(), "rating should match");
+        assertEquals(expected.getBook(), actual.getBook(), "book should match");
+        assertEquals(expected.getText(), actual.getText(), "text should match");
     }
 
     @Test
-    void testSearch() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, Operator.EQ, "10"),
+    void testSearchComments() {
+        final Search<SeriesLookup> search = new Search<>(
+                new SeriesLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Rating> response;
+        final List<Comment> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(comments.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < ratings.size(); i++) {
-            validateComment(response.get(i), ratings.get(i));
+        for (int i = 0; i < comments.size(); i++) {
+            validateComment(response.get(i), comments.get(i));
         }
 
-        verify(ratingDAO, times(1)).find(10, LOOKUP, "=",
+        verify(commentDAO, times(1)).find("%value%", LOOKUP, "ILIKE",
                 10, 0, "id", "asc");
     }
 
     @Test
-    void testGetAll() {
-        final Search<RatingLookup> search = new Search<>(
+    void testGetComments() {
+        final Search<CommentLookup> search = new Search<>(
                 null,
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Rating> response;
+        final List<Comment> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(comments.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < ratings.size(); i++) {
-            validateComment(response.get(i), ratings.get(i));
+        for (int i = 0; i < comments.size(); i++) {
+            validateComment(response.get(i), comments.get(i));
         }
 
-        verify(ratingDAO, times(1)).find(10, 0, "id", "asc");
+        verify(commentDAO, times(1)).find(10, 0, "id", "asc");
     }
 
     @Test
     void testSearchEquality() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup("rating", Operator.EQ, "10"),
+        final Search<CommentLookup> search = new Search<>(
+                new CommentLookup("text", Operator.EQ, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Rating> response;
+        final List<Comment> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(comments.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < ratings.size(); i++) {
-            validateComment(response.get(i), ratings.get(i));
+        for (int i = 0; i < comments.size(); i++) {
+            validateComment(response.get(i), comments.get(i));
         }
 
-        verify(ratingDAO, times(1)).find(10, "rating", "=",
+        verify(commentDAO, times(1)).find("value", "text", "=",
                 10, 0, "id", "asc");
     }
 
     @Test
     void testValidationForField() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup("bad field", Operator.LIKE, "value"),
+        final Search<CommentLookup> search = new Search<>(
+                new CommentLookup("bad field", Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
+
             assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be 422 UNPROCESSABLE_ENTITY");
         }
     }
 
     @Test
     void testValidationForOperator() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, null, "value"),
+        final Search<CommentLookup> search = new Search<>(
+                new CommentLookup(LOOKUP, null, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
+
             assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be 422 UNPROCESSABLE_ENTITY");
         }
     }
 
     @Test
     void testValidationForPaginationStart() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<CommentLookup> search = new Search<>(
+                new CommentLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "asc"))
         );
 
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
+
             assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be 422 UNPROCESSABLE_ENTITY");
         }
     }
 
     @Test
     void testValidationForPaginationLimit() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<CommentLookup> search = new Search<>(
+                new CommentLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(0, 101, new Sort("id", "asc"))
         );
 
@@ -203,8 +208,8 @@ class RatingTest {
 
     @Test
     void testValidationForPaginationSort() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<CommentLookup> search = new Search<>(
+                new CommentLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "random"))
         );
 
@@ -212,4 +217,6 @@ class RatingTest {
             assertEquals(UNPROCESSABLE_ENTITY.getCode(), post.getStatus(), "Status should be 422 UNPROCESSABLE_ENTITY");
         }
     }
+
+
 }

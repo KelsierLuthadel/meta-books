@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2023. Kelsier Luthadel
  *
@@ -33,6 +34,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
+import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.annotation.security.RolesAllowed;
@@ -40,14 +43,16 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.BOOK_DETAILS;
+import static net.kelsier.bookshelf.api.db.tables.Table.LANGUAGES;
 
-@Path("api/1/bookshelf/")
+@Path("api/1/bookshelf/languages")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -58,8 +63,8 @@ import static net.kelsier.bookshelf.api.db.tables.Table.BOOK_DETAILS;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class BookDetails {
-    private static final Table TABLE_TYPE = BOOK_DETAILS;
+public class LanguagesResource {
+    private static final Table TABLE_TYPE = LANGUAGES;
     private final Jdbi databaseConnection;
 
     /**
@@ -67,8 +72,33 @@ public class BookDetails {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public BookDetails(final Jdbi databaseConnection) {
+    public LanguagesResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
+    }
+
+    /**
+     *
+     * Restricted to the following roles: admin:r, user:r
+     *
+     * @return A paginated list of languages
+     */
+    @POST
+    @RolesAllowed({"admin:r", "user:r"})
+    @Valid
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(
+        summary = "Search for a language",
+        tags = {"Bookshelf"},
+        description = "Search for a language",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorised"),
+            @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
+            @ApiResponse(responseCode = "404", description = "No languages found"),
+        })
+    public List<Entity> languages(@Parameter(name="data", required = true) @NotNull @Valid final Search<LanguageLookup> search)  {
+        return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
     @GET
@@ -78,17 +108,17 @@ public class BookDetails {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get Book details",
-            tags = {"Book Details"},
-            description = "Get Book details",
+            summary = "Get language details",
+            tags = {"Bookshelf"},
+            description = "Get language details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No tags found"),
+                    @ApiResponse(responseCode = "404", description = "No languages found"),
             })
-    public Entity get(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer tagId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, tagId);
+    public Entity language(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer languageId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, languageId);
     }
 
 }

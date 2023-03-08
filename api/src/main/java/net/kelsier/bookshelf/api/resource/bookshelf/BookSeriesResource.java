@@ -63,7 +63,7 @@ import static net.kelsier.bookshelf.api.db.tables.Table.*;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class BookSeries {
+public class BookSeriesResource {
     private static final Table TABLE_TYPE = SERIES;
     private final Jdbi databaseConnection;
 
@@ -72,7 +72,7 @@ public class BookSeries {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public BookSeries(final Jdbi databaseConnection) {
+    public BookSeriesResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 

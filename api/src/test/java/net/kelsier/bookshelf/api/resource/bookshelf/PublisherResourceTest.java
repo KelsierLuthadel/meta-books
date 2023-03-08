@@ -2,13 +2,14 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.DataLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.PublisherLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.api.model.common.Sort;
-import net.kelsier.bookshelf.api.db.dao.DataDAO;
-import net.kelsier.bookshelf.api.db.model.BookData;
+import net.kelsier.bookshelf.api.db.dao.PublisherDAO;
+import net.kelsier.bookshelf.api.db.model.Publisher;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,162 +30,135 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class DataTest {
+class PublisherResourceTest {
 
-    public static final String API = "/api/1/bookshelf/data";
+    public static final String API = "/api/1/bookshelf/publishers";
     public static final String LOOKUP = "name";
-    private BookData data;
-    private List<BookData> dataList;
+    private Publisher publisher;
+    private List<Publisher> publishers;
 
     @Spy
-    private DataDAO dataDAO;
+    private PublisherDAO publisherDAO;
 
     @Mock
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Data(databaseConnection))
+            .addResource(new PublishersResource(databaseConnection))
             .build();
 
     @BeforeEach
     void setup() {
-        data = new BookData(1, 1, "format", 100, "name");
+        publisher = new Publisher(1, "code", "code");
 
-        dataList = new ArrayList<>();
+        publishers = new ArrayList<>();
 
-        dataList.add(new BookData(1, 1, "format", 100, "name 1"));
-        dataList.add(new BookData(2, 1, "format", 200, "name 2"));
-        dataList.add(new BookData(3, 3, "format",150, "name 3"));
+        publishers.add(new Publisher(1,  "code 1", "1, code"));
+        publishers.add(new Publisher(2,  "code 2", "2, code"));
+        publishers.add(new Publisher(3,  "code 3", "3, code"));
 
-        dataDAO = spy(DataDAO.class);
+        publisherDAO = spy(PublisherDAO.class);
 
-        when(databaseConnection.onDemand(DataDAO.class)).thenReturn(dataDAO);
+        when(databaseConnection.onDemand(PublisherDAO.class)).thenReturn(publisherDAO);
 
-        when(dataDAO.get(anyInt())).thenReturn(data);
+        when(publisherDAO.get(anyInt())).thenReturn(publisher);
 
         // limit, start, field, direction
-        when(dataDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(dataList);
-
-        when(dataDAO.find(anyInt(), anyString(),  anyString(), anyInt(), anyInt(), anyString(),  anyString())).thenReturn(dataList);
+        when(publisherDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(publishers);
 
         // value, field, operator, limit, start, field, direction
-        when(dataDAO.find(anyString(), anyString(), anyString(),
-                anyInt(), anyInt(), anyString(), anyString())).thenReturn(dataList);
+        when(publisherDAO.find(anyString(), anyString(), anyString(),
+                anyInt(), anyInt(), anyString(), anyString())).thenReturn(publishers);
     }
 
     @Test
-    void testGetBook() {
+    void testGet() {
         final Response post = resources.target(MessageFormat.format("{0}/1", API)).request().get();
 
-        final BookData  response = post.readEntity(BookData.class);
+        final Publisher  response = post.readEntity(Publisher.class);
         assertEquals(Response.Status.OK.getStatusCode(),post.getStatus(),"Status should be 200 OK");
 
-        validateComment(response, data);
+        validateComment(response, publisher);
     }
 
-    private void validateComment(final BookData actual, final BookData expected) {
+    private void validateComment(final Publisher actual, final Publisher expected) {
         assertEquals(expected.getId(), actual.getId(), "id should match");
-        assertEquals(expected.getBook(), actual.getBook(), "book should match");
-        assertEquals(expected.getFormat(), actual.getFormat(), "format should match");
-        assertEquals(expected.getUncompressedSize(), actual.getUncompressedSize(), "size should match");
         assertEquals(expected.getName(), actual.getName(), "name should match");
+        assertEquals(expected.getSort(), actual.getSort(), "sort should match");
     }
 
     @Test
     void testSearch() {
-        final Search<DataLookup> search = new Search<>(
-                new DataLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<LanguageLookup> search = new Search<>(
+                new LanguageLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<BookData> response;
+        final List<Publisher> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(dataList.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < dataList.size(); i++) {
-            validateComment(response.get(i), dataList.get(i));
+        for (int i = 0; i < publishers.size(); i++) {
+            validateComment(response.get(i), publishers.get(i));
         }
 
-        verify(dataDAO, times(1)).find("%value%", LOOKUP, "ILIKE",
+        verify(publisherDAO, times(1)).find("%value%", LOOKUP, "ILIKE",
                 10, 0, "id", "asc");
     }
 
     @Test
-    void testSearchSize() {
-        final Search<DataLookup> search = new Search<>(
-                new DataLookup("uncompressed_size", Operator.EQ, "1024"),
-                new Pagination(0, 10, new Sort("id", "asc"))
-        );
-
-        final List<BookData> response;
-        try (Response post = resources.target(API).request().post(Entity.json(search))) {
-            assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
-
-            response = post.readEntity(new GenericType<>() {});
-        }
-        assertEquals(dataList.size(), response.size(), "The correct number of results should be returned");
-
-        for (int i = 0; i < dataList.size(); i++) {
-            validateComment(response.get(i), dataList.get(i));
-        }
-
-        verify(dataDAO, times(1)).find(1024, "uncompressed_size", "=",
-                10, 0, "id", "asc");
-    }
-
-    @Test
-    void testGetBookData() {
-        final Search<DataLookup> search = new Search<>(
+    void testGetAll() {
+        final Search<PublisherLookup> search = new Search<>(
                 null,
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<BookData> response;
+        final List<Publisher> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(dataList.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < dataList.size(); i++) {
-            validateComment(response.get(i), dataList.get(i));
+        for (int i = 0; i < publishers.size(); i++) {
+            validateComment(response.get(i), publishers.get(i));
         }
 
-        verify(dataDAO, times(1)).find(10, 0, "id", "asc");
+        verify(publisherDAO, times(1)).find(10, 0, "id", "asc");
     }
 
     @Test
     void testSearchEquality() {
-        final Search<DataLookup> search = new Search<>(
-                new DataLookup("format", Operator.EQ, "value"),
+        final Search<PublisherLookup> search = new Search<>(
+                new PublisherLookup("name", Operator.EQ, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<BookData> response;
+        final List<Publisher> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(dataList.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < dataList.size(); i++) {
-            validateComment(response.get(i), dataList.get(i));
+        for (int i = 0; i < publishers.size(); i++) {
+            validateComment(response.get(i), publishers.get(i));
         }
 
-        verify(dataDAO, times(1)).find("value", "format", "=",
+        verify(publisherDAO, times(1)).find("value", "name", "=",
                 10, 0, "id", "asc");
     }
 
     @Test
     void testValidationForField() {
-        final Search<DataLookup> search = new Search<>(
-                new DataLookup("bad field", Operator.LIKE, "value"),
+        final Search<PublisherLookup> search = new Search<>(
+                new PublisherLookup("bad field", Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -195,8 +169,8 @@ class DataTest {
 
     @Test
     void testValidationForOperator() {
-        final Search<DataLookup> search = new Search<>(
-                new DataLookup(LOOKUP, null, "value"),
+        final Search<PublisherLookup> search = new Search<>(
+                new PublisherLookup(LOOKUP, null, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -207,8 +181,8 @@ class DataTest {
 
     @Test
     void testValidationForPaginationStart() {
-        final Search<DataLookup> search = new Search<>(
-                new DataLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<PublisherLookup> search = new Search<>(
+                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "asc"))
         );
 
@@ -219,8 +193,8 @@ class DataTest {
 
     @Test
     void testValidationForPaginationLimit() {
-        final Search<DataLookup> search = new Search<>(
-                new DataLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<PublisherLookup> search = new Search<>(
+                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(0, 101, new Sort("id", "asc"))
         );
 
@@ -231,8 +205,8 @@ class DataTest {
 
     @Test
     void testValidationForPaginationSort() {
-        final Search<DataLookup> search = new Search<>(
-                new DataLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<PublisherLookup> search = new Search<>(
+                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "random"))
         );
 
