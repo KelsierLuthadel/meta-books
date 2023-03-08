@@ -22,54 +22,48 @@ class BookTagLinkTest {
     void testNullId() {
         final BookTagLink bookTagLink = new BookTagLink(null, 1, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
+        zeroIdTest(bookTagLink, "must not be null");
     }
 
     @Test
     void testZeroId() {
         final BookTagLink bookTagLink = new BookTagLink(0, 1, 1);
 
+        zeroIdTest(bookTagLink, "must be greater than or equal to 1");
+    }
+
+    private void zeroIdTest(final BookTagLink bookTagLink, final String expected) {
         final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
+        violations.forEach(authorConstraintViolation -> assertEquals(expected, authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testNullBook() {
         final BookTagLink bookTagLink = new BookTagLink(1, null, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
+        zeroIdTest(bookTagLink, "must not be null");
     }
 
     @Test
     void testZeroBook() {
         final BookTagLink bookTagLink = new BookTagLink(1, 0, 1);
 
-        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
+        zeroIdTest(bookTagLink, "must be greater than or equal to 1");
     }
 
     @Test
     void testNullTag() {
         final BookTagLink bookTagLink = new BookTagLink(1, 1, null);
 
-        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
+        zeroIdTest(bookTagLink, "must not be null");
     }
 
     @Test
     void testZeroTag() {
         final BookTagLink bookTagLink = new BookTagLink(1, 1, 0);
 
-        final Set<ConstraintViolation<Object>> violations = validate(bookTagLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
+        zeroIdTest(bookTagLink, "must be greater than or equal to 1");
     }
 
 

@@ -55,6 +55,10 @@ public interface BookTagLinkDAO {
     @GetGeneratedKeys
     long insert(@BindBean BookTagLink bookTagLink);
 
+    /**
+     * Delete all books-tags links from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM books_tags_link")
     void purge();
 }

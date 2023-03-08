@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  custom_column_n(id SERIAL PRIMARY KEY, value TEXT NOT NULL, UNIQUE(value))
  */
 
-public class CustomColumn {
+public class CustomColumn implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

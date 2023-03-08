@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * tags(id SERIAL PRIMARY KEY, name TEXT NOT NULL , UNIQUE (name))
  */
 
-public class Tag {
+public class Tag implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

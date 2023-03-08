@@ -20,56 +20,38 @@ class BookAuthorLinkTest {
 
     @Test
     void testNullId() {
-        final BookAuthorLink bookAuthorLink =  new BookAuthorLink(null, 1, 1);
-
-        final Set<ConstraintViolation<Object>> violations = validate(bookAuthorLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
+        testZeroParameter(new BookAuthorLink(null, 1, 1), "must not be null");
     }
 
     @Test
     void testZeroId() {
-        final BookAuthorLink bookAuthorLink =  new BookAuthorLink(0, 1, 1);
+        testZeroParameter(new BookAuthorLink(0, 1, 1), "must be greater than or equal to 1");
+    }
 
+    private void testZeroParameter(final BookAuthorLink bookAuthorLink, final String expected) {
         final Set<ConstraintViolation<Object>> violations = validate(bookAuthorLink);
         assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
+        violations.forEach(authorConstraintViolation -> assertEquals(expected, authorConstraintViolation.getMessage()));
     }
 
     @Test
     void testNullBook() {
-        final BookAuthorLink bookAuthorLink = new BookAuthorLink(1, null, 1);
-
-        final Set<ConstraintViolation<Object>> violations = validate(bookAuthorLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
+        testZeroParameter(new BookAuthorLink(1, null, 1), "must not be null");
     }
 
     @Test
     void testZeroBook() {
-        final BookAuthorLink bookAuthorLink = new BookAuthorLink(1, 0, 1);
-
-        final Set<ConstraintViolation<Object>> violations = validate(bookAuthorLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
+        testZeroParameter(new BookAuthorLink(1, 0, 1), "must be greater than or equal to 1");
     }
 
     @Test
     void testNullAuthor() {
-        final BookAuthorLink bookAuthorLink = new BookAuthorLink(1, 1, null);
-
-        final Set<ConstraintViolation<Object>> violations = validate(bookAuthorLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
+        testZeroParameter(new BookAuthorLink(1, 1, null), "must not be null");
     }
 
     @Test
     void testZeroAuthor() {
-        final BookAuthorLink bookAuthorLink = new BookAuthorLink(1, 1, 0);
-
-        final Set<ConstraintViolation<Object>> violations = validate(bookAuthorLink);
-        assertEquals(1, violations.size());
-        violations.forEach(authorConstraintViolation -> assertEquals("must be greater than or equal to 1", authorConstraintViolation.getMessage()));
+        testZeroParameter(new BookAuthorLink(1, 1, 0), "must be greater than or equal to 1");
     }
 
     private Set<ConstraintViolation<Object>> validate(final Object object) {

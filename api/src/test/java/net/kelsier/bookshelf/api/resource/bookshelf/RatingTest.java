@@ -66,7 +66,7 @@ class RatingTest {
         when(ratingDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
 
         // value, field, operator, limit, start, field, direction
-        when(ratingDAO.find(anyInt(), anyString(), anyString(),
+        when(ratingDAO.find(anyDouble(), anyString(), anyString(),
                 anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
     }
 

@@ -31,10 +31,11 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import net.kelsier.bookshelf.api.db.connection.Connection;
+import net.kelsier.bookshelf.api.db.model.Entity;
+import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.RatingLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
-import net.kelsier.bookshelf.api.db.dao.RatingDAO;
-import net.kelsier.bookshelf.api.db.model.Rating;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.annotation.security.RolesAllowed;
@@ -49,6 +50,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+import static net.kelsier.bookshelf.api.db.tables.Table.RATINGS;
+
 @Path("api/1/bookshelf/ratings")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -61,6 +64,7 @@ import java.util.List;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class Ratings {
+    private static final Table TABLE_TYPE = RATINGS;
     private final Jdbi databaseConnection;
 
     /**
@@ -93,25 +97,8 @@ public class Ratings {
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
             @ApiResponse(responseCode = "404", description = "No ratings found"),
         })
-    public List<Rating> ratings(@Parameter(name="data", required = true) @NotNull @Valid final Search<RatingLookup> search)  {
-        if (null == search.getQuery()) {
-            return databaseConnection.onDemand(RatingDAO.class).find(
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        } else {
-            return databaseConnection.onDemand(RatingDAO.class).find(
-                    Integer.parseInt(search.getQuery().getValue()),
-                    search.getQuery().getField(),
-                    search.getQuery().getOperator().getLabel(),
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        }
+    public List<Entity> ratings(@Parameter(name="data", required = true) @NotNull @Valid final Search<RatingLookup> search)  {
+        return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
     @GET
@@ -130,8 +117,8 @@ public class Ratings {
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
                     @ApiResponse(responseCode = "404", description = "No rating found"),
             })
-    public Rating rating(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer ratingId)  {
-        return databaseConnection.onDemand(RatingDAO.class).get(ratingId);
+    public Entity rating(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer ratingId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, ratingId);
     }
 
 }

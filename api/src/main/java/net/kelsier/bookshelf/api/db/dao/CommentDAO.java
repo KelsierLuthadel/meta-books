@@ -117,6 +117,7 @@ public interface CommentDAO {
     /**
      * Insert a new comment into the database
      * @param comment An object representing a comment
+     * @return row id for the newly created language
      */
     @SqlUpdate("INSERT INTO comments (book, text) values (:book, :text)")
     @GetGeneratedKeys

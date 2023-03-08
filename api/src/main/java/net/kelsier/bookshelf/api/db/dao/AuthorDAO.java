@@ -72,7 +72,7 @@ public interface AuthorDAO {
      * @return A list of authors
      */
     @SqlQuery("SELECT * FROM authors ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
-    List<Author> get(
+    List<Author> find(
             @Bind("limit") int limit,
             @Bind("offset") int offset,
             @Define("order") String order,
@@ -116,6 +116,7 @@ public interface AuthorDAO {
     /**
      * Insert a new author into the database
      * @param author An object representing an author
+     * @return row id for the newly created data
      */
     @SqlUpdate("INSERT INTO authors (name, sort) " +
         "values (:name, :sort)")

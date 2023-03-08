@@ -55,6 +55,10 @@ public interface BookRatingLinkDAO {
     @GetGeneratedKeys
     long insert(@BindBean BookRatingLink bookRatingLink);
 
+    /**
+     * Delete all books-ratings links from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM books_ratings_link")
     void purge();
 }

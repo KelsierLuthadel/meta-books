@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
                   display  TEXT DEFAULT '{}' NOT NULL, is_multiple BOOL DEFAULT false NOT NULL, normalized BOOL NOT NULL, UNIQUE(label))
  */
 
-public class CustomColumns {
+public class CustomColumns implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

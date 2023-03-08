@@ -55,6 +55,10 @@ public interface BookAuthorLinkDAO {
     @GetGeneratedKeys
     long insert(@BindBean BookAuthorLink bookAuthorLink);
 
+    /**
+     * Delete all book-author links from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM books_authors_link")
     void purge();
 }

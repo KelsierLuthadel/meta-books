@@ -55,6 +55,10 @@ public interface BookSeriesLinkDAO {
     @GetGeneratedKeys
     long insert(@BindBean BookSeriesLink bookSeriesLink);
 
+    /**
+     * Delete all books-series links from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM books_series_link")
     void purge();
 }

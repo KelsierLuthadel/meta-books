@@ -68,7 +68,7 @@ public interface RatingDAO {
     );
 
     @SqlQuery("SELECT * FROM ratings WHERE <column> <clause> :value ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
-    List<Rating> find(@Bind("value") int value,
+    List<Rating> find(@Bind("value") double value,
                       @Define("column") final String column,
                       @Define("clause") final String clause,
                       @Bind("limit") int limit,
@@ -77,6 +77,10 @@ public interface RatingDAO {
                       @Define("direction") String direction
     );
 
+    /**
+     * Delete all ratings from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM ratings")
     void purge();
 }

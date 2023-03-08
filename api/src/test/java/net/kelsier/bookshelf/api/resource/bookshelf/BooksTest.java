@@ -84,7 +84,7 @@ class BooksTest {
         when(bookDAOMock.get(anyInt())).thenReturn(book);
 
         // limit, start, field, direction
-        when(bookDAOMock.get(anyInt(), anyInt(), anyString(), anyString())).thenReturn(books);
+        when(bookDAOMock.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(books);
 
         // value, field, operator, limit, start, field, direction
         when(bookDAOMock.find(anyString(), anyString(), anyString(),
@@ -205,7 +205,7 @@ class BooksTest {
             validateBook(response.get(i), books.get(i));
         }
 
-        verify(bookDAOMock, times(1)).get(10, 0, "id", "asc");
+        verify(bookDAOMock, times(1)).find(10, 0, "id", "asc");
     }
 
     @Test

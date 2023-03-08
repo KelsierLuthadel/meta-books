@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.validation.OneOf;
 import io.swagger.v3.oas.annotations.media.Schema;
+import net.kelsier.bookshelf.api.db.types.DataTypes;
 import net.kelsier.bookshelf.api.model.common.ColumnLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 
@@ -26,6 +27,7 @@ public class BookLookup implements ColumnLookup {
      * Default search constraint that will be used in the OpenAPI example
      */
     private static final String DEFAULT_OPERATOR = "LIKE";
+
 
     /**
      * Search query field mapped to a database column
@@ -102,6 +104,7 @@ public class BookLookup implements ColumnLookup {
      *
      * @return String containing the value used in a query. If the lookup requires a wildcard, this value will contain the wildcard
      */
+    @Override
     @JsonIgnore
     public String getLookupValue() {
         if (Operator.LIKE == operator || Operator.UNLIKE == operator) {
@@ -119,5 +122,15 @@ public class BookLookup implements ColumnLookup {
     @JsonIgnore
     private String getWildcardValue() {
         return MessageFormat.format("%{0}%", value);
+    }
+
+    @Override
+    @JsonIgnore
+    public DataTypes getDataType() {
+        if ("has_cover".equalsIgnoreCase(field)) {
+            return DataTypes.BOOL;
+        }
+
+        return DataTypes.STRING;
     }
 }

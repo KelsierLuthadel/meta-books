@@ -69,6 +69,7 @@ public interface CustomColumnDAO {
      *
      * @param table custom column table
      * @param customColumn Data to add to the table
+     * @return row id for the newly created language
      */
     @SqlUpdate("INSERT INTO <table> (value) values (:value)")
     @GetGeneratedKeys

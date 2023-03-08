@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * ratings (id SERIAL PRIMARY KEY, rating INTEGER CHECK(rating > -1 AND rating < 11), UNIQUE (rating))
  */
 
-public class Rating {
+public class Rating implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

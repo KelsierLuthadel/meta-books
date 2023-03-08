@@ -77,7 +77,7 @@ public interface BookDAO {
      * @return A list of books
      */
     @SqlQuery("SELECT * FROM books ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
-    List<Book> get(
+    List<Book> find(
             @Bind("limit") int limit,
             @Bind("offset") int offset,
             @Define("order") String order,
@@ -156,12 +156,17 @@ public interface BookDAO {
     /**
      * Insert a new book into the database
      * @param book An object representing a book
+     * @return row id for the newly created data
      */
     @SqlUpdate("INSERT INTO books (title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified) " +
             "values (:title, :sort, :dateAdded, :publicationDate, :seriesIndex, :isbn, :path, :hasCover, :lastModified)")
     @GetGeneratedKeys
     long insert(@BindBean Book book);
 
+    /**
+     * Delete all books from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM books")
     void purge();
 }

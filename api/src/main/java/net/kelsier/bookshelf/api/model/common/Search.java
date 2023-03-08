@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Search parameters containing a query and pagination
  *
- * @param <T>
+ * @param <T> an instance of {@link ColumnLookup} for specific query data
  */
 @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 public final class Search<T> {

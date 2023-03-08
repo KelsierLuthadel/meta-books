@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 books_custom_column_n_link(id SERIAL PRIMARY KEY, book INTEGER NOT NULL, value INTEGER NOT NULL, UNIQUE(book, value))
  */
 
-public class CustomColumnLink {
+public class CustomColumnLink implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)
