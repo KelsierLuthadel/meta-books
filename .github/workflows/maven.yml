@@ -20,11 +20,11 @@ permissions:
   actions: read
   contents: write
   deployments: read
-  issues: read
+  issues: write
   discussions: read
   packages: read
   pages: read
-  pull-requests: read
+  pull-requests: write
   repository-projects: read
   security-events: read
   statuses: read  
