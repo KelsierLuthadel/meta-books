@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * Author details as represented by the authors table
  */
 @JsonPropertyOrder({"id", "name", "sort"})
-public class Author {
+public class Author implements Entity {
 
     /**
      * Unique id

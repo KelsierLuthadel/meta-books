@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.AuthorLookup;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
@@ -45,6 +46,8 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+
+import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
 
 /**
  * API to retrieve authors from the database.
@@ -180,6 +183,7 @@ public final class Authors {
                     @ApiResponse(responseCode = "404", description = "No author found"),
             })
     public Author author(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId)  {
-        return databaseConnection.onDemand(AuthorDAO.class).get(authorId);
+//        return databaseConnection.onDemand(AuthorDAO.class).get(authorId);
+        return (Author)Connection.get(databaseConnection, AUTHORS, authorId);
     }
 }
