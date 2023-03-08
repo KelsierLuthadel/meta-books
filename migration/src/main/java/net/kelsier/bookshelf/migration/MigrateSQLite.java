@@ -43,6 +43,8 @@ import org.jdbi.v3.core.Jdbi;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.text.MessageFormat;
@@ -52,6 +54,7 @@ import java.util.Locale;
 
 
 public class MigrateSQLite {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MigrateSQLite.class);
     private final Jdbi databaseConnection;
     private final String sqliteDatabase;
 
@@ -146,7 +149,7 @@ public class MigrateSQLite {
                     final Integer book = rs.getInt("book");
                     final Integer value = rs.getInt("value");
 
-                    customColumnLinkDAO.insert(table, new CustomColumnLink(0, book, value));
+                    customColumnLinkDAO.insert(table, new CustomColumnLink(rs.getInt("id"), book, value));
 
                 }
             } catch (SQLException e) {
@@ -166,7 +169,7 @@ public class MigrateSQLite {
                  ResultSet rs = stmt.executeQuery( sql)) {
 
                 while (rs.next()) {
-                    customColumnDAO.insert(table, new CustomColumn(0, rs.getString("value")));
+                    customColumnDAO.insert(table, new CustomColumn(rs.getInt("id"), rs.getString("value")));
 
                 }
             } catch (SQLException e) {
@@ -199,7 +202,7 @@ public class MigrateSQLite {
             final BookSeriesLinkDAO bookSeriesLinkDAO = databaseConnection.onDemand(BookSeriesLinkDAO.class);
 
             while (rs.next()) {
-                bookSeriesLinkDAO.insert(new BookSeriesLink(0, rs.getInt("book"), rs.getInt("series")));
+                bookSeriesLinkDAO.insert(new BookSeriesLink(rs.getInt("id"), rs.getInt("book"), rs.getInt("series")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book series link", e);
@@ -213,7 +216,7 @@ public class MigrateSQLite {
             final BookTagLinkDAO bookTagLinkDAO = databaseConnection.onDemand(BookTagLinkDAO.class);
 
             while (rs.next()) {
-                bookTagLinkDAO.insert(new BookTagLink(0, rs.getInt("book"), rs.getInt("tag")));
+                bookTagLinkDAO.insert(new BookTagLink(rs.getInt("id"), rs.getInt("book"), rs.getInt("tag")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book tags link", e);
@@ -228,7 +231,7 @@ public class MigrateSQLite {
 
             while (rs.next()) {
                 customColumnsDAO.insert(new CustomColumns(
-                        0,
+                        rs.getInt("id"),
                         rs.getString("label"),
                         rs.getString("name"),
                         rs.getString("datatype"),
@@ -248,7 +251,7 @@ public class MigrateSQLite {
             final BookRatingLinkDAO bookRatingLinkDAO = databaseConnection.onDemand(BookRatingLinkDAO.class);
 
             while (rs.next()) {
-                bookRatingLinkDAO.insert(new BookRatingLink(0, rs.getInt("book"), rs.getInt("rating")));
+                bookRatingLinkDAO.insert(new BookRatingLink(rs.getInt("id"), rs.getInt("book"), rs.getInt("rating")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate books ratings link", e);
@@ -262,7 +265,7 @@ public class MigrateSQLite {
             final PublisherDAO publisherDAO = databaseConnection.onDemand(PublisherDAO.class);
 
             while (rs.next()) {
-                publisherDAO.insert(new Publisher(0, rs.getString("name"), rs.getString("sort")));
+                publisherDAO.insert(new Publisher(rs.getInt("id"), rs.getString("name"), rs.getString("sort")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate publishers", e);
@@ -276,7 +279,7 @@ public class MigrateSQLite {
             final SeriesDAO seriesDAO = databaseConnection.onDemand(SeriesDAO.class);
 
             while (rs.next()) {
-                seriesDAO.insert(new Series(0, rs.getString("name"), rs.getString("sort")));
+                seriesDAO.insert(new Series(rs.getInt("id"), rs.getString("name"), rs.getString("sort")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate series", e);
@@ -290,7 +293,7 @@ public class MigrateSQLite {
             final TagDAO tagDAO = databaseConnection.onDemand(TagDAO.class);
 
             while (rs.next()) {
-                tagDAO.insert(new Tag(0, rs.getString("name")));
+                tagDAO.insert(new Tag(rs.getInt("id"), rs.getString("name")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate tags", e);
@@ -303,7 +306,7 @@ public class MigrateSQLite {
             final RatingDAO ratingDAO = databaseConnection.onDemand(RatingDAO.class);
 
             while (rs.next()) {
-                ratingDAO.insert(new Rating(0, rs.getInt("rating")));
+                ratingDAO.insert(new Rating(rs.getInt("id"), rs.getInt("rating")));
 
             }
         } catch (SQLException e) {
@@ -319,7 +322,12 @@ public class MigrateSQLite {
             final AuthorDAO authorDAO = databaseConnection.onDemand(AuthorDAO.class);
 
             while (rs.next()) {
-                authorDAO.insert(new Author(0, rs.getString("name"), rs.getString("sort")));
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String sort = rs.getString("sort");
+
+
+                authorDAO.insert(new Author(id, name, sort));
             }
 
         } catch (SQLException e) {
@@ -333,10 +341,15 @@ public class MigrateSQLite {
             final ResultSet rs = stmt.executeQuery("select * from books;")) {
             final BookDAO bookDAO = databaseConnection.onDemand(BookDAO.class);
 
+            LOGGER.info(MessageFormat.format("Migrating {0}", "Books"));
             while (rs.next()) {
+
+                int id =  rs.getInt("id");
+                String title =  rs.getString("title");
+
                 bookDAO.insert(new Book(
-                        0,
-                        rs.getString("title"),
+                       id,
+                       title,
                         rs.getString("sort"),
                         parseDateField(rs.getString("timestamp")),
                         parseDateField(rs.getString("pubdate")),
@@ -359,7 +372,7 @@ public class MigrateSQLite {
             final CommentDAO commentDao = databaseConnection.onDemand(CommentDAO.class);
 
             while (rs.next()) {
-                commentDao.insert(new Comment(0, rs.getInt("book"), rs.getString("text")));
+                commentDao.insert(new Comment(rs.getInt("id"), rs.getInt("book"), rs.getString("text")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate comments", e);
@@ -373,7 +386,7 @@ public class MigrateSQLite {
             final DataDAO dataDAO = databaseConnection.onDemand(DataDAO.class);
 
             while (rs.next()) {
-                dataDAO.insert(new BookData(0,
+                dataDAO.insert(new BookData(rs.getInt("id"),
                         rs.getInt("book"),
                         rs.getString("format"),
                         rs.getInt("uncompressed_size"),
@@ -392,7 +405,7 @@ public class MigrateSQLite {
 
             while (rs.next()) {
                 identifierDAO.insert(new Identifier(
-                        0,
+                        rs.getInt("id"),
                         rs.getInt("book"),
                         rs.getString("type"),
                         rs.getString("val")));
@@ -410,7 +423,7 @@ public class MigrateSQLite {
             final LanguageDAO languageDAO = databaseConnection.onDemand(LanguageDAO.class);
 
             while (rs.next()) {
-                languageDAO.insert(new Language(0, rs.getString("lang_code")));
+                languageDAO.insert(new Language(rs.getInt("id"), rs.getString("lang_code")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate languages", e);
@@ -425,7 +438,7 @@ public class MigrateSQLite {
 
             while (rs.next()) {
                 bookAuthorLinkDAO.insert(new BookAuthorLink(
-                        0, rs.getInt("book"), rs.getInt("author")));
+                        rs.getInt("id"), rs.getInt("book"), rs.getInt("author")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book author link", e);
@@ -440,7 +453,7 @@ public class MigrateSQLite {
 
             while (rs.next()) {
                 bookLanguageLinkDAO.insert(new BookLanguageLink(
-                        0, rs.getInt("book"), rs.getInt("lang_code")));
+                        rs.getInt("id"), rs.getInt("book"), rs.getInt("lang_code")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book languages link", e);
@@ -455,7 +468,7 @@ public class MigrateSQLite {
 
             while (rs.next()) {
                 bookPublisherLinkDAO.insert( new BookPublisherLink(
-                        0, rs.getInt("book"), rs.getInt("publisher")));
+                        rs.getInt("id"), rs.getInt("book"), rs.getInt("publisher")));
             }
         } catch (SQLException e) {
             throw new MigrationException("Unable to populate book publishers link", e);

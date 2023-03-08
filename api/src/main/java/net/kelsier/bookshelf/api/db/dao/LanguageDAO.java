@@ -119,7 +119,7 @@ public interface LanguageDAO {
      * @param language An object representing a language
      * @return row id for the newly created language
      */
-    @SqlUpdate("INSERT INTO languages (lang_code) values (:languageCode)")
+    @SqlUpdate("INSERT INTO languages (id, lang_code) values (:id, :languageCode)")
     @GetGeneratedKeys
     long insert(@BindBean Language language);
 

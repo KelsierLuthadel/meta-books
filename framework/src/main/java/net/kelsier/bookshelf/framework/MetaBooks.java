@@ -24,6 +24,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import net.kelsier.bookshelf.api.resource.bookshelf.Authors;
+import net.kelsier.bookshelf.api.resource.bookshelf.BookDetails;
 import net.kelsier.bookshelf.api.resource.bookshelf.BookSeries;
 import net.kelsier.bookshelf.api.resource.bookshelf.Books;
 import net.kelsier.bookshelf.api.resource.bookshelf.Comments;
@@ -45,7 +46,15 @@ import net.kelsier.bookshelf.framework.db.dao.users.RoleDAO;
 import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.encryption.JasyptCipher;
 import net.kelsier.bookshelf.framework.environment.ResourceRegistrar;
-import net.kelsier.bookshelf.framework.error.exception.*;
+import net.kelsier.bookshelf.framework.error.exception.DatabaseExceptionMapper;
+import net.kelsier.bookshelf.framework.error.exception.JsonProcessingExceptionMapper;
+import net.kelsier.bookshelf.framework.error.exception.ResponseErrorExceptionMapper;
+import net.kelsier.bookshelf.framework.error.exception.RuntimeExceptionMapper;
+import net.kelsier.bookshelf.framework.error.exception.StartupException;
+import net.kelsier.bookshelf.framework.error.exception.TechnicalExceptionMapper;
+import net.kelsier.bookshelf.framework.error.exception.ValidationExceptionMapper;
+import net.kelsier.bookshelf.framework.error.exception.WebApplicationExceptionMapper;
+import net.kelsier.bookshelf.framework.error.exception.WebApplicationSilentExceptionMapper;
 import net.kelsier.bookshelf.framework.filter.CacheControlFilter;
 import net.kelsier.bookshelf.framework.filter.CsrfFilter;
 import net.kelsier.bookshelf.framework.health.DatabaseHealth;
@@ -309,8 +318,13 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     }
 
     private void registerOpenAPI(final Environment environment) {
-        OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf.api.resource").collect(
-            Collectors.toSet()));
+        //Stream.of("net.kelsier.bookshelf.migration.resource")
+
+        OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf").collect(
+                Collectors.toSet()));
+
+//        OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf.api.resource").collect(
+//            Collectors.toSet()));
 
         final OpenAPI oas = new OpenAPI();
         final Info info = new Info()
@@ -362,6 +376,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
             resourceRegistrar.registerResource(new BookSeries(databaseConnection));
             resourceRegistrar.registerResource(new Ratings(databaseConnection));
             resourceRegistrar.registerResource(new Tags(databaseConnection));
+            resourceRegistrar.registerResource(new BookDetails(databaseConnection));
 
             resourceRegistrar.registerResource(new BookshelfAdministration(databaseConnection));
         }

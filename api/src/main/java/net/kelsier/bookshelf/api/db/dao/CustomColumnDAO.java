@@ -71,7 +71,7 @@ public interface CustomColumnDAO {
      * @param customColumn Data to add to the table
      * @return row id for the newly created language
      */
-    @SqlUpdate("INSERT INTO <table> (value) values (:value)")
+    @SqlUpdate("INSERT INTO <table> (id, value) values (:id, :value)")
     @GetGeneratedKeys
     long insert(@Define("table") String table, @BindBean CustomColumn customColumn);
 

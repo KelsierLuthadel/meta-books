@@ -50,8 +50,8 @@ public interface BookLanguageLinkDAO {
     @SqlQuery("SELECT * FROM books_languages_link WHERE ID = :id")
     BookLanguageLink get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO books_languages_link (book, lang_code) " +
-            "values (:book, :languageCode)")
+    @SqlUpdate("INSERT INTO books_languages_link (id, book, lang_code) " +
+            "values (:id, :book, :languageCode)")
     @GetGeneratedKeys
     long insert(@BindBean BookLanguageLink bookLanguageLink);
 

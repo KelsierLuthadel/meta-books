@@ -61,8 +61,8 @@ public interface CustomColumnsDAO {
     @SqlQuery("SELECT * FROM custom_columns WHERE ID = :id")
     CustomColumns get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO custom_columns (label, name, datatype, display, is_multiple, normalized) " +
-            "values (:label, :name, :dataType, :display, :multiple, :normalized)")
+    @SqlUpdate("INSERT INTO custom_columns (id, label, name, datatype, display, is_multiple, normalized) " +
+            "values (:id, :label, :name, :dataType, :display, :multiple, :normalized)")
     @GetGeneratedKeys
     long insert(@BindBean CustomColumns bookTagLink);
 

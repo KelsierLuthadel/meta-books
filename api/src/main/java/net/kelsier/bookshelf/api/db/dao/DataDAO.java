@@ -156,7 +156,7 @@ public interface DataDAO {
      * @param bookData An object representing a data objects
      * @return row id for the newly created language
      */
-    @SqlUpdate("INSERT INTO data (book, format, uncompressed_size, name) values (:book, :format, :uncompressedSize, :name)")
+    @SqlUpdate("INSERT INTO data (id, book, format, uncompressed_size, name) values (:id, :book, :format, :uncompressedSize, :name)")
     @GetGeneratedKeys
     long insert(@BindBean BookData bookData);
 

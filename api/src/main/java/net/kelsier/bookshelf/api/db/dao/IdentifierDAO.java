@@ -52,8 +52,8 @@ public interface IdentifierDAO {
     @SqlQuery("SELECT * FROM identifiers WHERE ID = :id")
     Identifier get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO identifiers (book, type, val) " +
-            "values (:book, :type, :val)")
+    @SqlUpdate("INSERT INTO identifiers (id, book, type, val) " +
+            "values (:id, :book, :type, :val)")
     @GetGeneratedKeys
     long insert(@BindBean Identifier author);
 

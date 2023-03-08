@@ -119,7 +119,7 @@ public interface CommentDAO {
      * @param comment An object representing a comment
      * @return row id for the newly created language
      */
-    @SqlUpdate("INSERT INTO comments (book, text) values (:book, :text)")
+    @SqlUpdate("INSERT INTO comments (id, book, text) values (:id, :book, :text)")
     @GetGeneratedKeys
     long insert(@BindBean Comment comment);
 

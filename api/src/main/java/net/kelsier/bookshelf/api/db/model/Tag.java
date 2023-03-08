@@ -6,29 +6,49 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * tags(id SERIAL PRIMARY KEY, name TEXT NOT NULL , UNIQUE (name))
+ * Tag details as represented by the authors table
  */
-
 public class Tag implements Entity {
+    /**
+     * Unique id
+     */
     @NotNull
     @JsonProperty("id")
     @Min(1)
     private final Integer id;
 
+    /**
+     * Tag display name
+     */
     @NotNull
     @JsonProperty("name")
     private final String name;
 
+    /**
+     * Constructor used to define an author
+     * @param id Unique id
+     * @param name Tag display name
+     */
     public Tag(@NotNull @JsonProperty("id") @Min(1) final Integer id,
                @JsonProperty("name") final String name) {
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * Unique id
+     *
+     * @return int containing the unique id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Tag display name
+     *
+     * @return string containing the tag name
+     */
     public String getName() {
         return name;
     }

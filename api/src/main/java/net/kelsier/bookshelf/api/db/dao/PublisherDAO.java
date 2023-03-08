@@ -55,8 +55,8 @@ public interface PublisherDAO {
     @SqlQuery("SELECT * FROM publishers WHERE ID = :id")
     Publisher get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO publishers (name, sort) " +
-            "values (:name, :sort)")
+    @SqlUpdate("INSERT INTO publishers (id, name, sort) " +
+            "values (:id, :name, :sort)")
     @GetGeneratedKeys
     long insert(@BindBean Publisher publisher);
 

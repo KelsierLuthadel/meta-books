@@ -118,8 +118,8 @@ public interface AuthorDAO {
      * @param author An object representing an author
      * @return row id for the newly created data
      */
-    @SqlUpdate("INSERT INTO authors (name, sort) " +
-        "values (:name, :sort)")
+    @SqlUpdate("INSERT INTO authors (id, name, sort) " +
+        "values (:id, :name, :sort)")
     @GetGeneratedKeys
     long insert(@BindBean Author author);
 

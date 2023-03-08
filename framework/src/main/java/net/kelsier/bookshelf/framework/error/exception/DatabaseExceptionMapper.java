@@ -23,10 +23,7 @@
 package net.kelsier.bookshelf.framework.error.exception;
 
 import net.kelsier.bookshelf.framework.error.response.ExceptionToResponse;
-import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.core.statement.StatementException;
-import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
-import org.postgresql.util.PSQLException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
