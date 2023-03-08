@@ -71,7 +71,7 @@ import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public final class Authors {
+public final class AuthorsResource {
     private static final Table TABLE_TYPE = AUTHORS;
     private final Jdbi databaseConnection;
 
@@ -80,7 +80,7 @@ public final class Authors {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public Authors(final Jdbi databaseConnection) {
+    public AuthorsResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 

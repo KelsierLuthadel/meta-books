@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class AuthorsTest {
+class AuthorsResourceTest {
 
     public static final String API = "/api/1/bookshelf/authors";
     private Author author;
@@ -41,7 +41,7 @@ class AuthorsTest {
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Authors(databaseConnection))
+            .addResource(new AuthorsResource(databaseConnection))
             .build();
 
     @BeforeEach

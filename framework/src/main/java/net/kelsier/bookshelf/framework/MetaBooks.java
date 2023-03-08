@@ -23,7 +23,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
-import net.kelsier.bookshelf.api.resource.bookshelf.Authors;
+import net.kelsier.bookshelf.api.resource.bookshelf.AuthorsResource;
 import net.kelsier.bookshelf.api.resource.bookshelf.BookDetailsResource;
 import net.kelsier.bookshelf.api.resource.bookshelf.BookSeries;
 import net.kelsier.bookshelf.api.resource.bookshelf.Books;
@@ -363,7 +363,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
                 encryptionConfiguration));
             resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
             resourceRegistrar.registerResource(new Books(databaseConnection));
-            resourceRegistrar.registerResource(new Authors(databaseConnection));
+            resourceRegistrar.registerResource(new AuthorsResource(databaseConnection));
             resourceRegistrar.registerResource(new Comments(databaseConnection));
             resourceRegistrar.registerResource(new Data(databaseConnection));
             resourceRegistrar.registerResource(new Languages(databaseConnection));
