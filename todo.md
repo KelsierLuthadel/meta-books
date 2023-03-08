@@ -7,6 +7,9 @@ REST default values
 
 ## Books
 get book needs to return BookDetails object instead of Book  
+date regex
+
+add: tags + ratings to BookDetails
 
 ## Testing
 SQLi testing  

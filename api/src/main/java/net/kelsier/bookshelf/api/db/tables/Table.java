@@ -35,5 +35,6 @@ public enum Table {
     PUBLISHERS,
     RATINGS,
     SERIES,
-    TAGS
+    TAGS,
+    BOOK_DETAILS
 }

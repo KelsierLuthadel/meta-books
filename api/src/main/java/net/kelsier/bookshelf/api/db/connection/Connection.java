@@ -25,6 +25,7 @@ package net.kelsier.bookshelf.api.db.connection;
 
 import net.kelsier.bookshelf.api.db.dao.AuthorDAO;
 import net.kelsier.bookshelf.api.db.dao.BookDAO;
+import net.kelsier.bookshelf.api.db.dao.BookDetailsDAO;
 import net.kelsier.bookshelf.api.db.dao.CommentDAO;
 import net.kelsier.bookshelf.api.db.dao.DataDAO;
 import net.kelsier.bookshelf.api.db.dao.LanguageDAO;
@@ -78,6 +79,8 @@ public class Connection {
                 return databaseConnection.onDemand(SeriesDAO.class).get(id);
             case TAGS:
                 return databaseConnection.onDemand(TagDAO.class).get(id);
+            case BOOK_DETAILS:
+                return databaseConnection.onDemand(BookDetailsDAO.class).get(id);
             default:
                 throw new BadRequestException("Invalid query");
         }
