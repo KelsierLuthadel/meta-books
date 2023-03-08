@@ -2,7 +2,6 @@ package net.kelsier.bookshelf.framework.errorhandling.exceptionmapper;
 
 import net.kelsier.bookshelf.framework.error.exception.WebApplicationExceptionMapper;
 import net.kelsier.bookshelf.framework.error.response.ResponseErrorFormat;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.WebApplicationException;

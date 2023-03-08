@@ -84,7 +84,6 @@ public class BookDetails implements Entity {
 
     @NotNull
     @JsonProperty("path")
-    //todo sanitize
     private final String path;
 
     @NotNull

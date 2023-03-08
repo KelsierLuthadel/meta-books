@@ -341,7 +341,7 @@ public class MigrateSQLite {
             final ResultSet rs = stmt.executeQuery("select * from books;")) {
             final BookDAO bookDAO = databaseConnection.onDemand(BookDAO.class);
 
-            LOGGER.info(MessageFormat.format("Migrating {0}", "Books"));
+            LOGGER.info("Migrating Books");
             while (rs.next()) {
 
                 int id =  rs.getInt("id");

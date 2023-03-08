@@ -19,18 +19,18 @@ public class Rating implements Entity {
     @JsonProperty("rating")
     @Min(0)
     @Max(10)
-    private final Integer rating;
+    private final Integer value;
 
-    public Rating(@JsonProperty("id") final Integer id, @JsonProperty("rating") final Integer rating) {
+    public Rating(@JsonProperty("id") final Integer id, @JsonProperty("rating") final Integer value) {
         this.id = id;
-        this.rating = rating;
+        this.value = value;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Integer getRating() {
-        return rating;
+    public Integer getValue() {
+        return value;
     }
 }

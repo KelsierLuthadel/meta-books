@@ -112,7 +112,7 @@ public class BookData implements Entity {
     }
 
     /**
-     * Display nmae
+     * Display name
      *
      * @return string containing the book display name
      */

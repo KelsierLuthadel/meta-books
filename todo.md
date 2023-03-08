@@ -8,6 +8,7 @@ REST default values
 ## Books
 get book needs to return BookDetails object instead of Book  
 date regex
+bookDetails: path needs sanitize regex
 
 add: tags + ratings to BookDetails
 
