@@ -31,10 +31,11 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import net.kelsier.bookshelf.api.db.connection.Connection;
+import net.kelsier.bookshelf.api.db.model.Entity;
+import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.CommentLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
-import net.kelsier.bookshelf.api.db.dao.CommentDAO;
-import net.kelsier.bookshelf.api.db.model.Comment;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.annotation.security.RolesAllowed;
@@ -49,6 +50,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+import static net.kelsier.bookshelf.api.db.tables.Table.COMMENTS;
+
 @Path("api/1/bookshelf/comments")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -61,6 +64,7 @@ import java.util.List;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class Comments {
+    private static final Table TABLE_TYPE = COMMENTS;
     private final Jdbi databaseConnection;
 
     /**
@@ -93,25 +97,8 @@ public class Comments {
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
             @ApiResponse(responseCode = "404", description = "No comments found"),
         })
-    public List<Comment> comments(@Parameter(name="comment", required = true) @NotNull @Valid final Search<CommentLookup> search)  {
-        if (null == search.getQuery()) {
-            return databaseConnection.onDemand(CommentDAO.class).find(
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        } else {
-            return databaseConnection.onDemand(CommentDAO.class).find(
-                    search.getQuery().getLookupValue(),
-                    search.getQuery().getField(),
-                    search.getQuery().getOperator().getLabel(),
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        }
+    public List<Entity> comments(@Parameter(name="comment", required = true) @NotNull @Valid final Search<CommentLookup> search)  {
+        return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
     @GET
@@ -130,8 +117,8 @@ public class Comments {
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
                     @ApiResponse(responseCode = "404", description = "No comments found"),
             })
-    public Comment comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer commentId)  {
-        return databaseConnection.onDemand(CommentDAO.class).get(commentId);
+    public Entity comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer commentId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, commentId);
     }
 
 }

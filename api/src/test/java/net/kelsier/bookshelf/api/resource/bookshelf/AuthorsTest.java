@@ -65,7 +65,7 @@ class AuthorsTest {
         when(authorDAOMock.get(anyInt())).thenReturn(author);
 
         // limit, start, field, direction
-        when(authorDAOMock.get(anyInt(), anyInt(), anyString(), anyString())).thenReturn(authors);
+        when(authorDAOMock.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(authors);
 
         // value, field, operator, limit, start, field, direction
         when(authorDAOMock.find(anyString(), anyString(), anyString(),
@@ -121,7 +121,7 @@ class AuthorsTest {
                 validateAuthor(authors.get(i), response.get(i));
             }
 
-            verify(authorDAOMock, times(1)).get(10, 0, "id", "asc");
+            verify(authorDAOMock, times(1)).find(10, 0, "id", "asc");
         }
     }
 

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * books_series_link (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, series INTEGER NOT NULL, UNIQUE(book))
  */
 
-public class BookSeriesLink {
+public class BookSeriesLink implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

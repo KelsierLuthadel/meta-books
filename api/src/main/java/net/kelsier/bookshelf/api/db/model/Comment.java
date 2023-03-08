@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  comments (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, text TEXT NOT NULL , UNIQUE(book))
  */
 
-public class Comment {
+public class Comment implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

@@ -1,5 +1,9 @@
 package net.kelsier.bookshelf.api.model.common;
 
+/**
+ * Operators used for performing a query.
+ * The value is used by the user for creating a query and the label is used as part of a database query
+ */
 public enum Operator {
     EQ("="),
     NEQ("!="),

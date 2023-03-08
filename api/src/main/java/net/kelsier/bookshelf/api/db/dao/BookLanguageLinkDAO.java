@@ -55,6 +55,10 @@ public interface BookLanguageLinkDAO {
     @GetGeneratedKeys
     long insert(@BindBean BookLanguageLink bookLanguageLink);
 
+    /**
+     * Delete all books-languages links from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM books_languages_link")
     void purge();
 }

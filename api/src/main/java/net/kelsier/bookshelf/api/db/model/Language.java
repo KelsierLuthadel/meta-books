@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * languages(id SERIAL PRIMARY KEY, lang_code TEXT NOT NULL, UNIQUE(lang_code))
  */
 
-public class Language {
+public class Language implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

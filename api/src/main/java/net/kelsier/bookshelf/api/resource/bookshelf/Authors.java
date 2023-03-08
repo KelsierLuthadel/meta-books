@@ -32,18 +32,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
+import net.kelsier.bookshelf.api.db.model.Entity;
+import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.AuthorLookup;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
-import net.kelsier.bookshelf.api.db.dao.AuthorDAO;
-import net.kelsier.bookshelf.api.db.model.Author;
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -68,6 +72,7 @@ import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public final class Authors {
+    private static final Table TABLE_TYPE = AUTHORS;
     private final Jdbi databaseConnection;
 
     /**
@@ -132,25 +137,8 @@ public final class Authors {
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
             @ApiResponse(responseCode = "404", description = "No authors found"),
         })
-    public List<Author> authors(@Parameter(name="search", required = true) @NotNull @Valid final Search<AuthorLookup> search)  {
-        if (null == search.getQuery()) {
-            return databaseConnection.onDemand(AuthorDAO.class).get(
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        } else {
-            return databaseConnection.onDemand(AuthorDAO.class).find(
-                    search.getQuery().getLookupValue(),
-                    search.getQuery().getField(),
-                    search.getQuery().getOperator().getLabel(),
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        }
+    public List<Entity> authors(@Parameter(name="search", required = true) @NotNull @Valid final Search<AuthorLookup> search)  {
+        return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
     /**
@@ -182,7 +170,7 @@ public final class Authors {
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
                     @ApiResponse(responseCode = "404", description = "No author found"),
             })
-    public Author author(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId)  {
-        return (Author)Connection.get(databaseConnection, AUTHORS, authorId);
+    public Entity author(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, authorId);
     }
 }

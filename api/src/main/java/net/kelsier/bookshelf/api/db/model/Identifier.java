@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * identifiers (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, type TEXT NOT NULL DEFAULT 'isbn', val TEXT NOT NULL, UNIQUE(book, type))
  */
 
-public class Identifier {
+public class Identifier implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

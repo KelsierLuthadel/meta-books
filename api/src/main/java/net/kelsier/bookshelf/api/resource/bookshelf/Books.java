@@ -31,10 +31,11 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import net.kelsier.bookshelf.api.db.connection.Connection;
+import net.kelsier.bookshelf.api.db.model.Entity;
+import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.BookLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
-import net.kelsier.bookshelf.api.db.dao.BookDAO;
-import net.kelsier.bookshelf.api.db.model.Book;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.annotation.security.RolesAllowed;
@@ -49,6 +50,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+import static net.kelsier.bookshelf.api.db.tables.Table.BOOKS;
+
 @Path("api/1/bookshelf/books")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -61,6 +64,7 @@ import java.util.List;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public final class Books {
+    private static final Table TABLE_TYPE = BOOKS;
     private final Jdbi databaseConnection;
 
     /**
@@ -93,38 +97,8 @@ public final class Books {
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
             @ApiResponse(responseCode = "404", description = "No books found"),
         })
-    public List<Book> books(@Parameter(name="search", required = true) @NotNull @Valid final Search<BookLookup> search)  {
-        if (null == search.getQuery()) {
-            return databaseConnection.onDemand(BookDAO.class).get(
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        } else {
-            if ("has_cover".equalsIgnoreCase(search.getQuery().getField())) {
-                return databaseConnection.onDemand(BookDAO.class).find(
-                    Boolean.parseBoolean(search.getQuery().getValue()),
-                    search.getQuery().getField(),
-                    search.getQuery().getOperator().getLabel(),
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-                );
-            } else {
-                // title, isbn
-                return databaseConnection.onDemand(BookDAO.class).find(
-                    search.getQuery().getLookupValue(),
-                    search.getQuery().getField(),
-                    search.getQuery().getOperator().getLabel(),
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-                );
-            }
-        }
+    public List<Entity> books(@Parameter(name="search", required = true) @NotNull @Valid final Search<BookLookup> search)  {
+        return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
     @GET
@@ -143,8 +117,8 @@ public final class Books {
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
                     @ApiResponse(responseCode = "404", description = "No books found"),
             })
-    public Book book(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer bookId)  {
-        return databaseConnection.onDemand(BookDAO.class).get(bookId);
+    public Entity book(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer bookId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, bookId);
     }
 
 }

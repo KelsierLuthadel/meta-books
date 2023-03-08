@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * publishers(id SERIAL PRIMARY KEY, name TEXT NOT NULL, sort TEXT, UNIQUE(name))
  */
 
-public class Publisher {
+public class Publisher implements Entity {
     @NotNull
     @JsonProperty("id")
     @Min(1)

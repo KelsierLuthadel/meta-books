@@ -21,19 +21,15 @@
  *
  */
 
-package net.kelsier.bookshelf.api.db.tables;
+package net.kelsier.bookshelf.api.db.types;
 
 /**
- * Enum to define the different types of table that the database holds for books
+ * Available data types used by the columns for database queries
  */
-public enum Table {
-    AUTHORS,
-    BOOKS,
-    COMMENTS,
-    DATA,
-    LANGUAGES,
-    PUBLISHERS,
-    RATINGS,
-    SERIES,
-    TAGS
+public enum DataTypes {
+    INT,
+    DOUBLE,
+    STRING,
+    BOOL,
+    DATE
 }

@@ -78,6 +78,10 @@ public interface TagDAO {
             @Define("direction") String direction
     );
 
+    /**
+     * Delete all tags from the database, this is used when re-creating the database contents.
+     * Use with caution.
+     */
     @SqlUpdate("DELETE FROM tags")
     void purge();
 }

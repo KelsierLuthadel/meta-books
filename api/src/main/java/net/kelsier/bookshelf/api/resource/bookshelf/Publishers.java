@@ -31,10 +31,11 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import net.kelsier.bookshelf.api.db.connection.Connection;
+import net.kelsier.bookshelf.api.db.model.Entity;
+import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.PublisherLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
-import net.kelsier.bookshelf.api.db.dao.PublisherDAO;
-import net.kelsier.bookshelf.api.db.model.Publisher;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.annotation.security.RolesAllowed;
@@ -49,6 +50,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+import static net.kelsier.bookshelf.api.db.tables.Table.PUBLISHERS;
+
 @Path("api/1/bookshelf/publishers")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -61,6 +64,7 @@ import java.util.List;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class Publishers {
+    private static final Table TABLE_TYPE = PUBLISHERS;
     private final Jdbi databaseConnection;
 
     /**
@@ -93,25 +97,8 @@ public class Publishers {
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
             @ApiResponse(responseCode = "404", description = "No publishers found"),
         })
-    public List<Publisher> authors(@Parameter(name="data", required = true) @NotNull @Valid final Search<PublisherLookup> search)  {
-        if (null == search.getQuery()) {
-            return databaseConnection.onDemand(PublisherDAO.class).find(
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        } else {
-            return databaseConnection.onDemand(PublisherDAO.class).find(
-                    search.getQuery().getLookupValue(),
-                    search.getQuery().getField(),
-                    search.getQuery().getOperator().getLabel(),
-                    search.getPagination().getLimit(),
-                    search.getPagination().getStart(),
-                    search.getPagination().getSort().getField(),
-                    search.getPagination().getSort().getDirection()
-            );
-        }
+    public List<Entity> authors(@Parameter(name="data", required = true) @NotNull @Valid final Search<PublisherLookup> search)  {
+        return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
     @GET
@@ -130,8 +117,8 @@ public class Publishers {
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
                     @ApiResponse(responseCode = "404", description = "No publisher found"),
             })
-    public Publisher comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer publisherId)  {
-        return databaseConnection.onDemand(PublisherDAO.class).get(publisherId);
+    public Entity comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer publisherId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, publisherId);
     }
 
 }
