@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.CommentLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -50,9 +50,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.LANGUAGES;
+import static net.kelsier.bookshelf.api.db.tables.Table.COMMENTS;
 
-@Path("api/1/bookshelf/languages")
+@Path("api/1/bookshelf/comments")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -63,8 +63,8 @@ import static net.kelsier.bookshelf.api.db.tables.Table.LANGUAGES;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class Languages {
-    private static final Table TABLE_TYPE = LANGUAGES;
+public class CommentsResource {
+    private static final Table TABLE_TYPE = COMMENTS;
     private final Jdbi databaseConnection;
 
     /**
@@ -72,7 +72,7 @@ public class Languages {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public Languages(final Jdbi databaseConnection) {
+    public CommentsResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
@@ -80,7 +80,7 @@ public class Languages {
      *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of languages
+     * @return A paginated list of comments
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -88,16 +88,16 @@ public class Languages {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Search for a language",
+        summary = "Search within comments",
         tags = {"Bookshelf"},
-        description = "Search for a language",
+        description = "Search within comments",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No languages found"),
+            @ApiResponse(responseCode = "404", description = "No comments found"),
         })
-    public List<Entity> languages(@Parameter(name="data", required = true) @NotNull @Valid final Search<LanguageLookup> search)  {
+    public List<Entity> comments(@Parameter(name="comment", required = true) @NotNull @Valid final Search<CommentLookup> search)  {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
@@ -108,17 +108,17 @@ public class Languages {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get language details",
+            summary = "Get comments",
             tags = {"Bookshelf"},
-            description = "Get language details",
+            description = "Get comments for a book",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No languages found"),
+                    @ApiResponse(responseCode = "404", description = "No comments found"),
             })
-    public Entity language(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer languageId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, languageId);
+    public Entity comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer commentId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, commentId);
     }
 
 }

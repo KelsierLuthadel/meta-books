@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.RatingLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -50,9 +50,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.RATINGS;
+import static net.kelsier.bookshelf.api.db.tables.Table.LANGUAGES;
 
-@Path("api/1/bookshelf/ratings")
+@Path("api/1/bookshelf/languages")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -63,8 +63,8 @@ import static net.kelsier.bookshelf.api.db.tables.Table.RATINGS;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class Ratings {
-    private static final Table TABLE_TYPE = RATINGS;
+public class LanguagesResource {
+    private static final Table TABLE_TYPE = LANGUAGES;
     private final Jdbi databaseConnection;
 
     /**
@@ -72,7 +72,7 @@ public class Ratings {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public Ratings(final Jdbi databaseConnection) {
+    public LanguagesResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
@@ -80,7 +80,7 @@ public class Ratings {
      *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of ratings
+     * @return A paginated list of languages
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -88,16 +88,16 @@ public class Ratings {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Search ratings",
+        summary = "Search for a language",
         tags = {"Bookshelf"},
-        description = "Search ratings",
+        description = "Search for a language",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No ratings found"),
+            @ApiResponse(responseCode = "404", description = "No languages found"),
         })
-    public List<Entity> ratings(@Parameter(name="data", required = true) @NotNull @Valid final Search<RatingLookup> search)  {
+    public List<Entity> languages(@Parameter(name="data", required = true) @NotNull @Valid final Search<LanguageLookup> search)  {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
@@ -108,17 +108,17 @@ public class Ratings {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get rating details",
+            summary = "Get language details",
             tags = {"Bookshelf"},
-            description = "Get rating details",
+            description = "Get language details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No rating found"),
+                    @ApiResponse(responseCode = "404", description = "No languages found"),
             })
-    public Entity rating(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer ratingId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, ratingId);
+    public Entity language(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer languageId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, languageId);
     }
 
 }

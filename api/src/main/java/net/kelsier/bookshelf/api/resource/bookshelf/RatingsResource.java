@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2023. Kelsier Luthadel
  *
@@ -33,7 +34,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.TagLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.RatingLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -49,9 +50,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.TAGS;
+import static net.kelsier.bookshelf.api.db.tables.Table.RATINGS;
 
-@Path("api/1/bookshelf/tags")
+@Path("api/1/bookshelf/ratings")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -62,8 +63,8 @@ import static net.kelsier.bookshelf.api.db.tables.Table.TAGS;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class Tags {
-    private static final Table TABLE_TYPE = TAGS;
+public class RatingsResource {
+    private static final Table TABLE_TYPE = RATINGS;
     private final Jdbi databaseConnection;
 
     /**
@@ -71,7 +72,7 @@ public class Tags {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public Tags(final Jdbi databaseConnection) {
+    public RatingsResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
@@ -79,7 +80,7 @@ public class Tags {
      *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of tags
+     * @return A paginated list of ratings
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -87,16 +88,16 @@ public class Tags {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Search tags",
+        summary = "Search ratings",
         tags = {"Bookshelf"},
-        description = "Search tags",
+        description = "Search ratings",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No tags found"),
+            @ApiResponse(responseCode = "404", description = "No ratings found"),
         })
-    public List<Entity> tags(@Parameter(name="data", required = true) @NotNull @Valid final Search<TagLookup> search)  {
+    public List<Entity> ratings(@Parameter(name="data", required = true) @NotNull @Valid final Search<RatingLookup> search)  {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
@@ -107,17 +108,17 @@ public class Tags {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get tag details",
+            summary = "Get rating details",
             tags = {"Bookshelf"},
-            description = "Get tag details",
+            description = "Get rating details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No tags found"),
+                    @ApiResponse(responseCode = "404", description = "No rating found"),
             })
-    public Entity tag(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer tagId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, tagId);
+    public Entity rating(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer ratingId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, ratingId);
     }
 
 }

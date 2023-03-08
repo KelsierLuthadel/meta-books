@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class DataTest {
+class DataResourceTest {
 
     public static final String API = "/api/1/bookshelf/data";
     public static final String LOOKUP = "name";
@@ -43,7 +43,7 @@ class DataTest {
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Data(databaseConnection))
+            .addResource(new DataResource(databaseConnection))
             .build();
 
     @BeforeEach

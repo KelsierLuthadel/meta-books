@@ -2,14 +2,13 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.PublisherLookup;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.RatingLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.api.model.common.Sort;
-import net.kelsier.bookshelf.api.db.dao.PublisherDAO;
-import net.kelsier.bookshelf.api.db.model.Publisher;
+import net.kelsier.bookshelf.api.db.dao.RatingDAO;
+import net.kelsier.bookshelf.api.db.model.Rating;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,135 +29,134 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class PublisherTest {
+class RatingsResourceTest {
 
-    public static final String API = "/api/1/bookshelf/publishers";
-    public static final String LOOKUP = "name";
-    private Publisher publisher;
-    private List<Publisher> publishers;
+    public static final String API = "/api/1/bookshelf/ratings";
+    public static final String LOOKUP = "rating";
+    private Rating rating;
+    private List<Rating> ratings;
 
     @Spy
-    private PublisherDAO publisherDAO;
+    private RatingDAO ratingDAO;
 
     @Mock
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Publishers(databaseConnection))
+            .addResource(new RatingsResource(databaseConnection))
             .build();
 
     @BeforeEach
     void setup() {
-        publisher = new Publisher(1, "code", "code");
+        rating = new Rating(1, 1);
 
-        publishers = new ArrayList<>();
+        ratings = new ArrayList<>();
 
-        publishers.add(new Publisher(1,  "code 1", "1, code"));
-        publishers.add(new Publisher(2,  "code 2", "2, code"));
-        publishers.add(new Publisher(3,  "code 3", "3, code"));
+        ratings.add(new Rating(1,  1));
+        ratings.add(new Rating(2,  10));
+        ratings.add(new Rating(3,  5));
 
-        publisherDAO = spy(PublisherDAO.class);
+        ratingDAO = spy(RatingDAO.class);
 
-        when(databaseConnection.onDemand(PublisherDAO.class)).thenReturn(publisherDAO);
+        when(databaseConnection.onDemand(RatingDAO.class)).thenReturn(ratingDAO);
 
-        when(publisherDAO.get(anyInt())).thenReturn(publisher);
+        when(ratingDAO.get(anyInt())).thenReturn(rating);
 
         // limit, start, field, direction
-        when(publisherDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(publishers);
+        when(ratingDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
 
         // value, field, operator, limit, start, field, direction
-        when(publisherDAO.find(anyString(), anyString(), anyString(),
-                anyInt(), anyInt(), anyString(), anyString())).thenReturn(publishers);
+        when(ratingDAO.find(anyDouble(), anyString(), anyString(),
+                anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
     }
 
     @Test
     void testGet() {
         final Response post = resources.target(MessageFormat.format("{0}/1", API)).request().get();
 
-        final Publisher  response = post.readEntity(Publisher.class);
+        final Rating response = post.readEntity(Rating.class);
         assertEquals(Response.Status.OK.getStatusCode(),post.getStatus(),"Status should be 200 OK");
 
-        validateComment(response, publisher);
+        validateComment(response, rating);
     }
 
-    private void validateComment(final Publisher actual, final Publisher expected) {
+    private void validateComment(final Rating actual, final Rating expected) {
         assertEquals(expected.getId(), actual.getId(), "id should match");
-        assertEquals(expected.getName(), actual.getName(), "name should match");
-        assertEquals(expected.getSort(), actual.getSort(), "sort should match");
+        assertEquals(expected.getRating(), actual.getRating(), "rating should match");
     }
 
     @Test
     void testSearch() {
-        final Search<LanguageLookup> search = new Search<>(
-                new LanguageLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<RatingLookup> search = new Search<>(
+                new RatingLookup(LOOKUP, Operator.EQ, "10"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Publisher> response;
+        final List<Rating> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < publishers.size(); i++) {
-            validateComment(response.get(i), publishers.get(i));
+        for (int i = 0; i < ratings.size(); i++) {
+            validateComment(response.get(i), ratings.get(i));
         }
 
-        verify(publisherDAO, times(1)).find("%value%", LOOKUP, "ILIKE",
+        verify(ratingDAO, times(1)).find(10, LOOKUP, "=",
                 10, 0, "id", "asc");
     }
 
     @Test
     void testGetAll() {
-        final Search<PublisherLookup> search = new Search<>(
+        final Search<RatingLookup> search = new Search<>(
                 null,
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Publisher> response;
+        final List<Rating> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < publishers.size(); i++) {
-            validateComment(response.get(i), publishers.get(i));
+        for (int i = 0; i < ratings.size(); i++) {
+            validateComment(response.get(i), ratings.get(i));
         }
 
-        verify(publisherDAO, times(1)).find(10, 0, "id", "asc");
+        verify(ratingDAO, times(1)).find(10, 0, "id", "asc");
     }
 
     @Test
     void testSearchEquality() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup("name", Operator.EQ, "value"),
+        final Search<RatingLookup> search = new Search<>(
+                new RatingLookup("rating", Operator.EQ, "10"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Publisher> response;
+        final List<Rating> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(publishers.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < publishers.size(); i++) {
-            validateComment(response.get(i), publishers.get(i));
+        for (int i = 0; i < ratings.size(); i++) {
+            validateComment(response.get(i), ratings.get(i));
         }
 
-        verify(publisherDAO, times(1)).find("value", "name", "=",
+        verify(ratingDAO, times(1)).find(10, "rating", "=",
                 10, 0, "id", "asc");
     }
 
     @Test
     void testValidationForField() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup("bad field", Operator.LIKE, "value"),
+        final Search<RatingLookup> search = new Search<>(
+                new RatingLookup("bad field", Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -169,8 +167,8 @@ class PublisherTest {
 
     @Test
     void testValidationForOperator() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup(LOOKUP, null, "value"),
+        final Search<RatingLookup> search = new Search<>(
+                new RatingLookup(LOOKUP, null, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -181,8 +179,8 @@ class PublisherTest {
 
     @Test
     void testValidationForPaginationStart() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<RatingLookup> search = new Search<>(
+                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "asc"))
         );
 
@@ -193,8 +191,8 @@ class PublisherTest {
 
     @Test
     void testValidationForPaginationLimit() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<RatingLookup> search = new Search<>(
+                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(0, 101, new Sort("id", "asc"))
         );
 
@@ -205,8 +203,8 @@ class PublisherTest {
 
     @Test
     void testValidationForPaginationSort() {
-        final Search<PublisherLookup> search = new Search<>(
-                new PublisherLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<RatingLookup> search = new Search<>(
+                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "random"))
         );
 

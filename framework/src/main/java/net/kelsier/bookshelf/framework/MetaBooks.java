@@ -356,13 +356,13 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
             resourceRegistrar.registerResource(new RoleAdministration(getRoleDao()));
             resourceRegistrar.registerResource(new BooksResource(databaseConnection));
             resourceRegistrar.registerResource(new AuthorsResource(databaseConnection));
-            resourceRegistrar.registerResource(new Comments(databaseConnection));
-            resourceRegistrar.registerResource(new Data(databaseConnection));
-            resourceRegistrar.registerResource(new Languages(databaseConnection));
-            resourceRegistrar.registerResource(new Publishers(databaseConnection));
+            resourceRegistrar.registerResource(new CommentsResource(databaseConnection));
+            resourceRegistrar.registerResource(new DataResource(databaseConnection));
+            resourceRegistrar.registerResource(new LanguagesResource(databaseConnection));
+            resourceRegistrar.registerResource(new PublishersResource(databaseConnection));
             resourceRegistrar.registerResource(new BookSeriesResource(databaseConnection));
-            resourceRegistrar.registerResource(new Ratings(databaseConnection));
-            resourceRegistrar.registerResource(new Tags(databaseConnection));
+            resourceRegistrar.registerResource(new RatingsResource(databaseConnection));
+            resourceRegistrar.registerResource(new TagsResource(databaseConnection));
             resourceRegistrar.registerResource(new BookDetailsResource(databaseConnection));
 
             resourceRegistrar.registerResource(new BookshelfAdministration(databaseConnection));

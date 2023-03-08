@@ -2,13 +2,14 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.RatingLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.TagLookup;
 import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import net.kelsier.bookshelf.api.model.common.Sort;
-import net.kelsier.bookshelf.api.db.dao.RatingDAO;
-import net.kelsier.bookshelf.api.db.model.Rating;
+import net.kelsier.bookshelf.api.db.dao.TagDAO;
+import net.kelsier.bookshelf.api.db.model.Tag;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,134 +30,134 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class RatingTest {
+class TagsResourceTest {
 
-    public static final String API = "/api/1/bookshelf/ratings";
-    public static final String LOOKUP = "rating";
-    private Rating rating;
-    private List<Rating> ratings;
+    public static final String API = "/api/1/bookshelf/tags";
+    public static final String LOOKUP = "name";
+    private Tag tag;
+    private List<Tag> tags;
 
     @Spy
-    private RatingDAO ratingDAO;
+    private TagDAO tagDAO;
 
     @Mock
     static final Jdbi databaseConnection = mock(Jdbi.class);
 
     private static final ResourceExtension resources = ResourceExtension.builder()
-            .addResource(new Ratings(databaseConnection))
+            .addResource(new TagsResource(databaseConnection))
             .build();
 
     @BeforeEach
     void setup() {
-        rating = new Rating(1, 1);
+        tag = new Tag(1, "code");
 
-        ratings = new ArrayList<>();
+        tags = new ArrayList<>();
 
-        ratings.add(new Rating(1,  1));
-        ratings.add(new Rating(2,  10));
-        ratings.add(new Rating(3,  5));
+        tags.add(new Tag(1,  "code 1"));
+        tags.add(new Tag(2,  "code 2"));
+        tags.add(new Tag(3,  "code 3"));
 
-        ratingDAO = spy(RatingDAO.class);
+        tagDAO = spy(TagDAO.class);
 
-        when(databaseConnection.onDemand(RatingDAO.class)).thenReturn(ratingDAO);
+        when(databaseConnection.onDemand(TagDAO.class)).thenReturn(tagDAO);
 
-        when(ratingDAO.get(anyInt())).thenReturn(rating);
+        when(tagDAO.get(anyInt())).thenReturn(tag);
 
         // limit, start, field, direction
-        when(ratingDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
+        when(tagDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(tags);
 
         // value, field, operator, limit, start, field, direction
-        when(ratingDAO.find(anyDouble(), anyString(), anyString(),
-                anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
+        when(tagDAO.find(anyString(), anyString(), anyString(),
+                anyInt(), anyInt(), anyString(), anyString())).thenReturn(tags);
     }
 
     @Test
     void testGet() {
         final Response post = resources.target(MessageFormat.format("{0}/1", API)).request().get();
 
-        final Rating response = post.readEntity(Rating.class);
+        final Tag response = post.readEntity(Tag.class);
         assertEquals(Response.Status.OK.getStatusCode(),post.getStatus(),"Status should be 200 OK");
 
-        validateComment(response, rating);
+        validateComment(response, tag);
     }
 
-    private void validateComment(final Rating actual, final Rating expected) {
+    private void validateComment(final Tag actual, final Tag expected) {
         assertEquals(expected.getId(), actual.getId(), "id should match");
-        assertEquals(expected.getRating(), actual.getRating(), "rating should match");
+        assertEquals(expected.getName(), actual.getName(), "name should match");
     }
 
     @Test
     void testSearch() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, Operator.EQ, "10"),
+        final Search<LanguageLookup> search = new Search<>(
+                new LanguageLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Rating> response;
+        final List<Tag> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < ratings.size(); i++) {
-            validateComment(response.get(i), ratings.get(i));
+        for (int i = 0; i < tags.size(); i++) {
+            validateComment(response.get(i), tags.get(i));
         }
 
-        verify(ratingDAO, times(1)).find(10, LOOKUP, "=",
+        verify(tagDAO, times(1)).find("%value%", LOOKUP, "ILIKE",
                 10, 0, "id", "asc");
     }
 
     @Test
     void testGetAll() {
-        final Search<RatingLookup> search = new Search<>(
+        final Search<TagLookup> search = new Search<>(
                 null,
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Rating> response;
+        final List<Tag> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < ratings.size(); i++) {
-            validateComment(response.get(i), ratings.get(i));
+        for (int i = 0; i < tags.size(); i++) {
+            validateComment(response.get(i), tags.get(i));
         }
 
-        verify(ratingDAO, times(1)).find(10, 0, "id", "asc");
+        verify(tagDAO, times(1)).find(10, 0, "id", "asc");
     }
 
     @Test
     void testSearchEquality() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup("rating", Operator.EQ, "10"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup("name", Operator.EQ, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
-        final List<Rating> response;
+        final List<Tag> response;
         try (Response post = resources.target(API).request().post(Entity.json(search))) {
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
             response = post.readEntity(new GenericType<>() {});
         }
-        assertEquals(ratings.size(), response.size(), "The correct number of results should be returned");
+        assertEquals(tags.size(), response.size(), "The correct number of results should be returned");
 
-        for (int i = 0; i < ratings.size(); i++) {
-            validateComment(response.get(i), ratings.get(i));
+        for (int i = 0; i < tags.size(); i++) {
+            validateComment(response.get(i), tags.get(i));
         }
 
-        verify(ratingDAO, times(1)).find(10, "rating", "=",
+        verify(tagDAO, times(1)).find("value", "name", "=",
                 10, 0, "id", "asc");
     }
 
     @Test
     void testValidationForField() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup("bad field", Operator.LIKE, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup("bad field", Operator.LIKE, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -167,8 +168,8 @@ class RatingTest {
 
     @Test
     void testValidationForOperator() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, null, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup(LOOKUP, null, "value"),
                 new Pagination(0, 10, new Sort("id", "asc"))
         );
 
@@ -179,8 +180,8 @@ class RatingTest {
 
     @Test
     void testValidationForPaginationStart() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "asc"))
         );
 
@@ -191,8 +192,8 @@ class RatingTest {
 
     @Test
     void testValidationForPaginationLimit() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(0, 101, new Sort("id", "asc"))
         );
 
@@ -203,8 +204,8 @@ class RatingTest {
 
     @Test
     void testValidationForPaginationSort() {
-        final Search<RatingLookup> search = new Search<>(
-                new RatingLookup(LOOKUP, Operator.LIKE, "value"),
+        final Search<TagLookup> search = new Search<>(
+                new TagLookup(LOOKUP, Operator.LIKE, "value"),
                 new Pagination(-1, 10, new Sort("id", "random"))
         );
 

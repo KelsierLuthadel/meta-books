@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2023. Kelsier Luthadel
  *
@@ -34,7 +33,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
-import net.kelsier.bookshelf.api.model.bookshelf.lookup.PublisherLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.TagLookup;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -50,9 +49,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.PUBLISHERS;
+import static net.kelsier.bookshelf.api.db.tables.Table.TAGS;
 
-@Path("api/1/bookshelf/publishers")
+@Path("api/1/bookshelf/tags")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -63,8 +62,8 @@ import static net.kelsier.bookshelf.api.db.tables.Table.PUBLISHERS;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class Publishers {
-    private static final Table TABLE_TYPE = PUBLISHERS;
+public class TagsResource {
+    private static final Table TABLE_TYPE = TAGS;
     private final Jdbi databaseConnection;
 
     /**
@@ -72,7 +71,7 @@ public class Publishers {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public Publishers(final Jdbi databaseConnection) {
+    public TagsResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
@@ -80,7 +79,7 @@ public class Publishers {
      *
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of publishers
+     * @return A paginated list of tags
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -88,16 +87,16 @@ public class Publishers {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-        summary = "Search publishers",
+        summary = "Search tags",
         tags = {"Bookshelf"},
-        description = "Search publishers",
+        description = "Search tags",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorised"),
             @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-            @ApiResponse(responseCode = "404", description = "No publishers found"),
+            @ApiResponse(responseCode = "404", description = "No tags found"),
         })
-    public List<Entity> authors(@Parameter(name="data", required = true) @NotNull @Valid final Search<PublisherLookup> search)  {
+    public List<Entity> tags(@Parameter(name="data", required = true) @NotNull @Valid final Search<TagLookup> search)  {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
@@ -108,17 +107,17 @@ public class Publishers {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get publisher details",
+            summary = "Get tag details",
             tags = {"Bookshelf"},
-            description = "Get publisher details",
+            description = "Get tag details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
-                    @ApiResponse(responseCode = "404", description = "No publisher found"),
+                    @ApiResponse(responseCode = "404", description = "No tags found"),
             })
-    public Entity comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer publisherId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, publisherId);
+    public Entity tag(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer tagId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, tagId);
     }
 
 }
