@@ -24,7 +24,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import net.kelsier.bookshelf.api.resource.bookshelf.Authors;
-import net.kelsier.bookshelf.api.resource.bookshelf.BookDetails;
+import net.kelsier.bookshelf.api.resource.bookshelf.BookDetailsResource;
 import net.kelsier.bookshelf.api.resource.bookshelf.BookSeries;
 import net.kelsier.bookshelf.api.resource.bookshelf.Books;
 import net.kelsier.bookshelf.api.resource.bookshelf.Comments;
@@ -318,13 +318,8 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
     }
 
     private void registerOpenAPI(final Environment environment) {
-        //Stream.of("net.kelsier.bookshelf.migration.resource")
-
         OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf").collect(
                 Collectors.toSet()));
-
-//        OpenApi.configure(environment, "/api", Stream.of("net.kelsier.bookshelf.api.resource").collect(
-//            Collectors.toSet()));
 
         final OpenAPI oas = new OpenAPI();
         final Info info = new Info()
@@ -347,7 +342,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
         final SwaggerConfiguration oasConfig = new SwaggerConfiguration()
             .openAPI(oas)
             .prettyPrint(true)
-            .resourcePackages(Stream.of("net.kelsier.bookserver.api.rest")
+            .resourcePackages(Stream.of("net.kelsier.bookshelf")
                 .collect(Collectors.toSet()));
 
         environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -376,7 +371,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
             resourceRegistrar.registerResource(new BookSeries(databaseConnection));
             resourceRegistrar.registerResource(new Ratings(databaseConnection));
             resourceRegistrar.registerResource(new Tags(databaseConnection));
-            resourceRegistrar.registerResource(new BookDetails(databaseConnection));
+            resourceRegistrar.registerResource(new BookDetailsResource(databaseConnection));
 
             resourceRegistrar.registerResource(new BookshelfAdministration(databaseConnection));
         }

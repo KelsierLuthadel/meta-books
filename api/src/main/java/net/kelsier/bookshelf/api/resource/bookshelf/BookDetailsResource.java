@@ -47,7 +47,7 @@ import javax.ws.rs.core.MediaType;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.BOOK_DETAILS;
 
-@Path("api/1/bookshelf/")
+@Path("api/1/bookshelf")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -58,7 +58,7 @@ import static net.kelsier.bookshelf.api.db.tables.Table.BOOK_DETAILS;
 @OpenAPIDefinition(
         security = @SecurityRequirement(name = "basicAuth")
 )
-public class BookDetails {
+public class BookDetailsResource {
     private static final Table TABLE_TYPE = BOOK_DETAILS;
     private final Jdbi databaseConnection;
 
@@ -67,7 +67,7 @@ public class BookDetails {
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
-    public BookDetails(final Jdbi databaseConnection) {
+    public BookDetailsResource(final Jdbi databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
 
@@ -88,7 +88,9 @@ public class BookDetails {
                     @ApiResponse(responseCode = "404", description = "No tags found"),
             })
     public Entity get(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer tagId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, tagId);
+        Entity fg =  Connection.get(databaseConnection, TABLE_TYPE, tagId);
+
+        return fg;
     }
 
 }

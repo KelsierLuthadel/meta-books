@@ -1,14 +1,19 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
 /**
  * Tag details as represented by the authors table
  */
+@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "language", "format",
+                    "size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
 public class BookDetails implements Entity {
     /**
      * Unique id
@@ -39,7 +44,12 @@ public class BookDetails implements Entity {
     @JsonProperty("publisher")
     private final String publisher;
 
-    @NotNull
+    /**
+     *  ISBN prior to 2007 is a 10-digit number.
+     *  ISBN from 2007 onwards consists of a 13-digit number is divided into five parts of variable length, each part separated by a hyphen.
+     */
+
+    @Length(min = 10, max = 17)
     @JsonProperty("isbn")
     private final String isbn;
 
@@ -56,16 +66,13 @@ public class BookDetails implements Entity {
     @JsonProperty("size")
     private final Integer size;
 
-    @NotNull
     @JsonProperty("hasCover")
-    private final Boolean hascover;
+    private final Boolean hasCover;
 
-    @NotNull
     @JsonProperty("dateAdded")
     private final Timestamp dateAdded;
 
-    @NotNull
-    @JsonProperty("published")
+    @JsonProperty("publicationDate")
     private final Timestamp publicationDate;
 
     @NotNull
@@ -74,15 +81,29 @@ public class BookDetails implements Entity {
 
     @NotNull
     @JsonProperty("path")
+    //todo sanitize
     private final String path;
 
+    @NotNull
     @JsonProperty("comments")
     private final String comments;
 
-    public BookDetails(final Integer id, final String title, final String author, final String series, final Integer seriesIndex,
-                       final String publisher, final String isbn, final String language, final String format, final Integer size,
-                       final Boolean hascover, final Timestamp dateAdded, final Timestamp publicationDate, final Timestamp lastModified,
-                       final String path, final String comments) {
+    public BookDetails(@JsonProperty("id") final Integer id,
+                       @JsonProperty("title")final String title,
+                       @JsonProperty("author")final String author,
+                       @JsonProperty("series")final String series,
+                       @JsonProperty("seriesIndex")final Integer seriesIndex,
+                       @JsonProperty("publisher")final String publisher,
+                       @JsonProperty("isbn")final String isbn,
+                       @JsonProperty("language")final String language,
+                       @JsonProperty("format")final String format,
+                       @JsonProperty("size")final Integer size,
+                       @JsonProperty("hasCover")final Boolean hasCover,
+                       @JsonProperty("dateAdded")final Timestamp dateAdded,
+                       @JsonProperty("publicationDate")final Timestamp publicationDate,
+                       @JsonProperty("lastModified")final Timestamp lastModified,
+                       @JsonProperty("path")final String path,
+                       @JsonProperty("comments")final String comments) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -93,7 +114,7 @@ public class BookDetails implements Entity {
         this.language = language;
         this.format = format;
         this.size = size;
-        this.hascover = hascover;
+        this.hasCover = hasCover;
         this.dateAdded = dateAdded;
         this.publicationDate = publicationDate;
         this.lastModified = lastModified;
@@ -141,8 +162,8 @@ public class BookDetails implements Entity {
         return size;
     }
 
-    public Boolean getHascover() {
-        return hascover;
+    public Boolean getHasCover() {
+        return hasCover;
     }
 
     public Timestamp getDateAdded() {
