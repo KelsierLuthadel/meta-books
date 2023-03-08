@@ -22,6 +22,7 @@ public class Sort {
      */
     @NotNull
     @JsonProperty("field")
+    @Schema(description = "Search query sort field", defaultValue = "id")
     private final String field;
 
     /**
@@ -30,6 +31,7 @@ public class Sort {
     @NotNull
     @OneOf({"asc", "desc"})
     @JsonProperty("direction")
+    @Schema(description = "Search query sort direction", defaultValue = "asc")
     private final String direction;
 
     /**

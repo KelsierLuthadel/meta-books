@@ -1,12 +1,12 @@
 package net.kelsier.bookshelf.api.db.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
 /**
@@ -70,13 +70,16 @@ public class BookDetails implements Entity {
     private final Boolean hasCover;
 
     @JsonProperty("dateAdded")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp dateAdded;
 
     @JsonProperty("publicationDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp publicationDate;
 
     @NotNull
     @JsonProperty("lastModified")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp lastModified;
 
     @NotNull

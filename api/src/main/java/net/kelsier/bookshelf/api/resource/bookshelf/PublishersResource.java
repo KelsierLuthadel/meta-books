@@ -35,6 +35,7 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.PublisherLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -52,6 +53,9 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.PUBLISHERS;
 
+/**
+ * API to retrieve book publisher data from the database.
+ */
 @Path("api/1/bookshelf/publishers")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -64,7 +68,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.PUBLISHERS;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class PublishersResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = PUBLISHERS;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -77,10 +88,42 @@ public class PublishersResource {
     }
 
     /**
-     *
+     * Search for publishers
      * Restricted to the following roles: admin:r, user:r
      *
+     * @param search A {@link Search} object, consisting of an {@link PublisherLookup} query and  {@link Pagination}
      * @return A paginated list of publishers
+     *
+     * <pre>Example request:{@code
+     * {
+     *   "query": {
+     *     "field": "name",
+     *     "operator": "LIKE",
+     *     "value": "random"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 10,
+     *     "sort": {
+     *       "field": "name",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     * {
+     *     "id": 55,
+     *     "name": "Random House"
+     *   },
+     *   {
+     *     "id": 1263,
+     *     "name": "Random House (UK)"
+     *   },
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -89,7 +132,7 @@ public class PublishersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search publishers",
-        tags = {"Bookshelf"},
+        tags = {"API"},
         description = "Search publishers",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -101,6 +144,18 @@ public class PublishersResource {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get publisher
+     * @param publisherId Publisher ID
+     * @return An object containing a publisher
+     *
+     * <pre>Example response:{@code
+     * {
+     *     "id": 55,
+     *     "name": "Random House"
+     * }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -109,7 +164,7 @@ public class PublishersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get publisher details",
-            tags = {"Bookshelf"},
+            tags = {"API"},
             description = "Get publisher details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

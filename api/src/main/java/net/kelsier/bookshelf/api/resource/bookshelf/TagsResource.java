@@ -34,6 +34,7 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.TagLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -51,6 +52,9 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.TAGS;
 
+/**
+ * API to retrieve book tags from the database.
+ */
 @Path("api/1/bookshelf/tags")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -63,7 +67,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.TAGS;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class TagsResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = TAGS;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -76,10 +87,46 @@ public class TagsResource {
     }
 
     /**
-     *
+     * Search for tags
      * Restricted to the following roles: admin:r, user:r
      *
+     * @param search A {@link Search} object, consisting of an {@link TagLookup} query and  {@link Pagination}
      * @return A paginated list of tags
+     *
+     * <pre>Example request:{@code
+     * {
+     *   "query": {
+     *     "field": "rating",
+     *     "operator": "NEQ",
+     *     "value": "1"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 3,
+     *     "sort": {
+     *       "field": "id",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *     "id": 1921,
+     *     "name": "Fiction"
+     *   },
+     *   {
+     *     "id": 2232,
+     *     "name": "Fiction.Adventure"
+     *   },
+     *   {
+     *     "id": 2241,
+     *     "name": "Fiction.SciFi"
+     *   }
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -88,7 +135,7 @@ public class TagsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search tags",
-        tags = {"Bookshelf"},
+        tags = {"API"},
         description = "Search tags",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -100,6 +147,18 @@ public class TagsResource {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get tag
+     * @param tagId Tag ID
+     * @return An object containing a tag
+     *
+     * <pre>Example response:{@code
+     *  {
+     *     "id": 2241,
+     *     "name": "Fiction.SciFi"
+     *   }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -108,7 +167,7 @@ public class TagsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get tag details",
-            tags = {"Bookshelf"},
+            tags = {"API"},
             description = "Get tag details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

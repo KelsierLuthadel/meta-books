@@ -68,9 +68,9 @@ public interface SeriesDAO {
             @Define("direction") String direction
     );
 
-    @SqlQuery("SELECT * FROM series WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    @SqlQuery("SELECT * FROM series WHERE <column> <clause> :name ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Series> find(
-            @Bind("text") String text,
+            @Bind("name") String name,
             @Define("column") final String column,
             @Define("clause") final String clause,
             @Bind("limit") int limit,

@@ -35,6 +35,7 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.CommentLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -52,6 +53,9 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.COMMENTS;
 
+/**
+ * API to retrieve book comments from the database.
+ */
 @Path("api/1/bookshelf/comments")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -64,7 +68,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.COMMENTS;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class CommentsResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = COMMENTS;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -77,10 +88,44 @@ public class CommentsResource {
     }
 
     /**
-     *
+     * Search for comments
      * Restricted to the following roles: admin:r, user:r
      *
+     * @param search A {@link Search} object, consisting of an {@link CommentLookup} query and  {@link Pagination}
      * @return A paginated list of comments
+     *
+     * <pre>Example request:{@code
+     * {
+     *   "query": {
+     *     "field": "text",
+     *     "operator": "LIKE",
+     *     "value": "tower"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 10,
+     *     "sort": {
+     *       "field": "id",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *     "id": 2057,
+     *     "book": 2068,
+     *     "text": "Book description"
+     *   },
+     *   {
+     *     "id": 2131,
+     *     "book": 1369,
+     *     "text": "Book review"
+     *   },
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -89,7 +134,7 @@ public class CommentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search within comments",
-        tags = {"Bookshelf"},
+        tags = {"API"},
         description = "Search within comments",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -101,6 +146,19 @@ public class CommentsResource {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get Book comments
+     * @param commentId Comment ID
+     * @return An object containing book comments
+     *
+     * <pre>Example response:{@code
+     *  {
+     *     "id": 2057,
+     *     "book": 2068,
+     *     "text": "Book description"
+     *   }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -109,7 +167,7 @@ public class CommentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get comments",
-            tags = {"Bookshelf"},
+            tags = {"API"},
             description = "Get comments for a book",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

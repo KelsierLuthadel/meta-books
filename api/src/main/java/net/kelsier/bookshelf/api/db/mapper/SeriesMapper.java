@@ -50,6 +50,6 @@ public class SeriesMapper implements RowMapper<Series> {
         return new Series(
                 resultSet.getInt("ID"),
                 resultSet.getString("NAME"),
-                resultSet.getString("TEXT"));
+                resultSet.getString("SORT"));
     }
 }

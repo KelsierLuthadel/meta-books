@@ -47,7 +47,9 @@ import javax.ws.rs.core.MediaType;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.BOOK_DETAILS;
 
-@Path("api/1/bookshelf")
+/**
+ * API to retrieve a book with associated metadata from the database.
+ */@Path("api/1/bookshelf")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -59,7 +61,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.BOOK_DETAILS;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class BookDetailsResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = BOOK_DETAILS;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -71,6 +80,32 @@ public class BookDetailsResource {
         this.databaseConnection = databaseConnection;
     }
 
+    /**
+     * Get full book details
+     * @param bookId Book ID
+     * @return An object containing book details
+     *
+     * <pre>Example response:{@code
+     * {
+     *   "id": 1,
+     *   "title": "The Book Title",
+     *   "author": "Author Name",
+     *   "series": "Book series",
+     *   "seriesIndex": 5,
+     *   "publisher": "Publisher",
+     *   "isbn": "1234567890",
+     *   "language": "eng",
+     *   "format": "EPUB",
+     *   "size": 494805,
+     *   "hasCover": true,
+     *   "dateAdded": "2015-11-15",
+     *   "published": "2006-08-22",
+     *   "lastModified": "2023-02-23",
+     *   "path": "path/book",
+     *   "comments": "Book comments"
+     * }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -79,7 +114,7 @@ public class BookDetailsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get Book details",
-            tags = {"Book Details"},
+            tags = {"Bookshelf"},
             description = "Get Book details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
@@ -87,10 +122,8 @@ public class BookDetailsResource {
                     @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
                     @ApiResponse(responseCode = "404", description = "No tags found"),
             })
-    public Entity get(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer tagId)  {
-        Entity fg =  Connection.get(databaseConnection, TABLE_TYPE, tagId);
-
-        return fg;
+    public Entity get(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer bookId)  {
+        return Connection.get(databaseConnection, TABLE_TYPE, bookId);
     }
 
 }
