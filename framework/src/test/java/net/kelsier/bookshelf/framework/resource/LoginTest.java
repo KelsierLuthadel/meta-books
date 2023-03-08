@@ -31,7 +31,6 @@ import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.model.users.LoginModel;
 import net.kelsier.bookshelf.framework.db.model.users.UserResponse;
 import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -41,19 +40,12 @@ import javax.ws.rs.core.Response;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
 class LoginTest {
     @Mock
-    private static UserDAO userDAO = mock(UserDAO.class);
-
-    @BeforeEach
-    void setup() {
-
-    }
+    private static final UserDAO userDAO = mock(UserDAO.class);
 
     private DatabaseUser getUser(final String password, final boolean enabled) {
         final EncryptionConfiguration encryptionConfiguration = new EncryptionConfiguration(

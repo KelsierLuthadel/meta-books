@@ -39,8 +39,8 @@ CREATE TABLE custom_column_(
  */
 
 /**
- * DAO to map a custom colummn object in the database to a Java object so that it can be returned RESTfully.
- * <p>Custom colummns are stored in the following schema:</p>
+ * DAO to map a custom column object in the database to a Java object so that it can be returned RESTfully.
+ * <p>Custom columns are stored in the following schema:</p>
  * <style>table, th, td {border: 1px solid black;  border-collapse: collapse; padding: 5px 5px 5px 5px;} th {background-color:#DEDEDE}</style>
  * <table>
  *   <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>

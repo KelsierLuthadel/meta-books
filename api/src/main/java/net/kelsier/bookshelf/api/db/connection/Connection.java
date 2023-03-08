@@ -47,6 +47,10 @@ import java.util.List;
 import static net.kelsier.bookshelf.api.db.types.DataTypes.*;
 
 public class Connection {
+    private static final String QUERY_ERROR = "Invalid query";
+    private Connection() {
+        throw new IllegalStateException("Utility class. Should not be instantiated.");
+    }
 
     public static List<Entity> query(final Jdbi databaseConnection,
                                      final Table table,
@@ -82,7 +86,7 @@ public class Connection {
             case BOOK_DETAILS:
                 return databaseConnection.onDemand(BookDetailsDAO.class).get(id);
             default:
-                throw new BadRequestException("Invalid query");
+                throw new BadRequestException(QUERY_ERROR);
         }
     }
 
@@ -112,7 +116,7 @@ public class Connection {
             case TAGS:
                 return Collections.unmodifiableList(databaseConnection.onDemand(TagDAO.class).find(limit, start, field, direction));
             default:
-                throw new BadRequestException("Invalid query");
+                throw new BadRequestException(QUERY_ERROR);
         }
     }
 
@@ -165,7 +169,7 @@ public class Connection {
                 return Collections.unmodifiableList(databaseConnection.onDemand(TagDAO.class).find(value,query, operator,
                     limit, start, field, direction));
             default:
-                throw new BadRequestException("Invalid query");
+                throw new BadRequestException(QUERY_ERROR);
         }
     }
 

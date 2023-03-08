@@ -3,7 +3,8 @@ package net.kelsier.bookshelf.framework.cipher;
 import net.kelsier.bookshelf.framework.encryption.exception.CipherException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class CipherExceptionTest {
 

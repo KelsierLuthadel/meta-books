@@ -35,6 +35,7 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.SeriesLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -52,6 +53,9 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.*;
 
+/**
+ * API to retrieve book series information from the database.
+ */
 @Path("api/1/bookshelf/series")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -64,7 +68,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.*;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class BookSeriesResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = SERIES;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -77,10 +88,44 @@ public class BookSeriesResource {
     }
 
     /**
-     *
+     * Search for series
      * Restricted to the following roles: admin:r, user:r
      *
+     * @param search A {@link Search} object, consisting of an {@link SeriesLookup} query and  {@link Pagination}
      * @return A paginated list of series
+     *
+     * <pre>Example request:{@code
+     * {
+     *   "query": {
+     *     "field": "name",
+     *     "operator": "LIKE",
+     *     "value": "series"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 10,
+     *     "sort": {
+     *       "field": "name",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *     "id": 97,
+     *     "name": "Seventh Series",
+     *     "sort": "Seventh Series"
+     *   },
+     *   {
+     *     "id": 384,
+     *     "name": "The Series",
+     *     "sort": "Series, The"
+     *   }
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -89,7 +134,7 @@ public class BookSeriesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for a series",
-        tags = {"Bookshelf"},
+        tags = {"API"},
         description = "Search for a series",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -101,6 +146,19 @@ public class BookSeriesResource {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get Book series details
+     * @param seriesId Series ID
+     * @return An object containing series details
+     *
+     * <pre>Example response:{@code
+     * {
+     *   "id": 384,
+     *   "name": "The Series",
+     *   "sort": "Series, The"
+     * }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -109,7 +167,7 @@ public class BookSeriesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get series details",
-            tags = {"Bookshelf"},
+            tags = {"API"},
             description = "Get series details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

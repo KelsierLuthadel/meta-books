@@ -82,7 +82,7 @@ class RatingsResourceTest {
 
     private void validateComment(final Rating actual, final Rating expected) {
         assertEquals(expected.getId(), actual.getId(), "id should match");
-        assertEquals(expected.getRating(), actual.getRating(), "rating should match");
+        assertEquals(expected.getValue(), actual.getValue(), "rating should match");
     }
 
     @Test

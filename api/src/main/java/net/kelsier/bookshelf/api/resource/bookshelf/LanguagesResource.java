@@ -35,6 +35,7 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.LanguageLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -52,6 +53,9 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.LANGUAGES;
 
+/**
+ * API to retrieve book language information from the database.
+ */
 @Path("api/1/bookshelf/languages")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -64,7 +68,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.LANGUAGES;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class LanguagesResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = LANGUAGES;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -77,10 +88,38 @@ public class LanguagesResource {
     }
 
     /**
-     *
+     * Search for languages
      * Restricted to the following roles: admin:r, user:r
      *
-     * @return A paginated list of languages
+     * @param search A {@link Search} object, consisting of an {@link LanguageLookup} query and  {@link Pagination}
+     * @return A paginated list of books
+     *
+     * <pre>Example request:{@code
+     * {
+     *   "query": {
+     *     "field": "lang_code",
+     *     "operator": "EQ",
+     *     "value": "eng"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 10,
+     *     "sort": {
+     *       "field": "lang_code",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *     "id": 1,
+     *     "languageCode": "eng"
+     *   }
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -89,7 +128,7 @@ public class LanguagesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for a language",
-        tags = {"Bookshelf"},
+        tags = {"API"},
         description = "Search for a language",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -101,6 +140,18 @@ public class LanguagesResource {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get language
+     * @param languageId Language ID
+     * @return An object containing a language
+     *
+     * <pre>Example response:{@code
+     *  {
+     *     "id": 1,
+     *     "languageCode": "eng"
+     *   }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -109,7 +160,7 @@ public class LanguagesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get language details",
-            tags = {"Bookshelf"},
+            tags = {"API"},
             description = "Get language details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

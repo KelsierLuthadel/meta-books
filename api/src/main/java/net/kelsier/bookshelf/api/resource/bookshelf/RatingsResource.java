@@ -35,6 +35,7 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.RatingLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -52,6 +53,9 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.RATINGS;
 
+/**
+ * API to retrieve ratings data from the database.
+ */
 @Path("api/1/bookshelf/ratings")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -64,7 +68,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.RATINGS;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class RatingsResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = RATINGS;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -77,10 +88,46 @@ public class RatingsResource {
     }
 
     /**
-     *
+     * Search for ratings
      * Restricted to the following roles: admin:r, user:r
      *
+     * @param search A {@link Search} object, consisting of an {@link RatingLookup} query and  {@link Pagination}
      * @return A paginated list of ratings
+     *
+     * <pre>Example request:{@code
+     * {
+     *   "query": {
+     *     "field": "rating",
+     *     "operator": "NEQ",
+     *     "value": "1"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 10,
+     *     "sort": {
+     *       "field": "id",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *     "id": 1,
+     *     "rating": 6
+     *   },
+     *   {
+     *     "id": 2,
+     *     "rating": 10
+     *   },
+     *   {
+     *     "id": 3,
+     *     "rating": 8
+     *   }
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -89,7 +136,7 @@ public class RatingsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search ratings",
-        tags = {"Bookshelf"},
+        tags = {"API"},
         description = "Search ratings",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -101,6 +148,18 @@ public class RatingsResource {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get rating
+     * @param ratingId Rating ID
+     * @return An object containing a rating
+     *
+     * <pre>Example response:{@code
+     *  {
+     *     "id": 1,
+     *     "rating": 6
+     *   }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -109,7 +168,7 @@ public class RatingsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get rating details",
-            tags = {"Bookshelf"},
+            tags = {"API"},
             description = "Get rating details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

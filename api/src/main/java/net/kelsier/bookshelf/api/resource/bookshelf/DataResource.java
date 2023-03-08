@@ -35,6 +35,7 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.DataLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -52,6 +53,9 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.DATA;
 
+/**
+ * API to retrieve ebook metadata from the database.
+ */
 @Path("api/1/bookshelf/data")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -64,7 +68,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.DATA;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public class DataResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = DATA;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -77,10 +88,41 @@ public class DataResource {
     }
 
     /**
-     *
+     * Search for ebook metadata
      * Restricted to the following roles: admin:r, user:r
      *
+     * @param search A {@link Search} object, consisting of an {@link DataLookup} query and  {@link Pagination}
      * @return A paginated list of data
+     *
+     * <pre>Example request:{@code
+     * {
+     *   "query": {
+     *     "field": "name",
+     *     "operator": "EQ",
+     *     "value": "1984 - George Orwell"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 10,
+     *     "sort": {
+     *       "field": "name",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *     "id": 64,
+     *     "book": 59,
+     *     "format": "EPUB",
+     *     "uncompressedSize": 263729,
+     *     "name": "1984 - George Orwell"
+     *   }
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -89,7 +131,7 @@ public class DataResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for book details",
-        tags = {"Bookshelf"},
+        tags = {"API"},
         description = "Get data for books",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -101,6 +143,21 @@ public class DataResource {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get ebook metadata
+     * @param bookDataId Book data ID
+     * @return An object containing book metadata
+     *
+     * <pre>Example response:{@code
+     * {
+     *   "id": 64,
+     *   "book": 59,
+     *   "format": "EPUB",
+     *   "uncompressedSize": 263729,
+     *   "name": "1984 - George Orwell"
+     * }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
@@ -109,7 +166,7 @@ public class DataResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get data for a book",
-            tags = {"Bookshelf"},
+            tags = {"API"},
             description = "Get data for a book",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

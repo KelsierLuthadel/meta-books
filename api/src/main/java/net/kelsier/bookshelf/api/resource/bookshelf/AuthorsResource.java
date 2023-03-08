@@ -55,10 +55,6 @@ import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
 
 /**
  * API to retrieve authors from the database.
- * Authors are stored in the following schema:
- * <p>
- * {@code public.authors (id SERIAL PRIMARY KEY, name TEXT NOT NULL , sort TEXT)}
- * </p>
  */
 @Path("api/1/bookshelf/authors")
 @Produces({"application/json", "application/xml"})
@@ -72,11 +68,18 @@ import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public final class AuthorsResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = AUTHORS;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
-     * Constructor
+     * Bookshelf REST resource
      *
      * @param databaseConnection Connection to the database where book data is stored
      */
@@ -92,10 +95,11 @@ public final class AuthorsResource {
      * @return A paginated list of authors
      *
      * <pre>Example request:{@code
-     * "lookup": {
+     * {
+     *   "query": {
      *     "field": "name",
      *     "operator": "LIKE",
-     *     "value": "Stephen King"
+     *     "value": "king"
      *   },
      *   "pagination": {
      *     "start": 0,
@@ -105,6 +109,7 @@ public final class AuthorsResource {
      *       "direction": "asc"
      *     }
      *   }
+     * }
      * }</pre>
      *
      * <pre>Example response:{@code
@@ -129,7 +134,7 @@ public final class AuthorsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for authors",
-        tags = {"Bookshelf"},
+        tags = {"API"},
         description = "Search for authors",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -162,7 +167,7 @@ public final class AuthorsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get author details",
-            tags = {"Bookshelf"},
+            tags = {"API"},
             description = "Get author details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

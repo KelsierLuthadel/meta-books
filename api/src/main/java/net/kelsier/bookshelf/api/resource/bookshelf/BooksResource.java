@@ -35,6 +35,7 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.BookLookup;
+import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
 
@@ -52,6 +53,9 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.tables.Table.BOOKS;
 
+/**
+ * API to retrieve a book from the database.
+ */
 @Path("api/1/bookshelf/books")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
@@ -64,7 +68,14 @@ import static net.kelsier.bookshelf.api.db.tables.Table.BOOKS;
         security = @SecurityRequirement(name = "basicAuth")
 )
 public final class BooksResource {
+    /**
+     * Table type for matching
+     */
     private static final Table TABLE_TYPE = BOOKS;
+
+    /**
+     * Database connection
+     */
     private final Jdbi databaseConnection;
 
     /**
@@ -77,10 +88,58 @@ public final class BooksResource {
     }
 
     /**
-     * Get a list of books in the database based on the title
+     * Search for books
      * Restricted to the following roles: admin:r, user:r
      *
+     * @param search A {@link Search} object, consisting of an {@link BookLookup} query and  {@link Pagination}
      * @return A paginated list of books
+     *
+     * <pre>Example request:{@code
+     * {
+     *   "query": {
+     *     "field": "title",
+     *     "operator": "LIKE",
+     *     "value": "tower"
+     *   },
+     *   "pagination": {
+     *     "start": 0,
+     *     "limit": 10,
+     *     "sort": {
+     *       "field": "title",
+     *       "direction": "asc"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     *
+     * <pre>Example response:{@code
+     * [
+     *   {
+     *   "id": 163,
+     *   "title": "To Green Angel Tower",
+     *   "sort": "To Green Angel Tower",
+     *   "seriesIndex": 3,
+     *   "isbn": "",
+     *   "hasCover": true,
+     *   "publicationDate": "1993-03-01",
+     *   "dateAdded": "2015-11-15",
+     *   "lastModified": "2023-02-23",
+     *   "path": "path/book"
+     *  },
+     *  {
+     *   "id": 1115,
+     *   "title": "The Two Towers",
+     *   "sort": "Two Towers, The",
+     *   "seriesIndex": 2,
+     *   "isbn": "",
+     *   "hasCover": true,
+     *   "publicationDate": "2012-09-18",
+     *   "dateAdded": "2013-01-03",
+     *   "lastModified": "2023-02-23",
+     *   "path": "path/book"
+     *  }
+     * ]
+     * }</pre>
      */
     @POST
     @RolesAllowed({"admin:r", "user:r"})
@@ -101,6 +160,26 @@ public final class BooksResource {
         return Connection.query(databaseConnection, TABLE_TYPE, search.getQuery(), search.getPagination());
     }
 
+    /**
+     * Get Book details
+     * @param bookId Book ID
+     * @return An object containing book details
+     *
+     * <pre>Example response:{@code
+     *  {
+     *   "id": 1115,
+     *   "title": "The Two Towers",
+     *   "sort": "Two Towers, The",
+     *   "seriesIndex": 2,
+     *   "isbn": "",
+     *   "hasCover": true,
+     *   "publicationDate": "2012-09-18",
+     *   "dateAdded": "2013-01-03",
+     *   "lastModified": "2023-02-23",
+     *   "path": "path/book"
+     *  }
+     * }</pre>
+     */
     @GET
     @Path("{id}")
     @RolesAllowed({"admin:r", "user:r"})
