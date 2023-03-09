@@ -353,7 +353,7 @@ public class MigrateSQLite {
                         rs.getString("sort"),
                         parseDateField(rs.getString("timestamp")),
                         parseDateField(rs.getString("pubdate")),
-                        rs.getDouble("series_index"),
+                        rs.getInt("series_index"),
                         rs.getString("isbn"),
                         rs.getString("path"),
                         rs.getBoolean("has_cover"),
