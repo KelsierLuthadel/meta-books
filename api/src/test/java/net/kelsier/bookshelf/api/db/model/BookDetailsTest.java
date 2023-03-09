@@ -233,7 +233,7 @@ class BookDetailsTest {
 
     @Test
     void testFilePathSize() {
-        final String maxSize = new String(new char[256]).replace('\0', 'a');
+        final String maxSize = new String(new char[257]).replace('\0', 'a');
         final BookDetails bookDetails = createBookDetailsForPath(maxSize);
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(1, violations.size(), "There should be one violation");

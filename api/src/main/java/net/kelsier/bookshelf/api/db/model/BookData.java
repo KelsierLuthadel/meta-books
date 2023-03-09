@@ -1,7 +1,9 @@
 package net.kelsier.bookshelf.api.db.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -9,6 +11,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Book data details as represented by the books table
  */
+@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 @JsonPropertyOrder({"id", "book", "format", "uncompressedSize", "name"})
 public class BookData implements Entity {
     /**

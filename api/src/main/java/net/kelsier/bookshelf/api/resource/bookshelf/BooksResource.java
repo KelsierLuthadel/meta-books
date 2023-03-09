@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.kelsier.bookshelf.api.db.connection.Connection;
+import net.kelsier.bookshelf.api.db.model.Book;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.BookLookup;
@@ -42,12 +43,7 @@ import org.jdbi.v3.core.Jdbi;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -197,7 +193,12 @@ public final class BooksResource {
                     @ApiResponse(responseCode = "404", description = "No books found"),
             })
     public Entity book(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer bookId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, bookId);
+        final Entity entity = Connection.get(databaseConnection, TABLE_TYPE, bookId);
+        if (null != entity) {
+            return entity;
+        }
+
+        throw new NotFoundException();
     }
 
 }

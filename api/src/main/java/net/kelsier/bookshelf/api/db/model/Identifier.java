@@ -1,6 +1,8 @@
 package net.kelsier.bookshelf.api.db.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -9,6 +11,7 @@ import javax.validation.constraints.NotNull;
  * identifiers (id SERIAL PRIMARY KEY, book INTEGER NOT NULL, type TEXT NOT NULL DEFAULT 'isbn', val TEXT NOT NULL, UNIQUE(book, type))
  */
 
+@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 public class Identifier implements Entity {
     @NotNull
     @JsonProperty("id")
