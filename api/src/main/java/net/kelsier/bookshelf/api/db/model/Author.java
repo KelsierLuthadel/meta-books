@@ -53,6 +53,7 @@ public class Author implements Entity {
      *
      * @return int containing the unique id
      */
+    @Override
     public int getId() {
         return id;
     }

@@ -25,7 +25,8 @@ public class CustomColumn implements Entity {
         this.value = value;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

@@ -1,7 +1,6 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -31,7 +30,8 @@ public class BookAuthorLink implements Entity {
         this.author = author;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

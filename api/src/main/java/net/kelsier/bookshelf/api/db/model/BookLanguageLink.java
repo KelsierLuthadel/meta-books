@@ -31,7 +31,8 @@ public class BookLanguageLink implements Entity {
         this.languageCode = languageCode;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

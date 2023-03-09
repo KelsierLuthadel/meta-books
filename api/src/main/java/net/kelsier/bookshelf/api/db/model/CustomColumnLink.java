@@ -31,7 +31,8 @@ public class CustomColumnLink implements Entity {
         this.value = value;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

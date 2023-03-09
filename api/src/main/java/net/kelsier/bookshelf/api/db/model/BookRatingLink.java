@@ -31,7 +31,8 @@ public class BookRatingLink implements Entity {
         this.rating = rating;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

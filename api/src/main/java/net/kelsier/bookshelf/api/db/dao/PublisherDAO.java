@@ -52,14 +52,24 @@ import java.util.List;
  */
 @RegisterRowMapper(PublisherMapper.class)
 public interface PublisherDAO {
+    /**
+     * Get a single publisher from the database
+     *
+     * @param id Publisher ID
+     * @return An object representing a publisher
+     */
     @SqlQuery("SELECT * FROM publishers WHERE ID = :id")
     Publisher get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO publishers (id, name, sort) " +
-            "values (:id, :name, :sort)")
-    @GetGeneratedKeys
-    long insert(@BindBean Publisher publisher);
-
+    /**
+     * Get all publishers from the database using pagination and sorting.
+     *
+     * @param limit Total number of publishers to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of publishers
+     */
     @SqlQuery("SELECT * FROM publishers ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Publisher> find(
             @Bind("limit") int limit,
@@ -68,6 +78,30 @@ public interface PublisherDAO {
             @Define("direction") String direction
     );
 
+    /**
+     * Geta list of publishers based on a search clause from the database using pagination and sorting.
+     * The search clause is represented by column and operator, where the operator is one of:
+     *
+     * <ul>
+     *     <li>=</li>
+     *     <li>!=</li>
+     *     <li>&lt;</li>
+     *     <li>&lt;=</li>
+     *     <li>&gt;</li>
+     *     <li>&gt;=</li>
+     *     <li>ILIKE</li>
+     *     <li>NOT ILIKE</li>
+     * </ul>
+     *
+     * @param text The value used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of publishers to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of publishers
+     */
     @SqlQuery("SELECT * FROM publishers WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Publisher> find(
             @Bind("text") String text,
@@ -78,6 +112,17 @@ public interface PublisherDAO {
             @Define("order") String order,
             @Define("direction") String direction
     );
+
+    /**
+     * Insert a new publisher into the database
+     * @param publisher An object representing a publisher
+     * @return row id for the newly created data
+     */
+    @SqlUpdate("INSERT INTO publishers (id, name, sort) " +
+        "values (:id, :name, :sort)")
+    @GetGeneratedKeys
+    long insert(@BindBean Publisher publisher);
+
 
     /**
      * Delete all publishers from the database, this is used when re-creating the database contents.

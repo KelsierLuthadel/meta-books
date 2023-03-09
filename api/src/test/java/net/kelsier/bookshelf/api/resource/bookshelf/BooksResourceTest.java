@@ -49,32 +49,32 @@ class BooksResourceTest {
     @BeforeEach
     void setup() {
         book = new Book(1, "Book name", "Book name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true, new Timestamp(0));
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true, new Timestamp(0));
         books = new ArrayList<>();
 
         books.add(new Book(1, "Name 1", "1, Name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true,
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true,
                 new Timestamp(0)));
         books.add(new Book(2, "Name 2", "2, Name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true,
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true,
                 new Timestamp(0)));
         books.add(new Book(3, "Name 3", "3, Name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true,
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true,
                 new Timestamp(0)));
         books.add(new Book(4, "Name 4", "4, Name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true,
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true,
                 new Timestamp(0)));
         books.add(new Book(5, "Name 5", "5, Name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true,
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true,
                 new Timestamp(0)));
         books.add(new Book(6, "Name 6", "6, Name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true,
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true,
                 new Timestamp(0)));
         books.add(new Book(7, "Name 7", "7, Name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true,
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true,
                 new Timestamp(0)));
         books.add(new Book(8, "Name 8", "8, Name",
-                new Timestamp(0), new Timestamp(0), 1.0, "isbn", "/path", true,
+                new Timestamp(0), new Timestamp(0), 1, "isbn", "/path", true,
                 new Timestamp(0)));
 
         bookDAOMock = spy(BookDAO.class);

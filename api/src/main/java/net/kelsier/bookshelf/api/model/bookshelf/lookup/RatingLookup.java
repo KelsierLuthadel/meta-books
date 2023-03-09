@@ -124,6 +124,6 @@ public class RatingLookup implements ColumnLookup {
     @Override
     @JsonIgnore
     public DataTypes getDataType() {
-     return DataTypes.DOUBLE;
+     return DataTypes.INT;
     }
 }

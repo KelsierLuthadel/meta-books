@@ -31,7 +31,8 @@ public class BookPublisherLink implements Entity {
         this.publisher = publisher;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

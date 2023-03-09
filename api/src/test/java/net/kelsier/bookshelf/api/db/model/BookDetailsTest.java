@@ -5,7 +5,12 @@ import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -197,6 +202,83 @@ class BookDetailsTest {
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(1, violations.size(), "There should be one violation");
         violations.forEach(authorConstraintViolation -> assertEquals("must not be null", authorConstraintViolation.getMessage()));
+    }
+
+    @Test
+    void testEmptyFilePath() {
+        final BookDetails bookDetails = createBookDetailsForPath("");
+        final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
+        assertEquals(1, violations.size(), "There should be one violation");
+        violations.forEach(authorConstraintViolation -> assertEquals("invalid path format", authorConstraintViolation.getMessage()));
+    }
+
+    @Test
+    void testFilePathManipulation() {
+        final List<String> attemptedPathManipulation = new ArrayList<>();
+        attemptedPathManipulation.add("../path");
+        attemptedPathManipulation.add("../path/path");
+        attemptedPathManipulation.add("path/../path");
+        attemptedPathManipulation.add("path/..");
+        attemptedPathManipulation.add("/path");
+
+        for (String path: attemptedPathManipulation) {
+            final BookDetails bookDetails = createBookDetailsForPath("");
+
+            final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
+            assertEquals(1, violations.size(), "There should be one violation");
+            violations.forEach(authorConstraintViolation ->
+                assertEquals("invalid path format", authorConstraintViolation.getMessage(),
+                    MessageFormat.format("{0} should be an invalid path", path)));
+        }
+    }
+
+    @Test
+    void testFilePathSize() {
+        final String maxSize = new String(new char[256]).replace('\0', 'a');
+        final BookDetails bookDetails = createBookDetailsForPath(maxSize);
+        final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
+        assertEquals(1, violations.size(), "There should be one violation");
+        violations.forEach(authorConstraintViolation -> assertEquals("invalid path format", authorConstraintViolation.getMessage()));
+    }
+
+    @Test
+    void testFilePathCharacters() {
+        final String ascii = new String(IntStream.rangeClosed(32, 255).toArray(), 0, 95);
+        final String illegal = ascii.replaceAll("[a-zA-Z0-9-._]", "");
+
+        final char[] disallowedCharacters = illegal.toCharArray();
+        final List<String> attemptedPathManipulation = new ArrayList<>();
+
+        for (char c: disallowedCharacters) {
+            attemptedPathManipulation.add(MessageFormat.format("{0}", c));
+            attemptedPathManipulation.add(MessageFormat.format("{0}/", c));
+            attemptedPathManipulation.add(MessageFormat.format("{0}/file", c));
+            attemptedPathManipulation.add(MessageFormat.format("file{0}", c));
+            attemptedPathManipulation.add(MessageFormat.format("file{0}/", c));
+            attemptedPathManipulation.add(MessageFormat.format("file{0}/file", c));
+            attemptedPathManipulation.add(MessageFormat.format("{0}file", c));
+            attemptedPathManipulation.add(MessageFormat.format("{0}file/", c));
+            attemptedPathManipulation.add(MessageFormat.format("{0}file/file", c));
+            attemptedPathManipulation.add(MessageFormat.format("path/{0}", c));
+            attemptedPathManipulation.add(MessageFormat.format("path/file{0}", c));
+            attemptedPathManipulation.add(MessageFormat.format("path/{0}file", c));
+        }
+
+        for (String path: attemptedPathManipulation) {
+            final BookDetails bookDetails = createBookDetailsForPath("");
+
+            final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
+            assertEquals(1, violations.size(), "There should be one violation");
+            violations.forEach(authorConstraintViolation ->
+                assertEquals("invalid path format", authorConstraintViolation.getMessage(),
+                    MessageFormat.format("{0} should be an invalid path", path)));
+        }
+    }
+
+    private static BookDetails createBookDetailsForPath(final String path) {
+        return new BookDetails(1, "title", "author", "series",
+            1, "publisher", "1234567890", "language", "format", 100, true,
+            new Timestamp(0), new Timestamp(0), new Timestamp(0), path, "comments");
     }
 
     private Set<ConstraintViolation<Object>> validate(final Object object) {

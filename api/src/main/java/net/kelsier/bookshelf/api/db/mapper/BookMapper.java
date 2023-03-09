@@ -51,7 +51,7 @@ public class BookMapper implements RowMapper<Book> {
                 resultSet.getString("SORT"),
                 resultSet.getTimestamp("DATE_ADDED"),
                 resultSet.getTimestamp("PUBLICATION_DATE"),
-                resultSet.getDouble("SERIES_INDEX"),
+                resultSet.getInt("SERIES_INDEX"),
                 resultSet.getString("ISBN"),
                 resultSet.getString("PATH"),
                 resultSet.getBoolean("HAS_COVER"),

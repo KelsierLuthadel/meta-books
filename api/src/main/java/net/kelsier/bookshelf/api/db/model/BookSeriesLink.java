@@ -31,7 +31,8 @@ public class BookSeriesLink implements Entity {
         this.series = series;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

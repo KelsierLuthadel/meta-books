@@ -46,12 +46,24 @@ import java.util.List;
 
 import static net.kelsier.bookshelf.api.db.types.DataTypes.*;
 
-public class Connection {
+/**
+ * Retrieve data from a database connection
+ */
+public final class Connection {
     private static final String QUERY_ERROR = "Invalid query";
     private Connection() {
         throw new IllegalStateException("Utility class. Should not be instantiated.");
     }
 
+    /**
+     * Perform a database query on a table
+     *
+     * @param databaseConnection JDBI connection
+     * @param table Name of the table used for query
+     * @param columnLookup Optional query parameters
+     * @param pagination Paganation and sorting parameters
+     * @return A list of results
+     */
     public static List<Entity> query(final Jdbi databaseConnection,
                                      final Table table,
                                      final @Valid ColumnLookup columnLookup,
@@ -63,6 +75,13 @@ public class Connection {
         }
     }
 
+    /**
+     * Get a row from the database
+     *
+     * @param databaseConnection JDBI connection
+     * @param table Name of the table used for query
+     * @return A list of results
+     */
     public static Entity get(final Jdbi databaseConnection, final Table table, final Integer id) {
         switch (table) {
             case AUTHORS:
@@ -160,7 +179,7 @@ public class Connection {
                 return Collections.unmodifiableList(databaseConnection.onDemand(PublisherDAO.class).find(value,query, operator,
                     limit, start, field, direction));
             case RATINGS:
-                return Collections.unmodifiableList(databaseConnection.onDemand(RatingDAO.class).find(Double.parseDouble(value),query, operator,
+                return Collections.unmodifiableList(databaseConnection.onDemand(RatingDAO.class).find(Integer.parseInt(value),query, operator,
                     limit, start, field, direction));
             case SERIES:
                 return Collections.unmodifiableList(databaseConnection.onDemand(SeriesDAO.class).find(value,query, operator,

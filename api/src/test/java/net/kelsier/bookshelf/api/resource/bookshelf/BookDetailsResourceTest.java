@@ -50,7 +50,7 @@ class BookDetailsResourceTest {
     }
 
     @Test
-    void getGetBook() {
+    void testGetBook() {
         final Response post = resources.target(API).request().get();
 
         final Author response = post.readEntity(Author.class);

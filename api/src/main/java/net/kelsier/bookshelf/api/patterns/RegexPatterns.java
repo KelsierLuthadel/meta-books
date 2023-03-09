@@ -49,7 +49,6 @@ public final class RegexPatterns {
      *   Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
      *
      */
-
     public static final String PASSWORD_REGEX =
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\ \\-\\+\\:\\\\\\/|\\.\\(\\)\\[\\]_^,=;~<>£#$\"'`{}@!%&*?])[\\ \\-\\+\\:\\\\\\/|A-Za-z\\d\\.\\(\\)\\[\\]_^,=;~<>£#\"'`{}$@!%&*?]{8,30}$";
 
@@ -57,6 +56,13 @@ public final class RegexPatterns {
      * Regular expression for 'No whitespace, at least one character'
      */
     public static final String NO_WHITESPACE_ONE_CHAR_REGEX = "^\\S+$";
+
+    /**
+     * A regex pattern to only allow a-z, A-Z, hyphens, underscores and dot(period).
+     * The maximum length of a file name is 255 characters.
+     * Filenames with a preceding dot(period) or slashes are denied
+     */
+    public static final String FILENAME_REGEX = "^[^\\/\\\\\\<\\>:\\?\\*\\\"]{1,255}$";
 
     /**
      * Private constructor to hide the implicit public one

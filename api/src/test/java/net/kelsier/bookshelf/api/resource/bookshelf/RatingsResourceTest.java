@@ -66,7 +66,7 @@ class RatingsResourceTest {
         when(ratingDAO.find(anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
 
         // value, field, operator, limit, start, field, direction
-        when(ratingDAO.find(anyDouble(), anyString(), anyString(),
+        when(ratingDAO.find(anyInt(), anyString(), anyString(),
                 anyInt(), anyInt(), anyString(), anyString())).thenReturn(ratings);
     }
 

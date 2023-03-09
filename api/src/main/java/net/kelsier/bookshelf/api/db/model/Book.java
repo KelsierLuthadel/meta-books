@@ -54,7 +54,7 @@ public class Book implements Entity {
      */
     @NotNull
     @JsonProperty("seriesIndex")
-    private final Double seriesIndex;
+    private final Integer seriesIndex;
 
     /**
      * Book ISBN code
@@ -102,7 +102,7 @@ public class Book implements Entity {
                 @JsonProperty("sort") final String sort,
                 @JsonProperty("dateAdded") final Timestamp dateAdded,
                 @JsonProperty("publicationDate") final Timestamp publicationDate,
-                @JsonProperty("seriesIndex") final Double seriesIndex,
+                @JsonProperty("seriesIndex") final Integer seriesIndex,
                 @JsonProperty("isbn") final String isbn,
                 @JsonProperty("path") final String path,
                 @JsonProperty("hasCover") final Boolean hasCover,
@@ -124,7 +124,8 @@ public class Book implements Entity {
      *
      * @return int containing the unique id
      */
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 
@@ -168,9 +169,9 @@ public class Book implements Entity {
     /**
      * Book number if the book is part of a series
      *
-     * @return Double containing the book number if the book is part of a series
+     * @return Integer containing the book number if the book is part of a series
      */
-    public Double getSeriesIndex() {
+    public Integer getSeriesIndex() {
         return seriesIndex;
     }
 

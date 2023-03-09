@@ -51,7 +51,8 @@ public class CustomColumns implements Entity {
         this.normalized = normalized;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

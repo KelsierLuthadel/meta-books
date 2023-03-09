@@ -23,6 +23,9 @@
 
 package net.kelsier.bookshelf.api.db.model;
 
+/**
+ * Interface so that the database wrapper can return objects of the same type
+ */
 public interface Entity {
-
+    int getId();
 }

@@ -41,7 +41,7 @@ import java.util.List;
  * <table>
  *   <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
  *   <tbody>
- *     <tr><td>id</td><td>PRIMARY KEY</td><td>Rating ID</td></tr>
+ *     <tr><td>id</td><td>PRIMARY KEY</td><td>Series ID</td></tr>
  *     <tr><td>name</td><td>TEXT</td><td>Series display name</td></tr>
  *     <tr><td>sort</td><td>TEXT</td><td>Series name used for sorting</td></tr>
  *   </tbody>
@@ -52,14 +52,24 @@ import java.util.List;
  */
 @RegisterRowMapper(SeriesMapper.class)
 public interface SeriesDAO {
+    /**
+     * Get a single series from the database
+     *
+     * @param id Series ID
+     * @return An object representing a series
+     */
     @SqlQuery("SELECT * FROM series WHERE ID = :id")
     Series get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO series (id, name, sort) " +
-            "values (:id, :name, :sort)")
-    @GetGeneratedKeys
-    long insert(@BindBean Series series);
-
+    /**
+     * Get all series from the database using pagination and sorting.
+     *
+     * @param limit Total number of series to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of series
+     */
     @SqlQuery("SELECT * FROM series ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Series> find(
             @Bind("limit") int limit,
@@ -68,6 +78,30 @@ public interface SeriesDAO {
             @Define("direction") String direction
     );
 
+    /**
+     * Geta list of series based on a search clause from the database using pagination and sorting.
+     * The search clause is represented by column and operator, where the operator is one of:
+     *
+     * <ul>
+     *     <li>=</li>
+     *     <li>!=</li>
+     *     <li>&lt;</li>
+     *     <li>&lt;=</li>
+     *     <li>&gt;</li>
+     *     <li>&gt;=</li>
+     *     <li>ILIKE</li>
+     *     <li>NOT ILIKE</li>
+     * </ul>
+     *
+     * @param name The text used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of series to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of series
+     */
     @SqlQuery("SELECT * FROM series WHERE <column> <clause> :name ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Series> find(
             @Bind("name") String name,
@@ -78,6 +112,16 @@ public interface SeriesDAO {
             @Define("order") String order,
             @Define("direction") String direction
     );
+
+    /**
+     * Insert a new series into the database
+     * @param series An object representing a series
+     * @return row id for the newly created data
+     */
+    @SqlUpdate("INSERT INTO series (id, name, sort) " +
+        "values (:id, :name, :sort)")
+    @GetGeneratedKeys
+    long insert(@BindBean Series series);
 
     /**
      * Delete all series from the database, this is used when re-creating the database contents.

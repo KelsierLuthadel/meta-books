@@ -51,14 +51,25 @@ import java.util.List;
  */
 @RegisterRowMapper(TagMapper.class)
 public interface TagDAO {
+    /**
+     * Get a single tag from the database
+     *
+     * @param id Tag ID
+     * @return An object representing a tag
+     */
     @SqlQuery("SELECT * FROM tags WHERE ID = :id")
     Tag get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO tags (id, name) " +
-            "values (:id, :name)")
-    @GetGeneratedKeys
-    long insert(@BindBean Tag tag);
 
+    /**
+     * Get all tags from the database using pagination and sorting.
+     *
+     * @param limit Total number of tags to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of tags
+     */
     @SqlQuery("SELECT * FROM tags ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Tag> find(
             @Bind("limit") int limit,
@@ -67,6 +78,30 @@ public interface TagDAO {
             @Define("direction") String direction
     );
 
+    /**
+     * Geta list of tags based on a search clause from the database using pagination and sorting.
+     * The search clause is represented by column and operator, where the operator is one of:
+     *
+     * <ul>
+     *     <li>=</li>
+     *     <li>!=</li>
+     *     <li>&lt;</li>
+     *     <li>&lt;=</li>
+     *     <li>&gt;</li>
+     *     <li>&gt;=</li>
+     *     <li>ILIKE</li>
+     *     <li>NOT ILIKE</li>
+     * </ul>
+     *
+     * @param text The text used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of tags to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of tags
+     */
     @SqlQuery("SELECT * FROM tags WHERE <column> <clause> :text ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Tag> find(
             @Bind("text") String text,
@@ -77,6 +112,16 @@ public interface TagDAO {
             @Define("order") String order,
             @Define("direction") String direction
     );
+
+    /**
+     * Insert a new tag into the database
+     * @param tag An object representing a tag
+     * @return row id for the newly created data
+     */
+    @SqlUpdate("INSERT INTO tags (id, name) " +
+        "values (:id, :name)")
+    @GetGeneratedKeys
+    long insert(@BindBean Tag tag);
 
     /**
      * Delete all tags from the database, this is used when re-creating the database contents.

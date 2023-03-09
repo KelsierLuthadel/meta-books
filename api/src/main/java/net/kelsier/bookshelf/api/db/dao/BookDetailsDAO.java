@@ -28,8 +28,31 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
+/**
+ * DAO to map a book object in the database to a Java object so that it can be returned RESTfully.
+ * Data is taken from the following tables:
+ * <ul>
+ *     <li>{@link BookDAO}</li>
+ *     <li>{@link AuthorDAO}</li>
+ *     <li>{@link LanguageDAO}</li>
+ *     <li>{@link PublisherDAO}</li>
+ *     <li>{@link SeriesDAO}</li>
+ *     <li>{@link DataDAO}</li>
+ *     <li>{@link CommentDAO}</li>
+ * </ul>
+ * </table>
+ *
+ * @author Kelsier Luthadel
+ * @version 1.0.0
+ */
 @RegisterRowMapper(BookDetailsMapper.class)
 public interface BookDetailsDAO {
+    /**
+     * Get a book and associated metadata
+     *
+     * @param id Book ID
+     * @return An object representing a book
+     */
     @SqlQuery("select " +
         "books.id," +
         "books.title," +

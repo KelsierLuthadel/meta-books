@@ -1,6 +1,7 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Tag details as represented by the authors table
  */
+@JsonPropertyOrder({"id", "name"})
 public class Tag implements Entity {
     /**
      * Unique id
@@ -40,7 +42,8 @@ public class Tag implements Entity {
      *
      * @return int containing the unique id
      */
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

@@ -1,18 +1,15 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/*
- data(id SERIAL PRIMARY KEY, book INTEGER NOT NULL, format TEXT NOT NULL, uncompressed_size INTEGER NOT NULL,
-      name TEXT NOT NULL, UNIQUE(book, format))
-*/
-
 /**
  * Book data details as represented by the books table
  */
+@JsonPropertyOrder({"id", "book", "format", "uncompressedSize", "name"})
 public class BookData implements Entity {
     /**
      * Unique id
@@ -80,7 +77,8 @@ public class BookData implements Entity {
      *
      * @return int containing the unique id
      */
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

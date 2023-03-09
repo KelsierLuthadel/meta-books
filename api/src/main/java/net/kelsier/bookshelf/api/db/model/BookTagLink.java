@@ -31,7 +31,8 @@ public class BookTagLink implements Entity {
         this.tag = tag;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

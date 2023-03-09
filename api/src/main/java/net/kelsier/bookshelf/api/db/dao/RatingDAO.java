@@ -51,14 +51,24 @@ import java.util.List;
  */
 @RegisterRowMapper(RatingMapper.class)
 public interface RatingDAO {
+    /**
+     * Get a single rating from the database
+     *
+     * @param id Rating ID
+     * @return An object representing a rating
+     */
     @SqlQuery("SELECT * FROM ratings WHERE ID = :id")
     Rating get(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO ratings (id, rating) " +
-            "values (:id, :rating)")
-    @GetGeneratedKeys
-    long insert(@BindBean Rating rating);
-
+    /**
+     * Get all ratings from the database using pagination and sorting.
+     *
+     * @param limit Total number of ratings to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of raings
+     */
     @SqlQuery("SELECT * FROM ratings ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
     List<Rating> find(
             @Bind("limit") int limit,
@@ -67,8 +77,32 @@ public interface RatingDAO {
             @Define("direction") String direction
     );
 
+    /**
+     * Geta list of ratings based on a search clause from the database using pagination and sorting.
+     * The search clause is represented by column and operator, where the operator is one of:
+     *
+     * <ul>
+     *     <li>=</li>
+     *     <li>!=</li>
+     *     <li>&lt;</li>
+     *     <li>&lt;=</li>
+     *     <li>&gt;</li>
+     *     <li>&gt;=</li>
+     *     <li>ILIKE</li>
+     *     <li>NOT ILIKE</li>
+     * </ul>
+     *
+     * @param value The value used for searching
+     * @param column The column used for searching
+     * @param clause The search clause
+     * @param limit Total number of ratings to return
+     * @param offset Starting position
+     * @param order Tolumn used for ordering
+     * @param direction sort direction applies
+     * @return A list of ratings
+     */
     @SqlQuery("SELECT * FROM ratings WHERE <column> <clause> :value ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
-    List<Rating> find(@Bind("value") double value,
+    List<Rating> find(@Bind("value") int value,
                       @Define("column") final String column,
                       @Define("clause") final String clause,
                       @Bind("limit") int limit,
@@ -76,6 +110,16 @@ public interface RatingDAO {
                       @Define("order") String order,
                       @Define("direction") String direction
     );
+
+    /**
+     * Insert a new rating into the database
+     * @param rating An object representing a rating
+     * @return row id for the newly created data
+     */
+    @SqlUpdate("INSERT INTO ratings (id, rating) " +
+        "values (:id, :rating)")
+    @GetGeneratedKeys
+    long insert(@BindBean Rating rating);
 
     /**
      * Delete all ratings from the database, this is used when re-creating the database contents.

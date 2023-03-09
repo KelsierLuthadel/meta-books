@@ -1,14 +1,12 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/*
- * languages(id SERIAL PRIMARY KEY, lang_code TEXT NOT NULL, UNIQUE(lang_code))
- */
-
+@JsonPropertyOrder({"id", "languageCode"})
 public class Language implements Entity {
     @NotNull
     @JsonProperty("id")
@@ -24,7 +22,8 @@ public class Language implements Entity {
         this.languageCode = languageCode;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 

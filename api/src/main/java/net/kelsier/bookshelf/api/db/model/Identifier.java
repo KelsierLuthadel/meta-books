@@ -35,7 +35,8 @@ public class Identifier implements Entity {
         this.val = val;
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id;
     }
 
