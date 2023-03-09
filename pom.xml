@@ -38,7 +38,7 @@
         <jersey.pac4j.version>4.0.0</jersey.pac4j.version>
         <postgres-jdbc.version>42.5.4</postgres-jdbc.version>
         <swagger.version>2.2.8</swagger.version>
-        <jersey.multipart.version>2.32</jersey.multipart.version>
+        <jersey.multipart.version>2.38</jersey.multipart.version>
 
         <!-- Test -->
         <junit.platform.version>5.4.0</junit.platform.version>
