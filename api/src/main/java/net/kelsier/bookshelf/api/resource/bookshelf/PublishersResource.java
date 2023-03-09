@@ -42,12 +42,7 @@ import org.jdbi.v3.core.Jdbi;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -173,7 +168,13 @@ public class PublishersResource {
                     @ApiResponse(responseCode = "404", description = "No publisher found"),
             })
     public Entity comment(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer publisherId)  {
-        return Connection.get(databaseConnection, TABLE_TYPE, publisherId);
+        final Entity entity = Connection.get(databaseConnection, TABLE_TYPE, publisherId);
+
+        if (null != entity) {
+            return entity;
+        }
+
+        throw new NotFoundException();
     }
 
 }

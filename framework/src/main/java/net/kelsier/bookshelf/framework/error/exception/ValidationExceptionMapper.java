@@ -54,7 +54,13 @@ public class ValidationExceptionMapper implements ExceptionMapper<JerseyViolatio
 
         final List<APIResponseError> apiResponseErrors = new LinkedList<>();
         exception.getConstraintViolations().forEach((ConstraintViolation<?> constraintViolation) -> {
-            final String cause = constraintViolation.getPropertyPath().toString();
+            final String cause;
+            if (null != constraintViolation.getInvalidValue()) {
+                cause = constraintViolation.getInvalidValue().toString();
+            } else {
+                cause = constraintViolation.getPropertyPath().toString();
+            }
+
             apiResponseErrors.add(new APIResponseError(constraintViolation.getMessage(), cause));
         });
 

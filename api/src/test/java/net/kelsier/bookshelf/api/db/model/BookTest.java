@@ -18,7 +18,7 @@ class BookTest {
     @Test
     void testValidBook() {
         final Book book = new Book(1, "title", "sort", new Timestamp(0), new Timestamp(0),
-                1, "","path", true, new Timestamp(0));
+                1, "1234567890","path", true, new Timestamp(0));
 
         final Set<ConstraintViolation<Object>> violations = validate(book);
         assertEquals(0, violations.size());
@@ -29,7 +29,7 @@ class BookTest {
         final Timestamp date = new Timestamp(getTime("2023-03-26 23:59:59"));
 
         final Book book = new Book(1, "title", "sort", date, date,
-            2, "","path", true,date);
+            2, "1234567890","path", true,date);
 
         assertEquals(date,book.getDateAdded());
         assertEquals(date,book.getPublicationDate());
@@ -41,7 +41,7 @@ class BookTest {
         final Timestamp date = new Timestamp(getTime("2023-10-28 23:59:59"));
 
         final Book book = new Book(1, "title", "sort", date, date,
-            3, "","path", true,date);
+            3, "1234567890","path", true,date);
 
         assertEquals(date,book.getDateAdded());
         assertEquals(date,book.getPublicationDate());
@@ -57,7 +57,7 @@ class BookTest {
     @Test
     void testNullId() {
         final Book book = new Book(null, "title", "sort", new Timestamp(0), new Timestamp(0),
-                4, "","path", true, new Timestamp(0));
+                4, "1234567890","path", true, new Timestamp(0));
 
         final Set<ConstraintViolation<Object>> violations = validate(book);
         assertEquals(1, violations.size());
@@ -67,7 +67,7 @@ class BookTest {
     @Test
     void testZeroId() {
         final Book book = new Book(0, "title", "sort", new Timestamp(0), new Timestamp(0),
-                5, "","path", true, new Timestamp(0));
+                5, "1234567890","path", true, new Timestamp(0));
 
         final Set<ConstraintViolation<Object>> violations = validate(book);
         assertEquals(1, violations.size());
@@ -77,7 +77,7 @@ class BookTest {
     @Test
     void testNullTitle() {
         final Book book = new Book(1, null, "sort", new Timestamp(0), new Timestamp(0),
-                6, "","path", true, new Timestamp(0));
+                6, "1234567890","path", true, new Timestamp(0));
 
         final Set<ConstraintViolation<Object>> violations = validate(book);
         assertEquals(1, violations.size());
@@ -87,7 +87,7 @@ class BookTest {
     @Test
     void testNullSeriesIndex() {
         final Book book = new Book(1, "title", "sort", new Timestamp(0), new Timestamp(0),
-                null, "","path", true, new Timestamp(0));
+                null, "1234567890","path", true, new Timestamp(0));
 
         final Set<ConstraintViolation<Object>> violations = validate(book);
         assertEquals(1, violations.size());
@@ -97,7 +97,7 @@ class BookTest {
     @Test
     void testNullPath() {
         final Book book = new Book(1, "title", "sort", new Timestamp(0), new Timestamp(0),
-                7, "",null, true, new Timestamp(0));
+                7, "1234567890",null, true, new Timestamp(0));
 
         final Set<ConstraintViolation<Object>> violations = validate(book);
         assertEquals(1, violations.size());
@@ -107,7 +107,7 @@ class BookTest {
     @Test
     void testNullModified() {
         final Book book = new Book(1, "title", "sort", new Timestamp(0), new Timestamp(0),
-                8, "","path", true, null);
+                8, "1234567890","path", true, null);
 
         final Set<ConstraintViolation<Object>> violations = validate(book);
         assertEquals(1, violations.size());

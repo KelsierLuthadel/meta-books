@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import net.kelsier.bookshelf.framework.patterns.RegexPatterns;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -41,20 +42,12 @@ import java.util.List;
  */
 @Schema(description = "User Details")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"id", "username", "firstName", "lastName", "email", "roles", "enabled"})
-public class UserResponse {
-    /**
-     * User's id
-     */
-    @NotNull
-    @Size(min = 3, max = 30)
-    @JsonProperty("id")
-    private final Integer id;
-
+@JsonPropertyOrder({"username", "firstName", "lastName", "email", "roles", "enabled"})
+public class BaseUser {
     /**
      * User's username
      */
-    @NotNull
+    @NotBlank
     @Size(min = 3, max = 30)
     @JsonProperty("username")
     private final String username;
@@ -100,7 +93,6 @@ public class UserResponse {
     /**
      * Constructor
      *
-     * @param id         user id
      * @param username   Unique username
      * @param firstName  User's first name
      * @param lastName   User's last name
@@ -108,27 +100,18 @@ public class UserResponse {
      * @param enabled    Enabled flag
      * @param roles      List of associated security roles
      */
-    public UserResponse(@JsonProperty("id") final Integer id,
-                        @JsonProperty("username") final String username,
-                        @JsonProperty("firstName") final String firstName,
-                        @JsonProperty("lastName") final String lastName,
-                        @JsonProperty("email") final String email,
-                        @JsonProperty("enabled") final Boolean enabled,
-                        @JsonProperty("roles") final List<Integer> roles) {
-        this.id = id;
+    public BaseUser(@JsonProperty("username") final String username,
+                    @JsonProperty("firstName") final String firstName,
+                    @JsonProperty("lastName") final String lastName,
+                    @JsonProperty("email") final String email,
+                    @JsonProperty("enabled") final Boolean enabled,
+                    @JsonProperty("roles") final List<Integer> roles) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.enabled = enabled;
         this.roles = roles;
-    }
-
-    /**
-     * @return An int containing the user's id
-     */
-    public int getId() {
-        return id;
     }
 
     /**
@@ -162,7 +145,7 @@ public class UserResponse {
     /**
      * @return A flag determining if the user's account is enabled
      */
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 

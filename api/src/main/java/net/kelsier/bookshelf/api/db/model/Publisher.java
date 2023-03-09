@@ -1,7 +1,9 @@
 package net.kelsier.bookshelf.api.db.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -9,6 +11,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Publisher details as represented by the publishers table
  */
+@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 @JsonPropertyOrder({"id", "name", "sort"})
 public class Publisher implements Entity {
     /**

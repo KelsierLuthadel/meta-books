@@ -1,8 +1,10 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 import net.kelsier.bookshelf.api.patterns.RegexPatterns;
 import org.hibernate.validator.constraints.Length;
 
@@ -14,6 +16,7 @@ import java.sql.Timestamp;
 /**
  * Book metadata consisting of data pulled from various tables
  */
+@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 @JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "language", "format",
                     "size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
 public class BookDetails implements Entity {

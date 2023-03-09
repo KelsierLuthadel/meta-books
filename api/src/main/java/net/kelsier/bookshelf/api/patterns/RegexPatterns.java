@@ -62,7 +62,7 @@ public final class RegexPatterns {
      * The maximum length of a file name is 255 characters.
      * Filenames with a preceding dot(period) or slashes are denied
      */
-    public static final String FILENAME_REGEX = "^[^\\/\\\\\\<\\>:\\?\\*\\\"]{1,255}$";
+    public static final String FILENAME_REGEX = "^([^\\/.])([^\\\\\\<\\>:\\?\\*\\\"]){1,255}$";
 
     /**
      * Private constructor to hide the implicit public one

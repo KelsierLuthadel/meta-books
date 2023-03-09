@@ -80,7 +80,7 @@ class ValidationExceptionMapperTest {
             assertEquals("Validation error", format.getMessage());
             assertEquals(1, format.getErrors().size());
             assertEquals("must be greater than or equal to 1024", format.getErrors().get(0).getDetail());
-            assertEquals("minimum", format.getErrors().get(0).getCause());
+            assertEquals("1023", format.getErrors().get(0).getCause());
         }
     }
 
