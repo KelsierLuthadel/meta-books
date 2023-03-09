@@ -26,7 +26,6 @@ import java.util.List;
 
 import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.*;
 
 
@@ -299,7 +298,7 @@ class BooksResourceTest {
             new Timestamp(0), new Timestamp(0), 1, "1234567890", "/path", true, new Timestamp(0)));
 
         final Response post = resources.target(MessageFormat.format("{0}/1", API)).request().get();
-        assertNotEquals(Response.Status.OK.getStatusCode(),post.getStatus(),"Status should not be 200 OK");
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),post.getStatus(),"Status should be 500");
 
     }
 }

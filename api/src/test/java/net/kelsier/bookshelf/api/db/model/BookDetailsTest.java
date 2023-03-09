@@ -7,7 +7,6 @@ import javax.validation.ConstraintViolation;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -239,6 +238,13 @@ class BookDetailsTest {
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(1, violations.size(), "There should be one violation");
         violations.forEach(authorConstraintViolation -> assertEquals("invalid path format", authorConstraintViolation.getMessage()));
+    }
+
+    @Test
+    void testBookPathWithParentesis() {
+        final BookDetails bookDetails = createBookDetailsForPath("Author name/The book title (1234)");
+        final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
+        assertEquals(0, violations.size(), "There should be no violations");
     }
 
     @Test
