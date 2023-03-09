@@ -1,12 +1,13 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import net.kelsier.bookshelf.api.patterns.RegexPatterns;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 
 /**
@@ -57,7 +58,9 @@ public class Book implements Entity {
     private final Integer seriesIndex;
 
     /**
-     * Book ISBN code
+     *  ISBN Value
+     *  ISBN prior to 2007 is a 10-digit number.
+     *  ISBN from 2007 onwards consists of a 13-digit number is divided into five parts of variable length, each part separated by a hyphen.
      */
     @JsonProperty("isbn")
     private final String isbn;
@@ -67,7 +70,7 @@ public class Book implements Entity {
      */
     @NotNull
     @JsonProperty("path")
-    @JsonIgnore
+    @Pattern(regexp = RegexPatterns.FILENAME_REGEX, message = "invalid path format")
     private final String path;
 
     /**

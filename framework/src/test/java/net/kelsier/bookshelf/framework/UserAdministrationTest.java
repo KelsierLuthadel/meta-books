@@ -71,7 +71,7 @@ class UserAdministrationTest {
         assertEquals(users.get(0).getFirstName(), userModel.get(0).getFirstName(), "First name should match");
         assertEquals(users.get(0).getLastName(), userModel.get(0).getLastName(), "Last name should match");
         assertEquals(users.get(0).getEmail(), userModel.get(0).getEmail(), "Email should match");
-        assertEquals(users.get(0).isEnabled(), userModel.get(0).getEnabled(), "Enabled should match");
+        assertEquals(users.get(0).isEnabled(), userModel.get(0).isEnabled(), "Enabled should match");
         assertEquals(users.get(0).getRoles().size(), userModel.get(0).getRoles().size(), "Role size should match");
         assertEquals(users.get(0).getRoles().get(0), userModel.get(0).getRoles().get(0), "First role should match");
         assertEquals(users.get(0).getRoles().get(1), userModel.get(0).getRoles().get(1), "Second role should match");
@@ -95,7 +95,7 @@ class UserAdministrationTest {
         assertEquals(user.getFirstName(), userModel.getFirstName(), "First name should match");
         assertEquals(user.getLastName(), userModel.getLastName(), "Last name should match");
         assertEquals(user.getEmail(), userModel.getEmail(), "Email should match");
-        assertEquals(user.isEnabled(), userModel.getEnabled(), "Enabled should match");
+        assertEquals(user.isEnabled(), userModel.isEnabled(), "Enabled should match");
         assertEquals(user.getRoles().size(), userModel.getRoles().size(), "Role size should match");
         assertEquals(user.getRoles().get(0), userModel.getRoles().get(0), "First role should match");
         assertEquals(user.getRoles().get(1), userModel.getRoles().get(1), "Second role should match");
@@ -118,7 +118,7 @@ class UserAdministrationTest {
             assertEquals(user.getFirstName(), model.getFirstName(), "First name should match");
             assertEquals(user.getLastName(), model.getLastName(), "Last name should match");
             assertEquals(user.getEmail(), model.getEmail(), "Email should match");
-            assertEquals(user.getEnabled(), model.getEnabled(), "Enabled should match");
+            assertEquals(user.isEnabled(), model.isEnabled(), "Enabled should match");
             assertEquals(user.getRoles().size(), model.getRoles().size(), "Number of roles should match");
             assertArrayEquals(user.getRoles().toArray(), model.getRoles().toArray(), "Roles should match");
         }
@@ -138,7 +138,7 @@ class UserAdministrationTest {
             assertEquals(user.getFirstName(), model.getFirstName(), "First name should match");
             assertEquals(user.getLastName(), model.getLastName(), "Last name should match");
             assertEquals(user.getEmail(), model.getEmail(), "Email should match");
-            assertEquals(user.getEnabled(), model.getEnabled(), "Enabled should match");
+            assertEquals(user.isEnabled(), model.isEnabled(), "Enabled should match");
             assertEquals(user.getRoles().size(), model.getRoles().size(), "Number of roles should match");
             assertArrayEquals(user.getRoles().toArray(), model.getRoles().toArray(), "Roles should match");
         }
@@ -158,7 +158,7 @@ class UserAdministrationTest {
             assertNull( model.getFirstName(), "First name should be null");
             assertNull(model.getLastName(), "Last name should be null");
             assertNull(model.getEmail(), "Email should be null");
-            assertEquals(user.getEnabled(), model.getEnabled(), "Enabled should match");
+            assertEquals(user.isEnabled(), model.isEnabled(), "Enabled should match");
             assertEquals(user.getRoles().size(), model.getRoles().size(), "Number of roles should match");
             assertArrayEquals(user.getRoles().toArray(), model.getRoles().toArray(), "Roles should match");
         }
@@ -185,7 +185,7 @@ class UserAdministrationTest {
             assertEquals(update.getFirstName(), model.getFirstName(), "First name should match");
             assertEquals(update.getLastName(), model.getLastName(), "Last name should match");
             assertEquals(update.getEmail(), model.getEmail(), "Email should match");
-            assertEquals(update.getEnabled(), model.getEnabled(), "Enabled should match");
+            assertEquals(update.isEnabled(), model.isEnabled(), "Enabled should match");
             assertEquals(update.getRoles(), model.getRoles(), "Roles should match");
         }
     }
@@ -376,7 +376,7 @@ class UserAdministrationTest {
             final ValidationErrorMessage msg = post.readEntity(ValidationErrorMessage.class);
 
             assertEquals(1, msg.getErrors().size(), "There should only be one validation error");
-            assertEquals("username must not be null", msg.getErrors().get(0),
+            assertEquals("username must not be blank", msg.getErrors().get(0),
                 "There should be an invalid password error");
         }
     }

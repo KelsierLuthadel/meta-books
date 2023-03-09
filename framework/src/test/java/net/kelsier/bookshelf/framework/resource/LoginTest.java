@@ -29,7 +29,7 @@ import net.kelsier.bookshelf.framework.config.EncryptionConfiguration;
 import net.kelsier.bookshelf.framework.db.dao.users.UserDAO;
 import net.kelsier.bookshelf.framework.db.model.users.DatabaseUser;
 import net.kelsier.bookshelf.framework.db.model.users.LoginModel;
-import net.kelsier.bookshelf.framework.db.model.users.UserResponse;
+import net.kelsier.bookshelf.framework.db.model.users.UserModel;
 import net.kelsier.bookshelf.framework.encryption.PasswordEncrypt;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -85,12 +85,12 @@ class LoginTest {
         when(userDAO.find(anyString())).thenReturn(user);
 
         final LoginModel login = new LoginModel("user", password);
-        final UserResponse response;
+        final UserModel response;
         try (Response post = resources.target("/api/1/login").request().post(Entity.json(login))) {
 
             assertEquals(Response.Status.OK.getStatusCode(), post.getStatus(), "Status should be 200 OK");
 
-            response = post.readEntity(UserResponse.class);
+            response = post.readEntity(UserModel.class);
         }
         assertEquals(user.getId(), response.getId());
         assertEquals(user.getUsername(), response.getUsername());

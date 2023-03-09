@@ -165,7 +165,7 @@ public class UserAdministration {
 
         validateRoles(user.getRoles());
         final DatabaseUser databaseUser = new DatabaseUser(0, user.getUsername(), user.getFirstName(),
-                user.getLastName(), user.getEmail(), user.getEnabled(),
+                user.getLastName(), user.getEmail(), user.isEnabled(),
                 new PasswordEncrypt(cipherConfiguration).encryptPassword(user.getPassword()), user.getRoles());
         long insertedId = userDAO.insert(databaseUser);
 
@@ -173,7 +173,7 @@ public class UserAdministration {
         LOGGER.info(createdMessage);
 
         return new UserModel(Math.toIntExact(insertedId), user.getUsername(), user.getFirstName(),user.getLastName(),
-            user.getEmail(), user.getEnabled(), user.getRoles());
+            user.getEmail(), user.isEnabled(), user.getRoles());
     }
 
     /**
@@ -215,13 +215,13 @@ public class UserAdministration {
         validateRoles(user.getRoles());
         userDAO.update(new DatabaseUser(
             databaseUser.getId(),user.getUsername(), user.getFirstName(),user.getLastName(),
-            user.getEmail(), user.getEnabled(), user.getPassword(),user.getRoles()));
+            user.getEmail(), user.isEnabled(), user.getPassword(),user.getRoles()));
 
         final String createdMessage = MessageFormat.format("User {0} updated", user.getUsername());
         LOGGER.info(createdMessage);
 
         return new UserModel(databaseUser.getId(),user.getUsername(), user.getFirstName(),user.getLastName(),
-            user.getEmail(), user.getEnabled(), user.getRoles());
+            user.getEmail(), user.isEnabled(), user.getRoles());
     }
 
     /**
