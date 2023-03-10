@@ -17,16 +17,16 @@ public class Tag implements Entity {
     /**
      * Unique id
      */
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
     /**
      * Tag display name
      */
-    @NotNull
     @JsonProperty("name")
+    @NotNull
     private final String name;
 
     /**
@@ -34,7 +34,7 @@ public class Tag implements Entity {
      * @param id Unique id
      * @param name Tag display name
      */
-    public Tag(@NotNull @JsonProperty("id") @Min(1) final Integer id,
+    public Tag(@JsonProperty("id") @NotNull @Min(1)  final Integer id,
                @JsonProperty("name") final String name) {
         this.id = id;
         this.name = name;

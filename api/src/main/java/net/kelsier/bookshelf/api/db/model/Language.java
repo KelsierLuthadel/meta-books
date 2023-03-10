@@ -11,16 +11,17 @@ import javax.validation.constraints.NotNull;
 @JsonPropertyOrder({"id", "languageCode"})
 @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 public class Language implements Entity {
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
-    @NotNull
     @JsonProperty("languageCode")
+    @NotNull
     private final String languageCode;
 
-    public Language(@JsonProperty("id") final Integer id, @JsonProperty("languageCode") final String languageCode) {
+    public Language(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                    @JsonProperty("languageCode") @NotNull final String languageCode) {
         this.id = id;
         this.languageCode = languageCode;
     }

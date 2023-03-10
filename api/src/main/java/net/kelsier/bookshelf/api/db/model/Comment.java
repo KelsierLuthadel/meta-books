@@ -17,24 +17,24 @@ public class Comment implements Entity {
     /**
      * Unique id
      */
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
     /**
      * Foreign key for linked book
      */
-    @NotNull
     @JsonProperty("book")
+    @NotNull
     @Min(1)
     private final Integer book;
 
     /**
      * Comments
      */
-    @NotNull
     @JsonProperty("text")
+    @NotNull
     private final String text;
 
     /**
@@ -43,7 +43,9 @@ public class Comment implements Entity {
      * @param book Foreign key for linked book
      * @param text Comments
      */
-    public Comment(@JsonProperty("id") final Integer id, @JsonProperty("book") final Integer book, @JsonProperty("text") final String text) {
+    public Comment(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                   @JsonProperty("book") @NotNull @Min(1) final Integer book,
+                   @JsonProperty("text") @NotNull @Min(1) final String text) {
         this.id = id;
         this.book = book;
         this.text = text;

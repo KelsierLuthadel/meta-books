@@ -23,7 +23,7 @@
 package net.kelsier.bookshelf.api.db.dao;
 
 import net.kelsier.bookshelf.api.db.mapper.BookTagLinkMapper;
-import net.kelsier.bookshelf.api.db.model.BookTagLink;
+import net.kelsier.bookshelf.api.db.model.links.BookTagLink;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;

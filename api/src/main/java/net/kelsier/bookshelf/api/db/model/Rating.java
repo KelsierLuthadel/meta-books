@@ -18,8 +18,8 @@ public class Rating implements Entity {
     /**
      * Unique id
      */
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
@@ -36,7 +36,8 @@ public class Rating implements Entity {
      * @param id Unique id
      * @param value Rating value
      */
-    public Rating(@JsonProperty("id") final Integer id, @JsonProperty("rating") final Integer value) {
+    public Rating(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                  @JsonProperty("rating") @Min(1)  @Min(10) final Integer value) {
         this.id = id;
         this.value = value;
     }

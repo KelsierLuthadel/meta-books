@@ -21,16 +21,16 @@ public class Book implements Entity {
     /**
      * Unique id
      */
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
     /**
      * Display title
      */
-    @NotNull
     @JsonProperty("title")
+    @NotNull
     private final String title;
 
     /**
@@ -56,8 +56,8 @@ public class Book implements Entity {
     /**
      * Book number if the book is part of a series
      */
-    @NotNull
     @JsonProperty("seriesIndex")
+    @NotNull
     private final Integer seriesIndex;
 
     /**
@@ -71,8 +71,8 @@ public class Book implements Entity {
     /**
      * Relative path to the book
      */
-    @NotNull
     @JsonProperty("path")
+    @NotNull
     @Pattern(regexp = RegexPatterns.FILENAME_REGEX, message = "invalid path format")
     private final String path;
 
@@ -85,8 +85,8 @@ public class Book implements Entity {
     /**
      * Date that the book was last modified
      */
-    @NotNull
     @JsonProperty("lastModified")
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp lastModified;
 
@@ -103,16 +103,16 @@ public class Book implements Entity {
      * @param hasCover Flag to indicate if book has a cover
      * @param lastModified Date that the book was last modified
      */
-    public Book(@JsonProperty("id") final Integer id,
-                @JsonProperty("title") final String title,
+    public Book(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                @JsonProperty("title") @NotNull final String title,
                 @JsonProperty("sort") final String sort,
-                @JsonProperty("dateAdded") final Timestamp dateAdded,
-                @JsonProperty("publicationDate") final Timestamp publicationDate,
-                @JsonProperty("seriesIndex") final Integer seriesIndex,
+                @JsonProperty("dateAdded") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp dateAdded,
+                @JsonProperty("publicationDate") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp publicationDate,
+                @JsonProperty("seriesIndex") @NotNull final Integer seriesIndex,
                 @JsonProperty("isbn") final String isbn,
-                @JsonProperty("path") final String path,
+                @JsonProperty("path") @NotNull @Pattern(regexp = RegexPatterns.FILENAME_REGEX, message = "invalid path format") final String path,
                 @JsonProperty("hasCover") final Boolean hasCover,
-                @JsonProperty("lastModified") final Timestamp lastModified) {
+                @JsonProperty("lastModified") @NotNull @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp lastModified) {
         this.id = id;
         this.title = title;
         this.sort = sort;

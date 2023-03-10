@@ -1,6 +1,7 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import io.dropwizard.jersey.validation.Validators;
+import net.kelsier.bookshelf.api.db.model.links.BookSeriesLink;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;

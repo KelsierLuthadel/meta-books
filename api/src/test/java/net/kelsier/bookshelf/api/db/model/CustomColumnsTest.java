@@ -1,6 +1,7 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import io.dropwizard.jersey.validation.Validators;
+import net.kelsier.bookshelf.api.db.model.customcolumn.CustomColumns;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;

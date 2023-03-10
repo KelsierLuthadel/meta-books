@@ -23,7 +23,7 @@
 package net.kelsier.bookshelf.api.db.dao;
 
 import net.kelsier.bookshelf.api.db.mapper.CustomColumnMapper;
-import net.kelsier.bookshelf.api.db.model.CustomColumn;
+import net.kelsier.bookshelf.api.db.model.customcolumn.CustomColumn;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.customizer.Define;

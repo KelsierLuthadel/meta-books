@@ -4,7 +4,8 @@ import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
 import net.kelsier.bookshelf.api.db.dao.BookDetailsDAO;
 import net.kelsier.bookshelf.api.db.model.Author;
-import net.kelsier.bookshelf.api.db.model.BookDetails;
+import net.kelsier.bookshelf.api.db.model.view.BookDetails;
+import net.kelsier.bookshelf.api.db.model.view.Identifier;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,39 @@ import static org.mockito.Mockito.*;
 @ExtendWith(DropwizardExtensionsSupport.class)
 class BookDetailsResourceTest {
 
-    public static final String API = "/api/1/bookshelf/1";
+    private static final String API = "/api/1/bookshelf/1";
+
+    private static final int ID = 1;
+
+    private static final String TITLE = "title";
+
+    private static final String AUTHOR = "author";
+
+    private static final String SERIES = "series";
+    private static final int SERIES_INDEX = 3;
+
+    public static final String PUBLISHER = "publisher";
+
+    public static final String ISBN = "1234567890";
+
+    public static final String[] IDENTIFIER_TYPES = new String [] {"provider-a", "provider-b", "provider-c"};
+
+    public static final String[] IDENTIFIER_VALUES = {"book-reference-1", "book-reference-2", "book-reference-3"};
+
+    public static final String LANGUAGE = "language";
+
+    public static final String FORMAT = "format";
+
+    public static final int SIZE = 120;
+
+    public static final boolean HAS_COVER = true;
+
+    public static final Timestamp DATE = new Timestamp(0);
+
+    public static final String PATH = "path";
+
+    public static final String COMMENTS = "comments";
+
     private BookDetails details;
 
     @Spy
@@ -36,10 +69,8 @@ class BookDetailsResourceTest {
 
     @BeforeEach
     void setup() {
-        details = new BookDetails(1, "title", "author", "series",
-                1, "publisher", "1234567890", "a,b,c", "1,2,3",
-            "language","format", 120, true, new Timestamp(0), new Timestamp(0), new Timestamp(0),
-                "path", "comments");
+        details = new BookDetails(ID, TITLE, AUTHOR, SERIES, SERIES_INDEX, PUBLISHER, ISBN,
+            new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
 
 
         bookDetailsDAO = spy(BookDetailsDAO.class);

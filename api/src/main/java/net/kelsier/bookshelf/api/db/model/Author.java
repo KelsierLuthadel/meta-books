@@ -18,16 +18,16 @@ public class Author implements Entity {
     /**
      * Unique id
      */
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
     /**
      * Author display name
      */
-    @NotNull
     @JsonProperty("name")
+    @NotNull
     private final String name;
 
     /**
@@ -43,8 +43,8 @@ public class Author implements Entity {
      * @param sort Author name used for sorting
      */
     public Author(
-            @NotNull @JsonProperty("id") @Min(1) final Integer id,
-            @NotNull @JsonProperty("name") final String name,
+            @JsonProperty("id") @NotNull @Min(1) final Integer id,
+            @JsonProperty("name") @NotNull final String name,
             @JsonProperty("sort") final String sort) {
         this.id = id;
         this.name = name;

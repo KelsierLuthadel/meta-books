@@ -23,7 +23,8 @@
 package net.kelsier.bookshelf.api.db.mapper;
 
 
-import net.kelsier.bookshelf.api.db.model.BookDetails;
+import net.kelsier.bookshelf.api.db.model.view.BookDetails;
+import net.kelsier.bookshelf.api.db.model.view.Identifier;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -55,8 +56,10 @@ public class BookDetailsMapper implements RowMapper<BookDetails> {
                 resultSet.getInt("SERIES_INDEX"),
                 resultSet.getString("PUBLISHER"),
                 resultSet.getString("ISBN"),
-                resultSet.getString("IDENTIFIER_TYPE"),
-                resultSet.getString("IDENTIFIER_VALUE"),
+                new Identifier(
+                    (String[])resultSet.getArray("IDENTIFIER_TYPE").getArray(),
+                    (String[])resultSet.getArray("IDENTIFIER_VALUE").getArray()
+                ),
                 resultSet.getString("LANGUAGE"),
                 resultSet.getString("FORMAT"),
                 resultSet.getInt("SIZE"),

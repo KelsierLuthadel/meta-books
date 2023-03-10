@@ -17,16 +17,16 @@ public class Publisher implements Entity {
     /**
      * Unique id
      */
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
     /**
      * Display name
      */
-    @NotNull
     @JsonProperty("name")
+    @NotNull
     private final String name;
 
     /**
@@ -41,8 +41,8 @@ public class Publisher implements Entity {
      * @param name Display name
      * @param sort Name used for sorting
      */
-    public Publisher(@JsonProperty("id") final Integer id,
-                     @JsonProperty("name") final String name,
+    public Publisher(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                     @JsonProperty("name") @NotNull final String name,
                      @JsonProperty("sort") final String sort) {
         this.id = id;
         this.name = name;

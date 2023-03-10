@@ -1,9 +1,33 @@
-package net.kelsier.bookshelf.api.db.model;
+/*
+ * Copyright (c) Kelsier Luthadel 2023.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+package net.kelsier.bookshelf.api.db.model.view;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 import net.kelsier.bookshelf.api.patterns.RegexPatterns;
 import org.hibernate.validator.constraints.Length;
@@ -17,52 +41,52 @@ import java.util.List;
 /**
  * Book metadata consisting of data pulled from various tables
  */
-@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "type", "value",
+@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "identifier",
                     "language", "format","size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
 @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 public class BookDetails implements Entity {
     /**
      * Unique id
      */
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
     /**
      * Book title
      */
-    @NotNull
     @JsonProperty("title")
+    @NotNull
     private final String title;
 
     /**
      * Book author
      */
-    @NotNull
     @JsonProperty("author")
+    @NotNull
     private final String author;
 
     /**
      * Book series
      */
-    @NotNull
     @JsonProperty("series")
+    @NotNull
     private final String series;
 
     /**
      * Series index if book is part of a series
      */
+    @JsonProperty("seriesIndex")
     @NotNull
     @Min(0)
-    @JsonProperty("seriesIndex")
     private final Integer seriesIndex;
 
     /**
      * Name of the book publisher
      */
-    @NotNull
     @JsonProperty("publisher")
+    @NotNull
     private final String publisher;
 
     /**
@@ -76,38 +100,29 @@ public class BookDetails implements Entity {
     /**
      * List of book identifiers (isbn, google, goodreads, amazon etc)
      */
-    @NotNull
-    @JsonProperty("type")
-    private String identifierTypes; //todo: should be a list of object
-
-    /**
-     * List of values associated with book identifiers
-     */
-    @NotNull
-    @JsonProperty("value")
-    private String identifierValues; //todo: should be a list of object
-
+    @JsonProperty("identifier")
+    private final Identifier identifier;
 
     /**
      * Language book is written in
      */
-    @NotNull
     @JsonProperty("language")
+    @NotNull
     private final String language;
 
     /**
      * eBook format
      */
-    @NotNull
     @JsonProperty("format")
+    @NotNull
     private final String format;
 
     /**
      * Uncompressed size of the book
      */
+    @JsonProperty("size")
     @NotNull
     @Min(0)
-    @JsonProperty("size")
     private final Integer size;
 
     /**
@@ -133,24 +148,24 @@ public class BookDetails implements Entity {
     /**
      * Date that the book metadata was last modified
      */
-    @NotNull
     @JsonProperty("lastModified")
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp lastModified;
 
     /**
      * Relative path to the book
      */
-    @NotNull
     @JsonProperty("path")
+    @NotNull
     @Pattern(regexp = RegexPatterns.FILENAME_REGEX, message = "invalid path format")
     private final String path;
 
     /**
      * Book comments
      */
-    @NotNull
     @JsonProperty("comments")
+    @NotNull
     private final String comments;
 
     /**
@@ -162,8 +177,7 @@ public class BookDetails implements Entity {
      * @param seriesIndex Series index if book is part of a series
      * @param publisher Name of the book publisher
      * @param isbn ISBN value
-     * @param identifierTypes list of book identifiers (isbn, google, goodreads, amazon etc)
-     * @param identifierValues list of values associated with book identifiers
+     * @param identifier list of book identifiers (isbn, google, goodreads, amazon etc)
      * @param language Language book is written in
      * @param format eBook format
      * @param size Uncompressed size of the book
@@ -174,26 +188,23 @@ public class BookDetails implements Entity {
      * @param path Relative path to the book
      * @param comments Book comments
      */
-    public BookDetails(@JsonProperty("id") final Integer id,
-                       @JsonProperty("title")final String title,
-                       @JsonProperty("author")final String author,
-                       @JsonProperty("series")final String series,
-                       @JsonProperty("seriesIndex")final Integer seriesIndex,
-                       @JsonProperty("publisher")final String publisher,
+    public BookDetails(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                       @JsonProperty("title") @NotNull final String title,
+                       @JsonProperty("author") @NotNull final String author,
+                       @JsonProperty("series") @NotNull final String series,
+                       @JsonProperty("seriesIndex") @NotNull @Min(0) final Integer seriesIndex,
+                       @JsonProperty("publisher") @NotNull final String publisher,
                        @JsonProperty("isbn")final String isbn,
-
-                       @JsonProperty("isbn")final String identifierTypes,
-                       @JsonProperty("isbn")final String identifierValues,
-
-                       @JsonProperty("language")final String language,
-                       @JsonProperty("format")final String format,
-                       @JsonProperty("size")final Integer size,
-                       @JsonProperty("hasCover")final Boolean hasCover,
-                       @JsonProperty("dateAdded")final Timestamp dateAdded,
-                       @JsonProperty("publicationDate")final Timestamp publicationDate,
-                       @JsonProperty("lastModified")final Timestamp lastModified,
-                       @JsonProperty("path")final String path,
-                       @JsonProperty("comments")final String comments) {
+                       @JsonProperty("identifier") @NotNull final Identifier identifier,
+                       @JsonProperty("language") @NotNull final String language,
+                       @JsonProperty("format") @NotNull final String format,
+                       @JsonProperty("size") @NotNull final Integer size,
+                       @JsonProperty("hasCover") @NotNull final Boolean hasCover,
+                       @JsonProperty("dateAdded") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp dateAdded,
+                       @JsonProperty("publicationDate") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp publicationDate,
+                       @JsonProperty("lastModified") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") @NotNull final Timestamp lastModified,
+                       @JsonProperty("path") @NotNull final String path,
+                       @JsonProperty("comments") @NotNull final String comments) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -201,8 +212,7 @@ public class BookDetails implements Entity {
         this.seriesIndex = seriesIndex;
         this.publisher = publisher;
         this.isbn = isbn;
-        this.identifierTypes = identifierTypes;
-        this.identifierValues = identifierValues;
+        this.identifier = identifier;
         this.language = language;
         this.format = format;
         this.size = size;
@@ -274,15 +284,8 @@ public class BookDetails implements Entity {
     /**
      * List of book identifiers (isbn, google, goodreads, amazon etc)
      */
-    public String getIdentifierTypes() {
-        return identifierTypes;
-    }
-
-    /**
-     * List of values associated with book identifiers
-     */
-    public String getIdentifierValues() {
-        return identifierValues;
+    public Identifier getIdentifier() {
+        return identifier;
     }
 
     /**

@@ -18,16 +18,16 @@ public class Series implements Entity {
     /**
      * Unique id
      */
-    @NotNull
     @JsonProperty("id")
+    @NotNull
     @Min(1)
     private final Integer id;
 
     /**
      * Display name
      */
-    @NotNull
     @JsonProperty("name")
+    @NotNull
     private final String name;
 
     /**
@@ -42,7 +42,9 @@ public class Series implements Entity {
      * @param name Display name
      * @param sort Name used for sorting
      */
-    public Series(@JsonProperty("id") final Integer id, @JsonProperty("name") final String name, @JsonProperty("sort") final String sort) {
+    public Series(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                  @JsonProperty("name") @NotNull final String name,
+                  @JsonProperty("sort") final String sort) {
         this.id = id;
         this.name = name;
         this.sort = sort;

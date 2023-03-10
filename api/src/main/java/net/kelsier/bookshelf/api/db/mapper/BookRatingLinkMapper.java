@@ -23,7 +23,7 @@
 package net.kelsier.bookshelf.api.db.mapper;
 
 
-import net.kelsier.bookshelf.api.db.model.BookRatingLink;
+import net.kelsier.bookshelf.api.db.model.links.BookRatingLink;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 

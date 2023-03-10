@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Kelsier Luthadel
+ * Copyright (c) Kelsier Luthadel 2023.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,37 +18,35 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
-
-package net.kelsier.bookshelf.api.db.mapper;
-
-
-import net.kelsier.bookshelf.api.db.model.customcolumn.CustomColumn;
-import org.jdbi.v3.core.mapper.RowMapper;
-import org.jdbi.v3.core.statement.StatementContext;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-/**
- * Map a database query to am {@link CustomColumn} class
  *
- * @author Kelsier Luthadel
- * @version 1.0.0
  */
-public class CustomColumnMapper implements RowMapper<CustomColumn> {
 
-    /**
-     * Map a database query to am {@link CustomColumn} class
-     *
-     * @param resultSet results from a query
-     * @param statementContext context
-     * @return {@link CustomColumn} object representing the results of a query
-     * @throws SQLException Thrown when there was a database error
-     */
-    public CustomColumn map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
-        return new CustomColumn(
-                resultSet.getInt("ID"),
-                resultSet.getString("VALUE"));
+package net.kelsier.bookshelf.api.db.model.view;
+
+import io.dropwizard.jersey.validation.Validators;
+import org.junit.jupiter.api.Test;
+
+import javax.validation.ConstraintViolation;
+import java.util.Arrays;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class IdentifierTest {
+
+    @Test
+    void testValidIdentifiers() {
+        final Identifier identifier = new Identifier(
+            new String[] {"a", "b", "c"},
+            new String[] {"1", "2", "3"}
+        );
+
+        final Set<ConstraintViolation<Object>> violations = validate(identifier);
+        assertEquals(0, violations.size());
     }
+
+    private Set<ConstraintViolation<Object>> validate(final Object object) {
+        return Validators.newValidator().validate(object);
+    }
+
 }
