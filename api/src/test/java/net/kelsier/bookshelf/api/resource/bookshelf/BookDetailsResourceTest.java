@@ -37,8 +37,8 @@ class BookDetailsResourceTest {
     @BeforeEach
     void setup() {
         details = new BookDetails(1, "title", "author", "series",
-                1, "publisher", "1234567890", "language",
-                "format", 120, true, new Timestamp(0), new Timestamp(0), new Timestamp(0),
+                1, "publisher", "1234567890", "a,b,c", "1,2,3",
+            "language","format", 120, true, new Timestamp(0), new Timestamp(0), new Timestamp(0),
                 "path", "comments");
 
 

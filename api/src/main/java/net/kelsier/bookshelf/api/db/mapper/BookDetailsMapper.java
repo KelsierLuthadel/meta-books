@@ -55,6 +55,8 @@ public class BookDetailsMapper implements RowMapper<BookDetails> {
                 resultSet.getInt("SERIES_INDEX"),
                 resultSet.getString("PUBLISHER"),
                 resultSet.getString("ISBN"),
+                resultSet.getString("IDENTIFIER_TYPE"),
+                resultSet.getString("IDENTIFIER_VALUE"),
                 resultSet.getString("LANGUAGE"),
                 resultSet.getString("FORMAT"),
                 resultSet.getInt("SIZE"),

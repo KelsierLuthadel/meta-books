@@ -10,12 +10,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Book metadata consisting of data pulled from various tables
  */
-@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "language", "format",
-                    "size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
+@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "identifiers", "values",
+                    "language", "format","size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
 public class BookDetails implements Entity {
     /**
      * Unique id
@@ -69,6 +70,21 @@ public class BookDetails implements Entity {
     @Length(min = 10, max = 17)
     @JsonProperty("isbn")
     private final String isbn;
+
+    /**
+     * List of book identifiers (isbn, google, goodreads, amazon etc)
+     */
+    @NotNull
+    @JsonProperty("identifiers")
+    private String identifierTypes;
+
+    /**
+     * List of values associated with book identifiers
+     */
+    @NotNull
+    @JsonProperty("identifiers")
+    private String identifierValues;
+
 
     /**
      * Language book is written in
@@ -144,6 +160,8 @@ public class BookDetails implements Entity {
      * @param seriesIndex Series index if book is part of a series
      * @param publisher Name of the book publisher
      * @param isbn ISBN value
+     * @param identifierTypes list of book identifiers (isbn, google, goodreads, amazon etc)
+     * @param identifierValues list of values associated with book identifiers
      * @param language Language book is written in
      * @param format eBook format
      * @param size Uncompressed size of the book
@@ -161,6 +179,10 @@ public class BookDetails implements Entity {
                        @JsonProperty("seriesIndex")final Integer seriesIndex,
                        @JsonProperty("publisher")final String publisher,
                        @JsonProperty("isbn")final String isbn,
+
+                       @JsonProperty("isbn")final String identifierTypes,
+                       @JsonProperty("isbn")final String identifierValues,
+
                        @JsonProperty("language")final String language,
                        @JsonProperty("format")final String format,
                        @JsonProperty("size")final Integer size,
@@ -177,6 +199,8 @@ public class BookDetails implements Entity {
         this.seriesIndex = seriesIndex;
         this.publisher = publisher;
         this.isbn = isbn;
+        this.identifierTypes = identifierTypes;
+        this.identifierValues = identifierValues;
         this.language = language;
         this.format = format;
         this.size = size;
@@ -243,6 +267,20 @@ public class BookDetails implements Entity {
      */
     public String getIsbn() {
         return isbn;
+    }
+
+    /**
+     * List of book identifiers (isbn, google, goodreads, amazon etc)
+     */
+    public String getIdentifierTypes() {
+        return identifierTypes;
+    }
+
+    /**
+     * List of values associated with book identifiers
+     */
+    public String getIdentifierValues() {
+        return identifierValues;
     }
 
     /**
