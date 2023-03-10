@@ -52,6 +52,9 @@ public interface IdentifierDAO {
     @SqlQuery("SELECT * FROM identifiers WHERE ID = :id")
     Identifier get(@Bind("id") int id);
 
+    @SqlQuery("SELECT array_agg(type) as type, array_agg(val) as val FROM identifiers where book = :book_id;")
+    Identifier query(@Bind("book_id") int bookId);
+
     @SqlUpdate("INSERT INTO identifiers (id, book, type, val) " +
             "values (:id, :book, :type, :val)")
     @GetGeneratedKeys

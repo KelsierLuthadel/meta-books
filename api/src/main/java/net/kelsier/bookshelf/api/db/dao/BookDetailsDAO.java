@@ -53,109 +53,78 @@ public interface BookDetailsDAO {
      * @param id Book ID
      * @return An object representing a book
      */
-//    @SqlQuery("select " +
-//        "books.id," +
-//        "books.title," +
-//        "authors.name AS author," +
-//        "series.name AS series," +
-//        "books.series_index," +
-//        "publishers.name AS publisher," +
-//        "books.isbn," +
-//        "languages.lang_code AS language," +
-//        "data.format AS format," +
-//        "data.uncompressed_size AS size," +
-//        "books.has_cover," +
-//        "books.date_added," +
-//        "books.publication_date," +
-//        "books.last_modified," +
-//        "books.path," +
-//        "comments.text AS comments " +
-//        "FROM books INNER JOIN books_authors_link ON books_authors_link.book=books.id " +
-//        "INNER JOIN authors ON authors.id=books_authors_link.author " +
-//        "INNER JOIN books_languages_link ON books_languages_link.book=books.id " +
-//        "INNER JOIN languages ON languages.id=books_languages_link.lang_code " +
-//        "INNER JOIN books_publishers_link ON books_publishers_link.book=books.id " +
-//        "INNER JOIN publishers ON publishers.id=books_publishers_link.publisher " +
-//        "INNER JOIN books_series_link ON books_series_link.book=books.id " +
-//        "INNER JOIN series ON series.id=books_series_link.series " +
-//        "INNER JOIN data ON data.id=books.id " +
-//        "INNER JOIN comments ON comments.book=books.id " +
-//        "WHERE books.id = :id")
-//    BookDetails get(@Bind("id") int id);
-
     @SqlQuery(
-        "select" +
-            "book.id," +
-            "book.title," +
-            "author.author," +
-            "series.series," +
-            "books.series_index," +
-            "publisher.publisher," +
-            "book.isbn," +
-            "identifier.identifier_type," +
-            "identifier.identifier_value," +
-            "language.language," +
-            "data.format," +
-            "data.size," +
-            "book.has_cover," +
-            "book.date_added," +
-            "book.publication_date," +
-            "book.last_modified," +
-            "book.path," +
-            "comments.comments" +
-            "FROM books book" +
+            "select " +
+                    "book.id," +
+                    "book.title," +
+                    "author.author," +
+                    "series.series," +
+                    "book.series_index," +
+                    "publisher.publisher," +
+                    "book.isbn," +
+                    "identifier.identifier_type," +
+                    "identifier.identifier_value," +
+                    "language.language ," +
+                    "data.format," +
+                    "data.size," +
+                    "book.has_cover," +
+                    "book.date_added," +
+                    "book.publication_date," +
+                    "book.last_modified," +
+                    "book.path," +
+                    "comments.comments " +
+                    "FROM books book " +
 
-            "JOIN (" +
-            "SELECT ref.id AS id, authors.name  as author" +
-            " FROM books ref" +
-            " INNER JOIN books_authors_link AS link ON link.book=ref.id " +
-            "     INNER JOIN authors AS authors ON authors.id=link.author " +
-            " GROUP BY ref.id, authors.name" +
-            ") author USING(id) " +
+                    "JOIN ( " +
+                    "SELECT ref.id AS id, authors.name  as author " +
+                    "FROM books ref " +
+                    "INNER JOIN books_authors_link AS link ON link.book=ref.id " +
+                    "INNER JOIN authors AS authors ON authors.id=link.author " +
+                    "GROUP BY ref.id, authors.name " +
+                    ") author USING(id) " +
 
-            "JOIN (" +
-            "SELECT ref.id AS id, series.name as series" +
-            " FROM books ref" +
-            " INNER JOIN books_series_link AS link ON link.book=ref.id " +
-            "     INNER JOIN series AS series ON series.id=link.series " +
-            " GROUP BY ref.id, series.name" +
-            ") series USING(id) " +
+                    "JOIN ( " +
+                    "SELECT ref.id AS id, series.name as series " +
+                    "FROM books ref " +
+                    "INNER JOIN books_series_link AS link ON link.book=ref.id " +
+                    "INNER JOIN series AS series ON series.id=link.series " +
+                    "GROUP BY ref.id, series.name " +
+                    ") series USING(id) " +
 
-            "JOIN (" +
-            "SELECT ref.id AS id, publishers.name as publisher" +
-            " FROM books ref" +
-            " INNER JOIN books_publishers_link AS link ON link.book=ref.id " +
-            "     INNER JOIN publishers AS publishers ON publishers.id=link.publisher " +
-            " GROUP BY ref.id, publishers.name" +
-            ") publisher USING(id) " +
+                    "JOIN ( " +
+                    "SELECT ref.id AS id, publishers.name as publisher " +
+                    "FROM books ref " +
+                    "INNER JOIN books_publishers_link AS link ON link.book=ref.id " +
+                    "INNER JOIN publishers AS publishers ON publishers.id=link.publisher " +
+                    "GROUP BY ref.id, publishers.name " +
+                    ") publisher USING(id) " +
 
-            "JOIN (" +
-            "SELECT ref.id AS id, languages.lang_code as language" +
-            " FROM books ref" +
-            " INNER JOIN books_languages_link AS link ON link.book=ref.id " +
-            "     INNER JOIN languages AS languages ON languages.id=link.lang_code " +
-            " GROUP BY ref.id, languages.lang_code" +
-            ") language USING(id) " +
+                    "JOIN ( " +
+                    "SELECT ref.id AS id, languages.lang_code as language " +
+                    "FROM books ref " +
+                    "INNER JOIN books_languages_link AS link ON link.book=ref.id " +
+                    "INNER JOIN languages AS languages ON languages.id=link.lang_code " +
+                    "GROUP BY ref.id, languages.lang_code " +
+                    ") language USING(id) " +
 
-            "JOIN (" +
-            "SELECT ref.id AS id, data.format as format, data.uncompressed_size AS size" +
-            " FROM books ref" +
-            " INNER JOIN data AS data ON data.id=ref.id " +
-            ") data USING(id) " +
+                    "JOIN ( " +
+                    "SELECT ref.id AS id, data.format as format, data.uncompressed_size AS size " +
+                    "FROM books ref " +
+                    "INNER JOIN data AS data ON data.id=ref.id " +
+                    ") data USING(id) " +
 
-            "JOIN (" +
-            "SELECT ref.id AS id, comments.text as comments" +
-            " FROM books ref" +
-            " INNER JOIN comments AS comments ON comments.book=ref.id " +
-            ") comments USING(id) " +
+                    "JOIN ( " +
+                    "SELECT ref.id AS id, comments.text as comments " +
+                    "FROM books ref " +
+                    "INNER JOIN comments AS comments ON comments.book=ref.id " +
+                    ") comments USING(id) " +
 
-            "LEFT JOIN (" +
-            "SELECT ref.id AS id, array_agg(ident.type) AS identifier_type, array_agg(ident.val) as identifier_value" +
-            "FROM books ref" +
-            "JOIN identifiers AS ident on ident.book=ref.id" +
-            "GROUP BY ref.id" +
-            ") identifier USING(id) " +
-            "WHERE books.id = :id"
+                    "LEFT JOIN ( " +
+                    "SELECT ref.id AS id, array_agg(ident.type) AS identifier_type, array_agg(ident.val) as identifier_value " +
+                    "FROM books ref " +
+                    "JOIN identifiers AS ident on ident.book=ref.id " +
+                    "GROUP BY ref.id " +
+                    ") identifier USING(id) where book.id = :id"
     )
     BookDetails get(@Bind("id") int id);
 

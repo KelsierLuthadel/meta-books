@@ -1,6 +1,8 @@
 package net.kelsier.bookshelf.api.db.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -10,6 +12,7 @@ import javax.validation.constraints.NotNull;
                   display  TEXT DEFAULT '{}' NOT NULL, is_multiple BOOL DEFAULT false NOT NULL, normalized BOOL NOT NULL, UNIQUE(label))
  */
 
+@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 public class CustomColumns implements Entity {
     @NotNull
     @JsonProperty("id")

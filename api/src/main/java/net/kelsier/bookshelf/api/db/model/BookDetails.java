@@ -1,8 +1,10 @@
 package net.kelsier.bookshelf.api.db.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 import net.kelsier.bookshelf.api.patterns.RegexPatterns;
 import org.hibernate.validator.constraints.Length;
 
@@ -15,8 +17,9 @@ import java.util.List;
 /**
  * Book metadata consisting of data pulled from various tables
  */
-@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "identifiers", "values",
+@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "type", "value",
                     "language", "format","size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
+@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 public class BookDetails implements Entity {
     /**
      * Unique id
@@ -67,7 +70,6 @@ public class BookDetails implements Entity {
      *  ISBN prior to 2007 is a 10-digit number.
      *  ISBN from 2007 onwards consists of a 13-digit number is divided into five parts of variable length, each part separated by a hyphen.
      */
-    @Length(min = 10, max = 17)
     @JsonProperty("isbn")
     private final String isbn;
 
@@ -75,15 +77,15 @@ public class BookDetails implements Entity {
      * List of book identifiers (isbn, google, goodreads, amazon etc)
      */
     @NotNull
-    @JsonProperty("identifiers")
-    private String identifierTypes;
+    @JsonProperty("type")
+    private String identifierTypes; //todo: should be a list of object
 
     /**
      * List of values associated with book identifiers
      */
     @NotNull
-    @JsonProperty("identifiers")
-    private String identifierValues;
+    @JsonProperty("value")
+    private String identifierValues; //todo: should be a list of object
 
 
     /**
