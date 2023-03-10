@@ -25,6 +25,7 @@ package net.kelsier.bookshelf.api.db.dao;
 import net.kelsier.bookshelf.api.db.mapper.CustomColumnMapper;
 import net.kelsier.bookshelf.api.db.model.customcolumn.CustomColumn;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
@@ -63,6 +64,17 @@ public interface CustomColumnDAO {
      */
     @SqlQuery("select * from <table>")
     CustomColumn get(@Define("table") String table);
+
+    @SqlQuery("Select id, custom.value " +
+            "FROM books " +
+            "JOIN ( " +
+            "SELECT ref.id AS id, custom.value as value " +
+            "FROM books ref " +
+            "INNER JOIN <table>_link AS custom_column ON custom_column.book=ref.id " +
+            "INNER JOIN <table> AS custom ON custom.id=custom_column.book " +
+            "GROUP BY ref.id, custom.value " +
+            ") custom USING(id) WHERE books.id =:id")
+    CustomColumn get(@Define("table") String table, @Bind int id);
 
     /**
      * Add a new row into a custom column table

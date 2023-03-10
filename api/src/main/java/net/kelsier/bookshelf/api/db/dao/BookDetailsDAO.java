@@ -72,7 +72,8 @@ public interface BookDetailsDAO {
                     "book.publication_date," +
                     "book.last_modified," +
                     "book.path," +
-                    "comments.comments " +
+                    "comments.comments," +
+                    "tag.tags " +
                     "FROM books book " +
 
                     "JOIN ( " +
@@ -118,6 +119,14 @@ public interface BookDetailsDAO {
                     "FROM books ref " +
                     "INNER JOIN comments AS comments ON comments.book=ref.id " +
                     ") comments USING(id) " +
+
+                    "LEFT JOIN ( " +
+                    "SELECT ref.id AS id, array_agg(tags.name) AS tags " +
+                    "FROM books ref " +
+                    "INNER JOIN books_tags_link AS link ON link.book=ref.id " +
+                    "INNER JOIN tags AS tags ON tags.id=link.tag " +
+                    "GROUP BY ref.id " +
+                    ") tag USING(id) " +
 
                     "LEFT JOIN ( " +
                     "SELECT ref.id AS id, array_agg(ident.type) AS identifier_type, array_agg(ident.val) as identifier_value " +
