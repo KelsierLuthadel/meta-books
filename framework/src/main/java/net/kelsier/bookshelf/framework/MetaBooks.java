@@ -24,6 +24,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import net.kelsier.bookshelf.api.resource.bookshelf.*;
+import net.kelsier.bookshelf.api.resource.bookshelf.metadata.*;
 import net.kelsier.bookshelf.framework.auth.BasicAuthenticator;
 import net.kelsier.bookshelf.framework.auth.BasicAuthorizer;
 import net.kelsier.bookshelf.framework.auth.UserAuth;

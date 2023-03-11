@@ -26,19 +26,16 @@ package net.kelsier.bookshelf.api.db.model.view;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Array;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Book metadata consisting of data pulled from identifiers table
  */
-@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "type", "value",
-    "language", "format","size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
+@JsonPropertyOrder({"identifierTypes", "identifierValues"})
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Identifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(Identifier.class);

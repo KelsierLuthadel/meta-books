@@ -3,15 +3,15 @@
 ## Database
 
 create views
-sort missing on DAO
 
 ## Pagination
 Return previous/next link  
 min - max values  
-REST default values  
+
 
 ## Books
-add: tags + ratings to BookDetails
+add:ratings to BookDetails
+
 
 ## Error handling
 better exception response for migration errors
@@ -35,14 +35,12 @@ roles, users: Set constraints and add swagger API details (from books)
 # REST
 
 ## Authors
-GET /api/1/authors => [{id: 1, name:name}]
 POST /api/1/authors => [{id: 1, name:name}]
 
 GET /api/1/authors/{id} => {id:1, name:name}
 GET /api/1/authors/{id}/books => [{id:1, title:book}]
 
 ## Books
-GET /api/1/books => [{id:1, title:book}]
 POST /api/1/books => [{id:1, title:book}]
 
 GET /api/1/{id} => {id:1, title:book}

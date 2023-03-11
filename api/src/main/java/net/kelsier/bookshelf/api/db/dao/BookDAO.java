@@ -78,7 +78,7 @@ public interface BookDAO {
      * @param id Book ID
      * @return An object representing a book
      */
-    @SqlQuery("SELECT * FROM books WHERE ID = :id")
+    @SqlQuery("SELECT id, title, sort, date_added, publication_date, series_index, isbn, path, has_cover, last_modified FROM books WHERE ID = :id")
     Book get(@Bind("id") int id);
 
     /**

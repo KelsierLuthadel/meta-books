@@ -3,6 +3,7 @@ package net.kelsier.bookshelf.api.db.model;
 import io.dropwizard.jersey.validation.Validators;
 import net.kelsier.bookshelf.api.db.model.view.BookDetails;
 import net.kelsier.bookshelf.api.db.model.view.Identifier;
+import net.kelsier.bookshelf.api.db.model.view.Tags;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
@@ -31,11 +32,13 @@ class BookDetailsTest {
     private static final String COMMENTS = "comments";
     public static final String[] IDENTIFIER_TYPES = new String [] {"provider-a", "provider-b", "provider-c"};
     public static final String[] IDENTIFIER_VALUES = {"book-reference-1", "book-reference-2", "book-reference-3"};
+    public static final String[] TAGS = {"tag-1", "tag-2", "tag-3"};
 
     @Test
     void testValidAuthor() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
-            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
+            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
+                HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(0, violations.size(), "There should be no violations");
@@ -44,7 +47,8 @@ class BookDetailsTest {
     @Test
     void testNullId() {
         final BookDetails bookDetails = new BookDetails(null, TITLE, AUTHOR, SERIES,
-            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
+            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
+                HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -54,7 +58,8 @@ class BookDetailsTest {
     @Test
     void testMinimumFailId() {
         final BookDetails bookDetails = new BookDetails(0, TITLE, AUTHOR, SERIES,
-            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
+            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
+                HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -67,7 +72,7 @@ class BookDetailsTest {
     void testNullTitle() {
         final BookDetails bookDetails = new BookDetails(ID, null, AUTHOR, SERIES,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
-            DATE, DATE, DATE, PATH, COMMENTS);
+            DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -77,7 +82,8 @@ class BookDetailsTest {
     @Test
     void testNullAuthor() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, null, SERIES,
-            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
+            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
+                DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -87,7 +93,8 @@ class BookDetailsTest {
     @Test
     void testNullSeries() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, null,
-            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
+            ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
+                HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -97,7 +104,8 @@ class BookDetailsTest {
     @Test
     void testNullSeriesIndex() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
-                null, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
+                null, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT,
+                SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -107,7 +115,8 @@ class BookDetailsTest {
     @Test
     void testNullPublisher() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
-            ID, null, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
+            ID, null, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
+                HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -117,8 +126,8 @@ class BookDetailsTest {
     @Test
     void testNullLanguage() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
-            ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), null, FORMAT, SIZE, HAS_COVER,
-            DATE, DATE, DATE, PATH, COMMENTS);
+            ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), null,
+                FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -128,8 +137,8 @@ class BookDetailsTest {
     @Test
     void testNullFormat() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
-            ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, null, SIZE, HAS_COVER,
-            DATE, DATE, DATE, PATH, COMMENTS);
+            ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, null,
+                SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -140,7 +149,7 @@ class BookDetailsTest {
     void testNullSize() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, null, HAS_COVER,
-            DATE, DATE, DATE, PATH, COMMENTS);
+            DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -151,7 +160,7 @@ class BookDetailsTest {
     void testMinSize() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, -ID, HAS_COVER,
-            DATE, DATE, DATE, PATH, COMMENTS);
+            DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -162,7 +171,7 @@ class BookDetailsTest {
     void testNullLastModified() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
-            DATE, DATE, null, PATH, COMMENTS);
+            DATE, DATE, null, PATH, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -173,7 +182,7 @@ class BookDetailsTest {
     void testNullPath() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
-            DATE, DATE, DATE, null, COMMENTS);
+            DATE, DATE, DATE, null, COMMENTS, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -184,7 +193,7 @@ class BookDetailsTest {
     void testNullComments() {
         final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
-            DATE, DATE, DATE, PATH, null);
+            DATE, DATE, DATE, PATH, null, new Tags(TAGS));
 
         final Set<ConstraintViolation<Object>> violations = validate(bookDetails);
         assertEquals(ID, violations.size(), "There should be one violation");
@@ -272,7 +281,7 @@ class BookDetailsTest {
     private static BookDetails createBookDetailsForPath(final String path) {
         return new BookDetails(ID, TITLE, AUTHOR, SERIES,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES),LANGUAGE, FORMAT, SIZE, HAS_COVER,
-            DATE, DATE, DATE, path, COMMENTS);
+            DATE, DATE, DATE, path, COMMENTS, new Tags(TAGS));
     }
 
     private Set<ConstraintViolation<Object>> validate(final Object object) {

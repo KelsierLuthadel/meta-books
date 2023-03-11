@@ -2,10 +2,11 @@ package net.kelsier.bookshelf.api.resource.bookshelf;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
-import net.kelsier.bookshelf.api.db.dao.BookDetailsDAO;
+import net.kelsier.bookshelf.api.db.dao.view.BookDetailsDAO;
 import net.kelsier.bookshelf.api.db.model.Author;
 import net.kelsier.bookshelf.api.db.model.view.BookDetails;
 import net.kelsier.bookshelf.api.db.model.view.Identifier;
+import net.kelsier.bookshelf.api.db.model.view.Tags;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ class BookDetailsResourceTest {
     public static final String[] IDENTIFIER_TYPES = new String [] {"provider-a", "provider-b", "provider-c"};
 
     public static final String[] IDENTIFIER_VALUES = {"book-reference-1", "book-reference-2", "book-reference-3"};
+    public static final String[] TAGS = {"tag-1", "tag-2", "tag-3"};
 
     public static final String LANGUAGE = "language";
 
@@ -70,7 +72,8 @@ class BookDetailsResourceTest {
     @BeforeEach
     void setup() {
         details = new BookDetails(ID, TITLE, AUTHOR, SERIES, SERIES_INDEX, PUBLISHER, ISBN,
-            new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS);
+            new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE,
+                PATH, COMMENTS, new Tags(TAGS));
 
 
         bookDetailsDAO = spy(BookDetailsDAO.class);

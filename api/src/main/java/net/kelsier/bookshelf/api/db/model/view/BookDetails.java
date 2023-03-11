@@ -159,6 +159,9 @@ public class BookDetails implements Entity {
     @JsonProperty("comments")
     private final String comments;
 
+    @JsonProperty("tags")
+    private final Tags tags;
+
     /**
      * Constructor used to define book data
      * @param id Unique id
@@ -177,6 +180,7 @@ public class BookDetails implements Entity {
      * @param publicationDate Date that the book was published
      * @param lastModified Date that the book metadata was last modified
      * @param path Relative path to the book
+     * @param Tags List of tags
      * @param comments Book comments
      */
     public BookDetails(@JsonProperty("id") @NotNull @Min(1) final Integer id,
@@ -195,7 +199,8 @@ public class BookDetails implements Entity {
                        @JsonProperty("publicationDate") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp publicationDate,
                        @JsonProperty("lastModified") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp lastModified,
                        @JsonProperty("path") @NotNull final String path,
-                       @JsonProperty("comments") final String comments) {
+                       @JsonProperty("comments") final String comments,
+                       @JsonProperty("tags") final Tags tags) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -213,6 +218,7 @@ public class BookDetails implements Entity {
         this.lastModified = lastModified;
         this.path = path;
         this.comments = comments;
+        this.tags = tags;
     }
 
     /**
@@ -349,5 +355,13 @@ public class BookDetails implements Entity {
      */
     public String getComments() {
         return comments;
+    }
+
+    /**
+     * Tags
+     * @return List containing tags
+     */
+    public Tags getTags() {
+        return tags;
     }
 }

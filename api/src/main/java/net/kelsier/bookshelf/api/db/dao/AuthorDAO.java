@@ -59,7 +59,7 @@ public interface AuthorDAO {
      * @param id Author ID
      * @return An object representing an author
      */
-    @SqlQuery("SELECT * FROM authors WHERE ID = :id")
+    @SqlQuery("SELECT id, name, sort FROM authors WHERE ID = :id")
     Author get(@Bind("id") int id);
 
     /**

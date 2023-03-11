@@ -137,7 +137,7 @@ public final class AuthorsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for authors",
-        tags = {"Bookshelf API"},
+        tags = {"Bookshelf API", "Bookshelf Authors", "Bookshelf"},
         description = "Search for authors",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -170,7 +170,7 @@ public final class AuthorsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get author details",
-            tags = {"Bookshelf API"},
+            tags = {"Bookshelf API", "Bookshelf Authors", "Bookshelf"},
             description = "Get author details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
@@ -202,9 +202,9 @@ public final class AuthorsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get author details",
-            tags = {"Bookshelf API"},
-            description = "Get author details",
+            summary = "Get books for author",
+            tags = {"Bookshelf API", "Bookshelf Authors", "Bookshelf"},
+            description = "Get books for author",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),

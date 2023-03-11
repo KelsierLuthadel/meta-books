@@ -49,7 +49,7 @@ import static net.kelsier.bookshelf.api.db.tables.Table.BOOK_DETAILS;
 
 /**
  * API to retrieve a book with associated metadata from the database.
- */@Path("api/1/bookshelf")
+ */@Path("api/1/bookshelf/books")
 @Produces({"application/json", "application/xml"})
 @SecurityScheme(
         name = "basicAuth",
@@ -107,15 +107,15 @@ public class BookDetailsResource {
      * }</pre>
      */
     @GET
-    @Path("{id}")
+    @Path("{id}/metadata")
     @RolesAllowed({"admin:r", "user:r"})
     @Valid
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get Book details",
-            tags = {"Bookshelf"},
-            description = "Get Book details",
+            summary = "Get Book metadata",
+            tags = {"Bookshelf Books", "Bookshelf"},
+            description = "Get Book metadata",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "401", description = "Unauthorised"),

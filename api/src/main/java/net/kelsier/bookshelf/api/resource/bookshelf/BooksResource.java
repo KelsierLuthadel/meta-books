@@ -148,7 +148,7 @@ public final class BooksResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for books",
-        tags = {"Bookshelf"},
+            tags = {"Bookshelf API", "Bookshelf Books", "Bookshelf"},
         description = "Get a list of books",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -188,7 +188,7 @@ public final class BooksResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get book details",
-            tags = {"Bookshelf", "Bookshelf API"},
+            tags = {"Bookshelf API", "Bookshelf Books", "Bookshelf"},
             description = "Get book details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

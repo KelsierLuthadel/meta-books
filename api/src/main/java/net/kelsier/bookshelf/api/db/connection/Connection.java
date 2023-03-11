@@ -24,6 +24,11 @@
 package net.kelsier.bookshelf.api.db.connection;
 
 import net.kelsier.bookshelf.api.db.dao.*;
+import net.kelsier.bookshelf.api.db.dao.customcolumn.CustomColumnDAO;
+import net.kelsier.bookshelf.api.db.dao.customcolumn.CustomColumnsDAO;
+import net.kelsier.bookshelf.api.db.dao.metadata.*;
+import net.kelsier.bookshelf.api.db.dao.view.BookDetailsDAO;
+import net.kelsier.bookshelf.api.db.dao.view.BookListDAO;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.common.ColumnLookup;
@@ -89,7 +94,9 @@ public final class Connection {
      * @param table Name of the table used for query
      * @return A list of results
      */
-    public static Entity get(final Jdbi databaseConnection, final Table table, final Integer id) {
+    public static Entity get(final Jdbi databaseConnection,
+                             final Table table,
+                             final Integer id) {
         switch (table) {
             case AUTHORS:
                 return databaseConnection.onDemand(AuthorDAO.class).get(id);
@@ -119,9 +126,11 @@ public final class Connection {
     public static List<Entity> getCustomColumns(final Jdbi databaseConnection, final @Valid Pagination pagination) {
         final int limit = pagination.getLimit();
         final int start = pagination.getStart();
+        final String field = pagination.getSort().getField();
+        final String direction = pagination.getSort().getDirection();
 
         return Collections.unmodifiableList(
-                databaseConnection.onDemand(CustomColumnsDAO.class).get(limit, start)
+                databaseConnection.onDemand(CustomColumnsDAO.class).get(limit, start, field, direction)
         );
     }
 
@@ -136,7 +145,11 @@ public final class Connection {
                                                final @Valid Pagination pagination) {
         final int limit = pagination.getLimit();
         final int start = pagination.getStart();
-        return Collections.unmodifiableList(databaseConnection.onDemand(CustomColumnDAO.class).get(tableId, limit, start));
+        final String field = pagination.getSort().getField();
+        final String direction = pagination.getSort().getDirection();
+        return Collections.unmodifiableList(databaseConnection.onDemand(CustomColumnDAO.class).get(
+                tableId, limit, start, field, direction
+        ));
     }
 
     private static List<Entity> performQuery(final Jdbi databaseConnection, final Table table, final @Valid Pagination pagination) {
