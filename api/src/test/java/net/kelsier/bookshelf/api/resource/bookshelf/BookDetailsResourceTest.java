@@ -4,7 +4,7 @@ import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
 import net.kelsier.bookshelf.api.db.dao.view.BookDetailsDAO;
 import net.kelsier.bookshelf.api.db.model.Author;
-import net.kelsier.bookshelf.api.db.model.view.BookDetails;
+import net.kelsier.bookshelf.api.db.model.view.BookMetadata;
 import net.kelsier.bookshelf.api.db.model.view.Identifier;
 import net.kelsier.bookshelf.api.db.model.view.Tags;
 import org.jdbi.v3.core.Jdbi;
@@ -58,7 +58,7 @@ class BookDetailsResourceTest {
 
     public static final String COMMENTS = "comments";
 
-    private BookDetails details;
+    private BookMetadata details;
 
     @Spy
     private BookDetailsDAO bookDetailsDAO;
@@ -72,7 +72,7 @@ class BookDetailsResourceTest {
 
     @BeforeEach
     void setup() {
-        details = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES, SERIES_INDEX, PUBLISHER, ISBN,
+        details = new BookMetadata(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES, SERIES_INDEX, PUBLISHER, ISBN,
             new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE,
                 PATH, COMMENTS, new Tags(TAGS));
 
@@ -94,7 +94,7 @@ class BookDetailsResourceTest {
         validateAuthor(details, response);
     }
 
-    private void validateAuthor(final BookDetails expected, final Author response) {
+    private void validateAuthor(final BookMetadata expected, final Author response) {
         assertEquals(expected.getId(), response.getId(), "Author id should match");
     }
 

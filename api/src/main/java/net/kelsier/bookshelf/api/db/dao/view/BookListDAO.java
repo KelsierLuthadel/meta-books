@@ -27,7 +27,6 @@ import net.kelsier.bookshelf.api.db.dao.BookDAO;
 import net.kelsier.bookshelf.api.db.dao.metadata.*;
 import net.kelsier.bookshelf.api.db.mapper.view.BookListMapper;
 import net.kelsier.bookshelf.api.db.model.view.BasicBookMetadata;
-import net.kelsier.bookshelf.api.db.model.view.BookDetails;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.Define;

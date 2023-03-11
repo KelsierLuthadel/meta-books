@@ -43,7 +43,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 @JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "identifier",
                     "language", "format","size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
 @JsonInclude(NON_EMPTY)
-public class BookDetails implements Entity {
+public class BookMetadata implements Entity {
     /**
      * Unique id
      */
@@ -190,25 +190,25 @@ public class BookDetails implements Entity {
      * @param tags List of tags
      * @param comments Book comments
      */
-    public BookDetails(@JsonProperty("id") @NotNull @Min(1) final Integer id,
-                       @JsonProperty("title") @NotNull final String title,
-                       @JsonProperty("authorId") @NotNull final Integer authorID,
-                       @JsonProperty("author") @NotNull final String author,
-                       @JsonProperty("series") final String series,
-                       @JsonProperty("seriesIndex") @Min(0) final Integer seriesIndex,
-                       @JsonProperty("publisher") final String publisher,
-                       @JsonProperty("isbn")final String isbn,
-                       @JsonProperty("identifier")final Identifier identifier,
-                       @JsonProperty("language") final String language,
-                       @JsonProperty("format") final String format,
-                       @JsonProperty("size") @NotNull final Integer size,
-                       @JsonProperty("hasCover") @NotNull final Boolean hasCover,
-                       @JsonProperty("dateAdded") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp dateAdded,
-                       @JsonProperty("publicationDate") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp publicationDate,
-                       @JsonProperty("lastModified") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp lastModified,
-                       @JsonProperty("path") @NotNull final String path,
-                       @JsonProperty("comments") final String comments,
-                       @JsonProperty("tags") final Tags tags) {
+    public BookMetadata(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                        @JsonProperty("title") @NotNull final String title,
+                        @JsonProperty("authorId") @NotNull final Integer authorID,
+                        @JsonProperty("author") @NotNull final String author,
+                        @JsonProperty("series") final String series,
+                        @JsonProperty("seriesIndex") @Min(0) final Integer seriesIndex,
+                        @JsonProperty("publisher") final String publisher,
+                        @JsonProperty("isbn")final String isbn,
+                        @JsonProperty("identifier")final Identifier identifier,
+                        @JsonProperty("language") final String language,
+                        @JsonProperty("format") final String format,
+                        @JsonProperty("size") @NotNull final Integer size,
+                        @JsonProperty("hasCover") @NotNull final Boolean hasCover,
+                        @JsonProperty("dateAdded") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp dateAdded,
+                        @JsonProperty("publicationDate") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp publicationDate,
+                        @JsonProperty("lastModified") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp lastModified,
+                        @JsonProperty("path") @NotNull final String path,
+                        @JsonProperty("comments") final String comments,
+                        @JsonProperty("tags") final Tags tags) {
         this.id = id;
         this.title = title;
         this.authorID = authorID;

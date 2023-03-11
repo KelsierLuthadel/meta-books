@@ -26,7 +26,7 @@ import net.kelsier.bookshelf.api.db.dao.AuthorDAO;
 import net.kelsier.bookshelf.api.db.dao.BookDAO;
 import net.kelsier.bookshelf.api.db.dao.metadata.*;
 import net.kelsier.bookshelf.api.db.mapper.view.BookDetailsMapper;
-import net.kelsier.bookshelf.api.db.model.view.BookDetails;
+import net.kelsier.bookshelf.api.db.model.view.BookMetadata;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -60,6 +60,6 @@ public interface BookDetailsDAO {
             "identifier_value, language, format, size, has_cover, date_added, publication_date, last_modified, " +
             "path, comments, tags " +
             "FROM book_metadata WHERE id = :id")
-    BookDetails get(@Bind("id") int id);
+    BookMetadata get(@Bind("id") int id);
 
 }

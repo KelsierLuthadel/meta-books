@@ -23,7 +23,7 @@
 package net.kelsier.bookshelf.api.db.mapper.view;
 
 
-import net.kelsier.bookshelf.api.db.model.view.BookDetails;
+import net.kelsier.bookshelf.api.db.model.view.BookMetadata;
 import net.kelsier.bookshelf.api.db.model.view.Identifier;
 import net.kelsier.bookshelf.api.db.model.view.Tags;
 import org.jdbi.v3.core.mapper.RowMapper;
@@ -33,23 +33,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Map a database query to am {@link BookDetails} class
+ * Map a database query to am {@link BookMetadata} class
  *
  * @author Kelsier Luthadel
  * @version 1.0.0
  */
-public class BookDetailsMapper implements RowMapper<BookDetails> {
+public class BookDetailsMapper implements RowMapper<BookMetadata> {
 
     /**
-     * Map a database query to am {@link BookDetails} class
+     * Map a database query to am {@link BookMetadata} class
      *
      * @param resultSet results from a query
      * @param statementContext context
-     * @return {@link BookDetails} object representing the results of a query
+     * @return {@link BookMetadata} object representing the results of a query
      * @throws SQLException Thrown when there was a database error
      */
-    public BookDetails map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
-        return new BookDetails(
+    public BookMetadata map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        return new BookMetadata(
                 resultSet.getInt("ID"),
                 resultSet.getString("TITLE"),
                 resultSet.getInt("AUTHOR_ID"),
