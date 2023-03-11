@@ -32,7 +32,7 @@ import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-@JsonPropertyOrder({"id", "label", "name", "dataType", "display", "multiple", "normalized"})
+@JsonPropertyOrder({"id", "label", "name", "dataType", "multiple", "normalized"})
 @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
 public class CustomColumns implements Entity {
     @JsonProperty("id")
@@ -53,7 +53,6 @@ public class CustomColumns implements Entity {
     private final String dataType;
 
     @JsonProperty("display")
-    @NotNull
     private final String display;
 
     @JsonProperty("multiple")

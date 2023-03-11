@@ -23,16 +23,7 @@
 
 package net.kelsier.bookshelf.api.db.connection;
 
-import net.kelsier.bookshelf.api.db.dao.AuthorDAO;
-import net.kelsier.bookshelf.api.db.dao.BookDAO;
-import net.kelsier.bookshelf.api.db.dao.BookDetailsDAO;
-import net.kelsier.bookshelf.api.db.dao.CommentDAO;
-import net.kelsier.bookshelf.api.db.dao.DataDAO;
-import net.kelsier.bookshelf.api.db.dao.LanguageDAO;
-import net.kelsier.bookshelf.api.db.dao.PublisherDAO;
-import net.kelsier.bookshelf.api.db.dao.RatingDAO;
-import net.kelsier.bookshelf.api.db.dao.SeriesDAO;
-import net.kelsier.bookshelf.api.db.dao.TagDAO;
+import net.kelsier.bookshelf.api.db.dao.*;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.common.ColumnLookup;
@@ -107,6 +98,29 @@ public final class Connection {
             default:
                 throw new BadRequestException(QUERY_ERROR);
         }
+    }
+
+    public static List<Entity> getCustomColumns(final Jdbi databaseConnection, final @Valid Pagination pagination) {
+        final int limit = pagination.getLimit();
+        final int start = pagination.getStart();
+
+        return Collections.unmodifiableList(
+                databaseConnection.onDemand(CustomColumnsDAO.class).get(limit, start)
+        );
+    }
+
+    public static Entity getCustomColumn(final Jdbi databaseConnection,
+                                         final Integer tableId,
+                                         final int id) {
+        return databaseConnection.onDemand(CustomColumnDAO.class).get(tableId, id);
+    }
+
+    public static List<Entity> getCustomColumn(final Jdbi databaseConnection,
+                                               final Integer tableId,
+                                               final @Valid Pagination pagination) {
+        final int limit = pagination.getLimit();
+        final int start = pagination.getStart();
+        return Collections.unmodifiableList(databaseConnection.onDemand(CustomColumnDAO.class).get(tableId, limit, start));
     }
 
     private static List<Entity> performQuery(final Jdbi databaseConnection, final Table table, final @Valid Pagination pagination) {

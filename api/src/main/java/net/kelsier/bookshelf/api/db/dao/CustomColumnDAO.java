@@ -32,6 +32,8 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.util.List;
+
 /*
 CREATE TABLE custom_column_(
                     id    SERIAL PRIMARY KEY,
@@ -62,19 +64,22 @@ public interface CustomColumnDAO {
      * @param table custom column table
      * @return An object representing a custom column
      */
-    @SqlQuery("select * from <table>")
-    CustomColumn get(@Define("table") String table);
+    @SqlQuery("select * from custom_column_<id> LIMIT :limit OFFSET :offset")
+    List<CustomColumn> get(@Define("id") int table, @Bind("limit") int limit, @Bind("offset") int offset);
+
+    @SqlQuery("select * from custom_column_14;")
+    CustomColumn get();
 
     @SqlQuery("Select id, custom.value " +
             "FROM books " +
             "JOIN ( " +
             "SELECT ref.id AS id, custom.value as value " +
             "FROM books ref " +
-            "INNER JOIN <table>_link AS custom_column ON custom_column.book=ref.id " +
-            "INNER JOIN <table> AS custom ON custom.id=custom_column.book " +
+            "INNER JOIN custom_column_<table>_link AS custom_column ON custom_column.book=ref.id " +
+            "INNER JOIN custom_column_<table> AS custom ON custom.id=custom_column.book " +
             "GROUP BY ref.id, custom.value " +
             ") custom USING(id) WHERE books.id =:id")
-    CustomColumn get(@Define("table") String table, @Bind int id);
+    CustomColumn get(@Define("table") int table, @Bind int id);
 
     /**
      * Add a new row into a custom column table

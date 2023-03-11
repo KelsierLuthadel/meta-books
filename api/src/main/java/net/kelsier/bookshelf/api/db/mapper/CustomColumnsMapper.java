@@ -61,7 +61,7 @@ public class CustomColumnsMapper implements RowMapper<CustomColumns> {
                 resultSet.getString("NAME"),
                 resultSet.getString("DATATYPE"),
                 resultSet.getString("DISPLAY"),
-                resultSet.getBoolean("MULTIPLE"),
+                resultSet.getBoolean("IS_MULTIPLE"),
                 resultSet.getBoolean("NORMALIZED"));
     }
 }

@@ -363,6 +363,7 @@ public class MetaBooks extends Application<MetaBooksConfiguration> {
             resourceRegistrar.registerResource(new RatingsResource(databaseConnection));
             resourceRegistrar.registerResource(new TagsResource(databaseConnection));
             resourceRegistrar.registerResource(new BookDetailsResource(databaseConnection));
+            resourceRegistrar.registerResource(new CustomColumnResource(databaseConnection));
 
             resourceRegistrar.registerResource(new BookshelfAdministration(databaseConnection));
         }

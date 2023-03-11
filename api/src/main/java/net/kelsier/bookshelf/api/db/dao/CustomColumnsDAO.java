@@ -58,6 +58,9 @@ public interface CustomColumnsDAO {
     @SqlQuery("SELECT * FROM custom_columns")
     List<CustomColumns> get();
 
+    @SqlQuery("SELECT id, label, name, display, datatype, is_multiple, normalized FROM custom_columns LIMIT :limit OFFSET :offset")
+    List<CustomColumns> get( @Bind("limit") int limit, @Bind("offset") int offset);
+
     @SqlQuery("SELECT * FROM custom_columns WHERE ID = :id")
     CustomColumns get(@Bind("id") int id);
 
