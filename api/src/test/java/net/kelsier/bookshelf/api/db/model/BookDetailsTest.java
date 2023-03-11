@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BookDetailsTest {
     private static final int ID = 1;
     private static final String TITLE = "title";
+    private static final Integer AUTHOR_ID = 1;
     private static final String AUTHOR = "author";
     private static final String SERIES = "series";
     private static final String PUBLISHER = "publisher";
@@ -36,7 +37,7 @@ class BookDetailsTest {
 
     @Test
     void testValidAuthor() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
                 HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -46,7 +47,7 @@ class BookDetailsTest {
 
     @Test
     void testNullId() {
-        final BookDetails bookDetails = new BookDetails(null, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(null, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
                 HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -57,7 +58,7 @@ class BookDetailsTest {
 
     @Test
     void testMinimumFailId() {
-        final BookDetails bookDetails = new BookDetails(0, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(0, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
                 HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -70,7 +71,7 @@ class BookDetailsTest {
 
     @Test
     void testNullTitle() {
-        final BookDetails bookDetails = new BookDetails(ID, null, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, null, AUTHOR_ID, AUTHOR, SERIES,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
             DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -81,7 +82,7 @@ class BookDetailsTest {
 
     @Test
     void testNullAuthor() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, null, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, null, SERIES,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
                 DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -92,7 +93,7 @@ class BookDetailsTest {
 
     @Test
     void testNullSeries() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, null,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, null,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
                 HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -103,7 +104,7 @@ class BookDetailsTest {
 
     @Test
     void testNullSeriesIndex() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
                 null, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT,
                 SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -114,7 +115,7 @@ class BookDetailsTest {
 
     @Test
     void testNullPublisher() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, null, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE,
                 HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -125,7 +126,7 @@ class BookDetailsTest {
 
     @Test
     void testNullLanguage() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), null,
                 FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -136,7 +137,7 @@ class BookDetailsTest {
 
     @Test
     void testNullFormat() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, null,
                 SIZE, HAS_COVER, DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -147,7 +148,7 @@ class BookDetailsTest {
 
     @Test
     void testNullSize() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, null, HAS_COVER,
             DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -158,7 +159,7 @@ class BookDetailsTest {
 
     @Test
     void testMinSize() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, -ID, HAS_COVER,
             DATE, DATE, DATE, PATH, COMMENTS, new Tags(TAGS));
 
@@ -169,7 +170,7 @@ class BookDetailsTest {
 
     @Test
     void testNullLastModified() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
             DATE, DATE, null, PATH, COMMENTS, new Tags(TAGS));
 
@@ -180,7 +181,7 @@ class BookDetailsTest {
 
     @Test
     void testNullPath() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
             DATE, DATE, DATE, null, COMMENTS, new Tags(TAGS));
 
@@ -191,7 +192,7 @@ class BookDetailsTest {
 
     @Test
     void testNullComments() {
-        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        final BookDetails bookDetails = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, "publisher", ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER,
             DATE, DATE, DATE, PATH, null, new Tags(TAGS));
 
@@ -279,7 +280,7 @@ class BookDetailsTest {
     }
 
     private static BookDetails createBookDetailsForPath(final String path) {
-        return new BookDetails(ID, TITLE, AUTHOR, SERIES,
+        return new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES,
             ID, PUBLISHER, ISBN, new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES),LANGUAGE, FORMAT, SIZE, HAS_COVER,
             DATE, DATE, DATE, path, COMMENTS, new Tags(TAGS));
     }

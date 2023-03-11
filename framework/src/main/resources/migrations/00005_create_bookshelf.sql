@@ -146,6 +146,137 @@ CREATE TABLE public.custom_columns (
     UNIQUE(label)
 );
 
+CREATE VIEW book_metadata AS select
+    book.id, book.title,author.author_id, author.author,
+    series.series,book.series_index,
+    publisher.publisher,
+    book.isbn,
+    identifier.identifier_type, identifier.identifier_value,
+    language.language ,
+    data.format, data.size,
+    book.has_cover, book.date_added, book.publication_date, book.last_modified, book.path,
+    comments.comments,
+    tag.tags
+FROM books book
+
+LEFT JOIN (
+    SELECT ref.id AS id, authors.name  as author, authors.id as author_id
+    FROM books ref
+        INNER JOIN books_authors_link AS link ON link.book=ref.id
+        INNER JOIN authors AS authors ON authors.id=link.author
+    GROUP BY ref.id, authors.name, authors.id
+) author USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, series.name as series
+    FROM books ref
+        INNER JOIN books_series_link AS link ON link.book=ref.id
+        INNER JOIN series AS series ON series.id=link.series
+    GROUP BY ref.id, series.name
+) series USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, publishers.name as publisher
+    FROM books ref
+        INNER JOIN books_publishers_link AS link ON link.book=ref.id
+        INNER JOIN publishers AS publishers ON publishers.id=link.publisher
+    GROUP BY ref.id, publishers.name
+) publisher USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, languages.lang_code as language
+    FROM books ref
+        INNER JOIN books_languages_link AS link ON link.book=ref.id
+        INNER JOIN languages AS languages ON languages.id=link.lang_code
+    GROUP BY ref.id, languages.lang_code
+) language USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, data.format as format, data.uncompressed_size AS size
+    FROM books ref
+        INNER JOIN data AS data ON data.id=ref.id
+) data USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, comments.text as comments
+    FROM books ref
+        INNER JOIN comments AS comments ON comments.book=ref.id
+) comments USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, array_agg(tags.name) AS tags
+    FROM books ref
+        INNER JOIN books_tags_link AS link ON link.book=ref.id
+        INNER JOIN tags AS tags ON tags.id=link.tag
+    GROUP BY ref.id
+) tag USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, array_agg(ident.type) AS identifier_type, array_agg(ident.val) as identifier_value
+    FROM books ref
+        JOIN identifiers AS ident on ident.book=ref.id
+    GROUP BY ref.id
+) identifier USING(id);
+
+CREATE VIEW book_basic_metadata AS select
+    book.id, book.title,author.author_id,author.author,
+    series.series,book.series_index,
+    publisher.publisher,
+    book.isbn,
+    language.language ,
+    data.format, data.size,
+    book.has_cover, book.publication_date, book.path,
+    tag.tags
+FROM books book
+
+LEFT JOIN (
+    SELECT ref.id AS id, authors.name  as author, authors.id as author_id
+    FROM books ref
+        INNER JOIN books_authors_link AS link ON link.book=ref.id
+        INNER JOIN authors AS authors ON authors.id=link.author
+    GROUP BY ref.id, authors.name, authors.id
+) author USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, series.name as series
+    FROM books ref
+        INNER JOIN books_series_link AS link ON link.book=ref.id
+        INNER JOIN series AS series ON series.id=link.series
+    GROUP BY ref.id, series.name
+) series USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, publishers.name as publisher
+    FROM books ref
+        INNER JOIN books_publishers_link AS link ON link.book=ref.id
+        INNER JOIN publishers AS publishers ON publishers.id=link.publisher
+    GROUP BY ref.id, publishers.name
+) publisher USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, languages.lang_code as language
+    FROM books ref
+        INNER JOIN books_languages_link AS link ON link.book=ref.id
+        INNER JOIN languages AS languages ON languages.id=link.lang_code
+    GROUP BY ref.id, languages.lang_code
+) language USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, data.format as format, data.uncompressed_size AS size
+    FROM books ref
+        INNER JOIN data AS data ON data.id=ref.id
+) data USING(id)
+
+LEFT JOIN (
+    SELECT ref.id AS id, array_agg(tags.name) AS tags
+    FROM books ref
+        INNER JOIN books_tags_link AS link ON link.book=ref.id
+        INNER JOIN tags AS tags ON tags.id=link.tag
+    GROUP BY ref.id
+) tag USING(id)
+
+
+
 -- rollback DROP TABLE public.authors;
 -- rollback DROP TABLE public.books;
 -- rollback DROP TABLE public.comments;

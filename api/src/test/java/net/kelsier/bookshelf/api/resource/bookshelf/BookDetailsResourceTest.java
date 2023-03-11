@@ -29,6 +29,7 @@ class BookDetailsResourceTest {
 
     private static final String TITLE = "title";
 
+    private static final Integer AUTHOR_ID = 1;
     private static final String AUTHOR = "author";
 
     private static final String SERIES = "series";
@@ -71,7 +72,7 @@ class BookDetailsResourceTest {
 
     @BeforeEach
     void setup() {
-        details = new BookDetails(ID, TITLE, AUTHOR, SERIES, SERIES_INDEX, PUBLISHER, ISBN,
+        details = new BookDetails(ID, TITLE, AUTHOR_ID, AUTHOR, SERIES, SERIES_INDEX, PUBLISHER, ISBN,
             new Identifier(IDENTIFIER_TYPES, IDENTIFIER_VALUES), LANGUAGE, FORMAT, SIZE, HAS_COVER, DATE, DATE, DATE,
                 PATH, COMMENTS, new Tags(TAGS));
 

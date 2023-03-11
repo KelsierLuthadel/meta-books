@@ -52,6 +52,7 @@ public class BookDetailsMapper implements RowMapper<BookDetails> {
         return new BookDetails(
                 resultSet.getInt("ID"),
                 resultSet.getString("TITLE"),
+                resultSet.getInt("AUTHOR_ID"),
                 resultSet.getString("AUTHOR"),
                 resultSet.getString("SERIES"),
                 resultSet.getInt("SERIES_INDEX"),

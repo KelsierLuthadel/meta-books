@@ -23,8 +23,10 @@
 package net.kelsier.bookshelf.api.db.mapper.view;
 
 
+import net.kelsier.bookshelf.api.db.model.view.BasicBookMetadata;
 import net.kelsier.bookshelf.api.db.model.view.BookDetails;
 import net.kelsier.bookshelf.api.db.model.view.Identifier;
+import net.kelsier.bookshelf.api.db.model.view.Tags;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 
@@ -37,7 +39,7 @@ import java.sql.SQLException;
  * @author Kelsier Luthadel
  * @version 1.0.0
  */
-public class BookListMapper implements RowMapper<BookDetails> {
+public class BookListMapper implements RowMapper<BasicBookMetadata> {
 
     /**
      * Map a database query to am {@link BookDetails} class
@@ -47,26 +49,23 @@ public class BookListMapper implements RowMapper<BookDetails> {
      * @return {@link BookDetails} object representing the results of a query
      * @throws SQLException Thrown when there was a database error
      */
-    public BookDetails map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
-        return new BookDetails(
+    public BasicBookMetadata map(final ResultSet resultSet, final StatementContext statementContext) throws SQLException {
+        return new BasicBookMetadata(
                 resultSet.getInt("ID"),
                 resultSet.getString("TITLE"),
+                resultSet.getInt("AUTHOR_ID"),
                 resultSet.getString("AUTHOR"),
                 resultSet.getString("SERIES"),
                 resultSet.getInt("SERIES_INDEX"),
-                null,
-                null,
-                null,
+                resultSet.getString("PUBLISHER"),
+                resultSet.getString("ISBN"),
                 resultSet.getString("LANGUAGE"),
                 resultSet.getString("FORMAT"),
                 resultSet.getInt("SIZE"),
                 resultSet.getBoolean("HAS_COVER"),
-                null,
-                null,
-                null,
+                resultSet.getTimestamp("PUBLICATION_DATE"),
                 resultSet.getString("PATH"),
-                null,
-                null
+                new Tags( (String[])resultSet.getArray("TAGS").getArray())
         );
     }
 }

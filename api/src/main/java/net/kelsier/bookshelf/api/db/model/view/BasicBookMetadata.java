@@ -40,10 +40,10 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 /**
  * Book metadata consisting of data pulled from various tables
  */
-@JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "identifier",
+@JsonPropertyOrder({"id", "title", "authorId", "author", "series", "seriesIndex", "publisher", "isbn", "identifier",
                     "language", "format","size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
 @JsonInclude(NON_EMPTY)
-public class BookDetails implements Entity {
+public class BasicBookMetadata implements Entity {
     /**
      * Unique id
      */
@@ -101,12 +101,6 @@ public class BookDetails implements Entity {
     private final String isbn;
 
     /**
-     * List of book identifiers (isbn, google, goodreads, amazon etc)
-     */
-    @JsonProperty("identifier")
-    private final Identifier identifier;
-
-    /**
      * Language book is written in
      */
     @JsonProperty("language")
@@ -132,25 +126,11 @@ public class BookDetails implements Entity {
     private final Boolean hasCover;
 
     /**
-     * Date that the book was added to the database
-     */
-    @JsonProperty("dateAdded")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final Timestamp dateAdded;
-
-    /**
      * Date that the book was published
      */
     @JsonProperty("publicationDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp publicationDate;
-
-    /**
-     * Date that the book metadata was last modified
-     */
-    @JsonProperty("lastModified")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final Timestamp lastModified;
 
     /**
      * Relative path to the book
@@ -160,11 +140,6 @@ public class BookDetails implements Entity {
     @Pattern(regexp = RegexPatterns.FILENAME_REGEX, message = "invalid path format")
     private final String path;
 
-    /**
-     * Book comments
-     */
-    @JsonProperty("comments")
-    private final String comments;
 
     @JsonProperty("tags")
     private final Tags tags;
@@ -178,37 +153,29 @@ public class BookDetails implements Entity {
      * @param seriesIndex Series index if book is part of a series
      * @param publisher Name of the book publisher
      * @param isbn ISBN value
-     * @param identifier list of book identifiers (isbn, google, goodreads, amazon etc)
      * @param language Language book is written in
      * @param format eBook format
      * @param size Uncompressed size of the book
      * @param hasCover Flag indicating if the book contains a cover
-     * @param dateAdded Date that the book was added to the database
      * @param publicationDate Date that the book was published
-     * @param lastModified Date that the book metadata was last modified
      * @param path Relative path to the book
      * @param tags List of tags
-     * @param comments Book comments
      */
-    public BookDetails(@JsonProperty("id") @NotNull @Min(1) final Integer id,
-                       @JsonProperty("title") @NotNull final String title,
-                       @JsonProperty("authorId") @NotNull final Integer authorID,
-                       @JsonProperty("author") @NotNull final String author,
-                       @JsonProperty("series") final String series,
-                       @JsonProperty("seriesIndex") @Min(0) final Integer seriesIndex,
-                       @JsonProperty("publisher") final String publisher,
-                       @JsonProperty("isbn")final String isbn,
-                       @JsonProperty("identifier")final Identifier identifier,
-                       @JsonProperty("language") final String language,
-                       @JsonProperty("format") final String format,
-                       @JsonProperty("size") @NotNull final Integer size,
-                       @JsonProperty("hasCover") @NotNull final Boolean hasCover,
-                       @JsonProperty("dateAdded") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp dateAdded,
-                       @JsonProperty("publicationDate") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp publicationDate,
-                       @JsonProperty("lastModified") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp lastModified,
-                       @JsonProperty("path") @NotNull final String path,
-                       @JsonProperty("comments") final String comments,
-                       @JsonProperty("tags") final Tags tags) {
+    public BasicBookMetadata(@JsonProperty("id") @NotNull @Min(1) final Integer id,
+                             @JsonProperty("title") @NotNull final String title,
+                             @JsonProperty("authorId") @NotNull final Integer authorID,
+                             @JsonProperty("author") @NotNull final String author,
+                             @JsonProperty("series") final String series,
+                             @JsonProperty("seriesIndex") @Min(0) final Integer seriesIndex,
+                             @JsonProperty("publisher") final String publisher,
+                             @JsonProperty("isbn")final String isbn,
+                             @JsonProperty("language") final String language,
+                             @JsonProperty("format") final String format,
+                             @JsonProperty("size") @NotNull final Integer size,
+                             @JsonProperty("hasCover") @NotNull final Boolean hasCover,
+                             @JsonProperty("publicationDate") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp publicationDate,
+                             @JsonProperty("path") @NotNull final String path,
+                             @JsonProperty("tags") final Tags tags) {
         this.id = id;
         this.title = title;
         this.authorID = authorID;
@@ -217,16 +184,12 @@ public class BookDetails implements Entity {
         this.seriesIndex = seriesIndex;
         this.publisher = publisher;
         this.isbn = isbn;
-        this.identifier = identifier;
         this.language = language;
         this.format = format;
         this.size = size;
         this.hasCover = hasCover;
-        this.dateAdded = dateAdded;
         this.publicationDate = publicationDate;
-        this.lastModified = lastModified;
         this.path = path;
-        this.comments = comments;
         this.tags = tags;
     }
 
@@ -296,13 +259,6 @@ public class BookDetails implements Entity {
     }
 
     /**
-     * List of book identifiers (isbn, google, goodreads, amazon etc)
-     */
-    public Identifier getIdentifier() {
-        return identifier;
-    }
-
-    /**
      * Book language
      * @return string containing the language that the book is written in
      */
@@ -335,14 +291,6 @@ public class BookDetails implements Entity {
     }
 
     /**
-     * Date that the book was added to the database
-     * @return Date that the book was added to the database
-     */
-    public Timestamp getDateAdded() {
-        return dateAdded;
-    }
-
-    /**
      * Date that the book was published
      * @return Date that the book was published
      */
@@ -351,27 +299,11 @@ public class BookDetails implements Entity {
     }
 
     /**
-     * Date that the book metadata was last modified
-     * @return Date that the book metadata was last modified
-     */
-    public Timestamp getLastModified() {
-        return lastModified;
-    }
-
-    /**
      * Path to book
      * @return string containing the relative path to the book
      */
     public String getPath() {
         return path;
-    }
-
-    /**
-     * Comments
-     * @return string containing any book comments
-     */
-    public String getComments() {
-        return comments;
     }
 
     /**

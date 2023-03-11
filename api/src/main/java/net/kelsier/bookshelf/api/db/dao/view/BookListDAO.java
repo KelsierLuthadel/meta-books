@@ -26,6 +26,7 @@ import net.kelsier.bookshelf.api.db.dao.AuthorDAO;
 import net.kelsier.bookshelf.api.db.dao.BookDAO;
 import net.kelsier.bookshelf.api.db.dao.metadata.*;
 import net.kelsier.bookshelf.api.db.mapper.view.BookListMapper;
+import net.kelsier.bookshelf.api.db.model.view.BasicBookMetadata;
 import net.kelsier.bookshelf.api.db.model.view.BookDetails;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -63,84 +64,12 @@ public interface BookListDAO {
      * @param direction sort direction applies
      * @return A list of books
      */
-    @SqlQuery(
-            "select " +
-                    "book.id," +
-                    "book.title," +
-                    "author.author," +
-                    "series.series," +
-                    "book.series_index," +
-                    "language.language ," +
-                    "data.format," +
-                    "data.size," +
-                    "book.has_cover," +
-                    "book.publication_date," +
-                    "book.path," +
-                    "tag.tags " +
-                    "FROM books book " +
-
-                    "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, authors.name  as author, authors.id as author_id " +
-                    "FROM books ref " +
-                    "INNER JOIN books_authors_link AS link ON link.book=ref.id " +
-                    "INNER JOIN authors AS authors ON authors.id=link.author " +
-                    "GROUP BY ref.id, authors.name, authors.id " +
-                    ") author USING(id) " +
-
-                    "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, series.name as series " +
-                    "FROM books ref " +
-                    "INNER JOIN books_series_link AS link ON link.book=ref.id " +
-                    "INNER JOIN series AS series ON series.id=link.series " +
-                    "GROUP BY ref.id, series.name " +
-                    ") series USING(id) " +
-
-                    "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, publishers.name as publisher " +
-                    "FROM books ref " +
-                    "INNER JOIN books_publishers_link AS link ON link.book=ref.id " +
-                    "INNER JOIN publishers AS publishers ON publishers.id=link.publisher " +
-                    "GROUP BY ref.id, publishers.name " +
-                    ") publisher USING(id) " +
-
-                    "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, languages.lang_code as language " +
-                    "FROM books ref " +
-                    "INNER JOIN books_languages_link AS link ON link.book=ref.id " +
-                    "INNER JOIN languages AS languages ON languages.id=link.lang_code " +
-                    "GROUP BY ref.id, languages.lang_code " +
-                    ") language USING(id) " +
-
-                    "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, data.format as format, data.uncompressed_size AS size " +
-                    "FROM books ref " +
-                    "INNER JOIN data AS data ON data.id=ref.id " +
-                    ") data USING(id) " +
-
-                    "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, comments.text as comments " +
-                    "FROM books ref " +
-                    "INNER JOIN comments AS comments ON comments.book=ref.id " +
-                    ") comments USING(id) " +
-
-                    "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, array_agg(tags.name) AS tags " +
-                    "FROM books ref " +
-                    "INNER JOIN books_tags_link AS link ON link.book=ref.id " +
-                    "INNER JOIN tags AS tags ON tags.id=link.tag " +
-                    "GROUP BY ref.id " +
-                    ") tag USING(id) " +
-
-                    "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, array_agg(ident.type) AS identifier_type, array_agg(ident.val) as identifier_value " +
-                    "FROM books ref " +
-                    "JOIN identifiers AS ident on ident.book=ref.id " +
-                    "GROUP BY ref.id " +
-                    ") identifier USING(id) where author.author_id = :author " +
-                    "ORDER BY <order> <direction> LIMIT :limit OFFSET :offset"
-    )
-    List<BookDetails> findByAuthor(
-            @Bind("author") int authorId,
+    @SqlQuery("SELECT id, title, author_id, author, series, series_index, publisher, isbn, language, format, size, " +
+            "has_cover, publication_date, path, tags " +
+            "FROM book_basic_metadata WHERE author_id = :authorId " +
+            "ORDER BY <order> <direction> LIMIT :limit OFFSET :offset")
+    List<BasicBookMetadata> findByAuthor(
+            @Bind("authorId") int authorId,
             @Bind("limit") int limit,
             @Bind("offset") int offset,
             @Define("order") String order,
