@@ -131,7 +131,7 @@ public class DataResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for book details",
-        tags = {"API"},
+        tags = {"Bookshelf API"},
         description = "Get data for books",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -166,7 +166,7 @@ public class DataResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get data for a book",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get data for a book",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

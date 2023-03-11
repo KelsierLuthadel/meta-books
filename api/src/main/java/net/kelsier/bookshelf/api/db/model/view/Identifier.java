@@ -39,7 +39,7 @@ import java.util.List;
  */
 @JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "type", "value",
     "language", "format","size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Identifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(Identifier.class);
     /**

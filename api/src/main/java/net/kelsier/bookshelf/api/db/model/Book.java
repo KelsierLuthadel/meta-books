@@ -16,7 +16,7 @@ import java.sql.Timestamp;
  * Book details as represented by the books table
  */
 @JsonPropertyOrder({"id", "title", "sort", "seriesIndex", "isbn", "hasCover", "publicationDate", "dateAdded", "lastModified"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Book implements Entity {
     /**
      * Unique id

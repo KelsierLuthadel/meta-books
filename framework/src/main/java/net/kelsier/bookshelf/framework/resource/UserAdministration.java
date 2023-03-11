@@ -84,7 +84,7 @@ public class UserAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            tags = {"Authentication"},
+            tags = {"User Administration", "Users"},
             description = "Users",
             responses = {
                     @ApiResponse(responseCode = "200"),
@@ -116,7 +116,7 @@ public class UserAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            tags = {"Authentication"},
+            tags = {"User Administration", "Users"},
             description = "Users",
             responses = {
                     @ApiResponse(responseCode = "200"),
@@ -150,7 +150,7 @@ public class UserAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            tags = {"Authentication"},
+            tags = {"User Administration", "Users"},
             description = "Add User",
             responses = {
                     @ApiResponse(responseCode = "200"),
@@ -190,7 +190,7 @@ public class UserAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            tags = {"Authentication"},
+            tags = {"User Administration", "Users"},
             description = "Users",
             responses = {
                     @ApiResponse(responseCode = "200"),
@@ -237,7 +237,7 @@ public class UserAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            tags = {"Authentication"},
+            tags = {"User Administration", "Users"},
             description = "Users",
             responses = {
                     @ApiResponse(responseCode = "200"),

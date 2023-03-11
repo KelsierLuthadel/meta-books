@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * Book data details as represented by the books table
  */
 @JsonPropertyOrder({"id", "book", "format", "uncompressedSize", "name"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BookData implements Entity {
     /**
      * Unique id

@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * Publisher details as represented by the publishers table
  */
 @JsonPropertyOrder({"id", "name", "sort"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Publisher implements Entity {
     /**
      * Unique id

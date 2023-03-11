@@ -134,7 +134,7 @@ public class CommentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search within comments",
-        tags = {"API"},
+        tags = {"Bookshelf API"},
         description = "Search within comments",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -167,7 +167,7 @@ public class CommentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get comments",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get comments for a book",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

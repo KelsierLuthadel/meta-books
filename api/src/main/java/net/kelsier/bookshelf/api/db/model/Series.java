@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * Series details as represented by the series table
  */
 @JsonPropertyOrder({"id", "name", "sort"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Series implements Entity {
     /**
      * Unique id

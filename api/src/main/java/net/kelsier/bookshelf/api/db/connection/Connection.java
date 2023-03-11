@@ -52,7 +52,7 @@ public final class Connection {
      * @param databaseConnection JDBI connection
      * @param table Name of the table used for query
      * @param columnLookup Optional query parameters
-     * @param pagination Paganation and sorting parameters
+     * @param pagination Pagination and sorting parameters
      * @return A list of results
      */
     public static List<Entity> query(final Jdbi databaseConnection,
@@ -64,6 +64,22 @@ public final class Connection {
         } else {
             return performQuery(databaseConnection, table, columnLookup, pagination);
         }
+    }
+
+    /**
+     * Perform a database query on a table
+     *
+     * @param databaseConnection JDBI connection
+     * @param table Name of the table used for query
+     * @param linkedId
+     * @param pagination Pagination and sorting parameters
+     * @return A list of results
+     */
+    public static List<Entity> linkedQuery(final Jdbi databaseConnection,
+                                     final Table table,
+                                     final Integer linkedId,
+                                     final @Valid Pagination pagination ) {
+        return performLinkedQuery(databaseConnection, table, linkedId, pagination);
     }
 
     /**
@@ -201,6 +217,26 @@ public final class Connection {
             case TAGS:
                 return Collections.unmodifiableList(databaseConnection.onDemand(TagDAO.class).find(value,query, operator,
                     limit, start, field, direction));
+            default:
+                throw new BadRequestException(QUERY_ERROR);
+        }
+    }
+
+    private static List<Entity> performLinkedQuery(final Jdbi databaseConnection,
+                                                   final Table table,
+                                                   final Integer linkedId,
+                                                   final @Valid Pagination pagination) {
+        final int limit = pagination.getLimit();
+        final int start = pagination.getStart();
+        final String order = pagination.getSort().getField();
+        final String direction = pagination.getSort().getDirection();
+
+        switch (table) {
+            case AUTHORS_BOOKS:
+                return Collections.unmodifiableList(
+                        databaseConnection.onDemand(BookListDAO.class).findByAuthor(
+                                linkedId, limit, start, order, direction
+                        ));
             default:
                 throw new BadRequestException(QUERY_ERROR);
         }

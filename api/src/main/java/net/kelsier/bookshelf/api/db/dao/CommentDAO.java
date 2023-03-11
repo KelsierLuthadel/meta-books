@@ -67,7 +67,7 @@ public interface CommentDAO {
      *
      * @param limit Total number of comments to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of comments
      */
@@ -99,7 +99,7 @@ public interface CommentDAO {
      * @param clause The search clause
      * @param limit Total number of comments to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of comments
      */

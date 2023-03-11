@@ -134,7 +134,7 @@ public class BookSeriesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for a series",
-        tags = {"API"},
+        tags = {"Bookshelf API"},
         description = "Search for a series",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -167,7 +167,7 @@ public class BookSeriesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get series details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get series details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

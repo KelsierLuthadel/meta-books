@@ -62,7 +62,7 @@ public class RoleAdministration {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get list of roles",
-            tags = {"Roles"},
+            tags = {"User Administration", "Roles"},
             description = "Get Roles",
             responses = {
                 @ApiResponse(responseCode = "200")
@@ -92,7 +92,7 @@ public class RoleAdministration {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get role details",
-            tags = {"Roles"},
+            tags = {"User Administration"},
             description = "Get Role",
             responses = {
                 @ApiResponse(responseCode = "200")
@@ -112,7 +112,7 @@ public class RoleAdministration {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Create new role",
-            tags = {"Roles"},
+            tags = {"User Administration", "Roles"},
             description = "Create role",
             responses = {
                     @ApiResponse(responseCode = "200")
@@ -143,7 +143,7 @@ public class RoleAdministration {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Update role details",
-            tags = {"Roles"},
+            tags = {"User Administration", "Roles"},
             description = "Update role",
             responses = {
                 @ApiResponse(responseCode = "200")
@@ -181,7 +181,7 @@ public class RoleAdministration {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Delete role",
-            tags = {"Roles"},
+            tags = {"User Administration", "Roles"},
             description = "Delete role",
             responses = {
                 @ApiResponse(responseCode = "200")

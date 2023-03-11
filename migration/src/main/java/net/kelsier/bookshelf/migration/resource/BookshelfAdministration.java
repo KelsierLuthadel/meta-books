@@ -52,7 +52,7 @@ public class BookshelfAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            tags = {"Bookshelf Admin"},
+            tags = {"Bookshelf Database Admin"},
             description = "Migrate Database",
             responses = {
                     @ApiResponse(responseCode = "200")
@@ -76,7 +76,7 @@ public class BookshelfAdministration {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            tags = {"Bookshelf Admin"},
+            tags = {"Bookshelf Database Admin"},
             description = "Migrate Database",
             responses = {
                     @ApiResponse(responseCode = "200")

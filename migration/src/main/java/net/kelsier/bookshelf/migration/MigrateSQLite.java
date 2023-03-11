@@ -309,7 +309,7 @@ public class MigrateSQLite {
                 ratingDAO.insert(new Rating(rs.getInt("id"), rs.getInt("rating")));
 
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new MigrationException("Unable to populate ratings", e);
         }
     }

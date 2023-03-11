@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * Rating details as represented by the rating table
  */
 @JsonPropertyOrder({"id", "rating"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Rating implements Entity {
     /**
      * Unique id
@@ -29,17 +29,17 @@ public class Rating implements Entity {
     @JsonProperty("rating")
     @Min(0)
     @Max(10)
-    private final Integer value;
+    private final Integer rating;
 
     /**
      * Constructor used to define a series
      * @param id Unique id
-     * @param value Rating value
+     * @param rating Rating value
      */
     public Rating(@JsonProperty("id") @NotNull @Min(1) final Integer id,
-                  @JsonProperty("rating") @Min(1)  @Min(10) final Integer value) {
+                  @JsonProperty("value") @Min(1)  @Min(10) final Integer rating) {
         this.id = id;
-        this.value = value;
+        this.rating = rating;
     }
 
     /**
@@ -57,7 +57,7 @@ public class Rating implements Entity {
      *
      * @return int containing the unique id
      */
-    public Integer getValue() {
-        return value;
+    public Integer getRating() {
+        return rating;
     }
 }

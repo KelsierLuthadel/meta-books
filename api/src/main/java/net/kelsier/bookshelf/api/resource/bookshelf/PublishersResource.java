@@ -132,7 +132,7 @@ public class PublishersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search publishers",
-        tags = {"API"},
+        tags = {"Bookshelf API"},
         description = "Search publishers",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -164,7 +164,7 @@ public class PublishersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get publisher details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get publisher details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

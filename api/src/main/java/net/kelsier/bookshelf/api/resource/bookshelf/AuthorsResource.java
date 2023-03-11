@@ -35,6 +35,9 @@ import net.kelsier.bookshelf.api.db.connection.Connection;
 import net.kelsier.bookshelf.api.db.model.Entity;
 import net.kelsier.bookshelf.api.db.tables.Table;
 import net.kelsier.bookshelf.api.model.bookshelf.lookup.AuthorLookup;
+import net.kelsier.bookshelf.api.model.bookshelf.lookup.BookLookup;
+import net.kelsier.bookshelf.api.model.common.ColumnLookup;
+import net.kelsier.bookshelf.api.model.common.Operator;
 import net.kelsier.bookshelf.api.model.common.Pagination;
 import net.kelsier.bookshelf.api.model.common.Search;
 import org.jdbi.v3.core.Jdbi;
@@ -51,7 +54,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static net.kelsier.bookshelf.api.db.tables.Table.AUTHORS;
+import static net.kelsier.bookshelf.api.db.tables.Table.*;
 
 /**
  * API to retrieve authors from the database.
@@ -134,7 +137,7 @@ public final class AuthorsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for authors",
-        tags = {"API"},
+        tags = {"Bookshelf API"},
         description = "Search for authors",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -167,7 +170,7 @@ public final class AuthorsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get author details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get author details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
@@ -177,5 +180,39 @@ public final class AuthorsResource {
             })
     public Entity author(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId)  {
         return Connection.get(databaseConnection, TABLE_TYPE, authorId);
+    }
+
+    /**
+     * Get Author details
+     * @param authorId Author ID
+     * @return An object containing author details
+     *
+     * <pre>Example response:{@code
+     * {
+     *   "id": 1,
+     *   "name": "Stephen King",
+     *   "sort": "King, Stephen"
+     * }
+     * }</pre>
+     */
+    @POST
+    @Path("{id}/books")
+    @RolesAllowed({"admin:r", "user:r"})
+    @Valid
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(
+            summary = "Get author details",
+            tags = {"Bookshelf API"},
+            description = "Get author details",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorised"),
+                    @ApiResponse(responseCode = "403", description = "Not allowed to view this resource"),
+                    @ApiResponse(responseCode = "404", description = "No author found"),
+            })
+    public List<Entity> booksByAuthor(@Parameter(name="id", required = true) @NotNull @PathParam("id") final Integer authorId,
+                                      @Parameter(name="pagination", required = true) @NotNull final Pagination pagination)  {
+        return Connection.linkedQuery(databaseConnection, AUTHORS_BOOKS, authorId, pagination );
     }
 }

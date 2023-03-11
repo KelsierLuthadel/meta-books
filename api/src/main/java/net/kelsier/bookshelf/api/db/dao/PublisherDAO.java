@@ -66,7 +66,7 @@ public interface PublisherDAO {
      *
      * @param limit Total number of publishers to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of publishers
      */
@@ -98,7 +98,7 @@ public interface PublisherDAO {
      * @param clause The search clause
      * @param limit Total number of publishers to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of publishers
      */

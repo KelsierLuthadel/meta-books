@@ -136,7 +136,7 @@ public class RatingsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search ratings",
-        tags = {"API"},
+        tags = {"Bookshelf API"},
         description = "Search ratings",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -168,7 +168,7 @@ public class RatingsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get rating details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get rating details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

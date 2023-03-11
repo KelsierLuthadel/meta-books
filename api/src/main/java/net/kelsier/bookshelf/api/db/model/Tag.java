@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * Tag details as represented by the authors table
  */
 @JsonPropertyOrder({"id", "name"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Tag implements Entity {
     /**
      * Unique id

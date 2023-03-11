@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * Author details as represented by the authors table
  */
 @JsonPropertyOrder({"id", "name", "sort"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Author implements Entity {
 
     /**

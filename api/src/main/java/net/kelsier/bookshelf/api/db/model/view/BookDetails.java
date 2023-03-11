@@ -28,22 +28,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import net.kelsier.bookshelf.api.db.model.Entity;
-import net.kelsier.bookshelf.api.filter.EmptyValueFilter;
 import net.kelsier.bookshelf.api.patterns.RegexPatterns;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
-import java.util.List;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 /**
  * Book metadata consisting of data pulled from various tables
  */
 @JsonPropertyOrder({"id", "title", "author", "series", "seriesIndex", "publisher", "isbn", "identifier",
                     "language", "format","size", "hasCover", "dateAdded", "publicationDate", "lastModified", "path", "comments"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(NON_EMPTY)
 public class BookDetails implements Entity {
     /**
      * Unique id
@@ -71,14 +70,12 @@ public class BookDetails implements Entity {
      * Book series
      */
     @JsonProperty("series")
-    @NotNull
     private final String series;
 
     /**
      * Series index if book is part of a series
      */
     @JsonProperty("seriesIndex")
-    @NotNull
     @Min(0)
     private final Integer seriesIndex;
 
@@ -86,7 +83,6 @@ public class BookDetails implements Entity {
      * Name of the book publisher
      */
     @JsonProperty("publisher")
-    @NotNull
     private final String publisher;
 
     /**
@@ -107,21 +103,18 @@ public class BookDetails implements Entity {
      * Language book is written in
      */
     @JsonProperty("language")
-    @NotNull
     private final String language;
 
     /**
      * eBook format
      */
     @JsonProperty("format")
-    @NotNull
     private final String format;
 
     /**
      * Uncompressed size of the book
      */
     @JsonProperty("size")
-    @NotNull
     @Min(0)
     private final Integer size;
 
@@ -149,7 +142,6 @@ public class BookDetails implements Entity {
      * Date that the book metadata was last modified
      */
     @JsonProperty("lastModified")
-    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final Timestamp lastModified;
 
@@ -165,7 +157,6 @@ public class BookDetails implements Entity {
      * Book comments
      */
     @JsonProperty("comments")
-    @NotNull
     private final String comments;
 
     /**
@@ -191,20 +182,20 @@ public class BookDetails implements Entity {
     public BookDetails(@JsonProperty("id") @NotNull @Min(1) final Integer id,
                        @JsonProperty("title") @NotNull final String title,
                        @JsonProperty("author") @NotNull final String author,
-                       @JsonProperty("series") @NotNull final String series,
-                       @JsonProperty("seriesIndex") @NotNull @Min(0) final Integer seriesIndex,
-                       @JsonProperty("publisher") @NotNull final String publisher,
+                       @JsonProperty("series") final String series,
+                       @JsonProperty("seriesIndex") @Min(0) final Integer seriesIndex,
+                       @JsonProperty("publisher") final String publisher,
                        @JsonProperty("isbn")final String isbn,
-                       @JsonProperty("identifier") @NotNull final Identifier identifier,
-                       @JsonProperty("language") @NotNull final String language,
-                       @JsonProperty("format") @NotNull final String format,
+                       @JsonProperty("identifier")final Identifier identifier,
+                       @JsonProperty("language") final String language,
+                       @JsonProperty("format") final String format,
                        @JsonProperty("size") @NotNull final Integer size,
                        @JsonProperty("hasCover") @NotNull final Boolean hasCover,
                        @JsonProperty("dateAdded") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp dateAdded,
                        @JsonProperty("publicationDate") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp publicationDate,
-                       @JsonProperty("lastModified") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") @NotNull final Timestamp lastModified,
+                       @JsonProperty("lastModified") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") final Timestamp lastModified,
                        @JsonProperty("path") @NotNull final String path,
-                       @JsonProperty("comments") @NotNull final String comments) {
+                       @JsonProperty("comments") final String comments) {
         this.id = id;
         this.title = title;
         this.author = author;

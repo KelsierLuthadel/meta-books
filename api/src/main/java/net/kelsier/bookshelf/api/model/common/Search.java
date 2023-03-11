@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  *
  * @param <T> an instance of {@link ColumnLookup} for specific query data
  */
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class Search<T> {
 
     /**

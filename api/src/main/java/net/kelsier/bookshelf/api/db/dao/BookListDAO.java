@@ -23,6 +23,7 @@
 package net.kelsier.bookshelf.api.db.dao;
 
 import net.kelsier.bookshelf.api.db.mapper.BookDetailsMapper;
+import net.kelsier.bookshelf.api.db.mapper.BookListMapper;
 import net.kelsier.bookshelf.api.db.model.view.BookDetails;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -48,13 +49,17 @@ import java.util.List;
  * @author Kelsier Luthadel
  * @version 1.0.0
  */
-@RegisterRowMapper(BookDetailsMapper.class)
-public interface BookDetailsDAO {
+@RegisterRowMapper(BookListMapper.class)
+public interface BookListDAO {
     /**
-     * Get a book and associated metadata
+     * Get a list of books linked to an author from the database using pagination and sorting.
      *
-     * @param id Book ID
-     * @return An object representing a book
+     * @param authorId The author id linked with a book
+     * @param limit Total number of books to return
+     * @param offset Starting position
+     * @param order Column used for ordering
+     * @param direction sort direction applies
+     * @return A list of books
      */
     @SqlQuery(
             "select " +
@@ -63,28 +68,21 @@ public interface BookDetailsDAO {
                     "author.author," +
                     "series.series," +
                     "book.series_index," +
-                    "publisher.publisher," +
-                    "book.isbn," +
-                    "identifier.identifier_type," +
-                    "identifier.identifier_value," +
                     "language.language ," +
                     "data.format," +
                     "data.size," +
                     "book.has_cover," +
-                    "book.date_added," +
                     "book.publication_date," +
-                    "book.last_modified," +
                     "book.path," +
-                    "comments.comments," +
                     "tag.tags " +
                     "FROM books book " +
 
                     "LEFT JOIN ( " +
-                    "SELECT ref.id AS id, authors.name  as author " +
+                    "SELECT ref.id AS id, authors.name  as author, authors.id as author_id " +
                     "FROM books ref " +
                     "INNER JOIN books_authors_link AS link ON link.book=ref.id " +
                     "INNER JOIN authors AS authors ON authors.id=link.author " +
-                    "GROUP BY ref.id, authors.name " +
+                    "GROUP BY ref.id, authors.name, authors.id " +
                     ") author USING(id) " +
 
                     "LEFT JOIN ( " +
@@ -136,8 +134,14 @@ public interface BookDetailsDAO {
                     "FROM books ref " +
                     "JOIN identifiers AS ident on ident.book=ref.id " +
                     "GROUP BY ref.id " +
-                    ") identifier USING(id) where book.id = :id"
+                    ") identifier USING(id) where author.author_id = :author"
     )
-    BookDetails get(@Bind("id") int id);
+    List<BookDetails> findByAuthor(
+            @Bind("author") int authorId,
+            @Bind("limit") int limit,
+            @Bind("offset") int offset,
+            @Define("order") String order,
+            @Define("direction") String direction
+    );
 
 }

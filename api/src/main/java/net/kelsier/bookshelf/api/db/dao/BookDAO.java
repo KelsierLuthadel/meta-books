@@ -24,6 +24,7 @@ package net.kelsier.bookshelf.api.db.dao;
 
 import net.kelsier.bookshelf.api.db.mapper.BookMapper;
 import net.kelsier.bookshelf.api.db.model.Book;
+import net.kelsier.bookshelf.api.db.model.view.BookDetails;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -52,6 +53,19 @@ import java.util.List;
  *     <tr><td>last_modified</td><td>TIMESTAMP</td><td>Date that the book was last modified</td></tr>
  *   </tbody>
  * </table>
+ * <p>
+ * A search clause is represented by column and operator, where the operator is one of:
+ * <ul>
+ *     <li>=</li>
+ *     <li>!=</li>
+ *     <li>&lt;</li>
+ *     <li>&lt;=</li>
+ *     <li>&gt;</li>
+ *     <li>&gt;=</li>
+ *     <li>ILIKE</li>
+ *     <li>NOT ILIKE</li>
+ * </ul>
+ * </p>
  *
  * @author Kelsier Luthadel
  * @version 1.0.0
@@ -72,7 +86,7 @@ public interface BookDAO {
      *
      * @param limit Total number of books to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of books
      */
@@ -86,26 +100,14 @@ public interface BookDAO {
 
 
     /**
-     * Geta list of books based on a search clause from the database using pagination and sorting.
-     * The search clause is represented by column and operator, where the operator is one of:
-     *
-     * <ul>
-     *     <li>=</li>
-     *     <li>!=</li>
-     *     <li>&lt;</li>
-     *     <li>&lt;=</li>
-     *     <li>&gt;</li>
-     *     <li>&gt;=</li>
-     *     <li>ILIKE</li>
-     *     <li>NOT ILIKE</li>
-     * </ul>
+     * Get a list of books based on a search clause from the database using pagination and sorting.
      *
      * @param text The text used for searching
      * @param column The column used for searching
      * @param clause The search clause
      * @param limit Total number of books to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of books
      */
@@ -119,27 +121,17 @@ public interface BookDAO {
             @Define("direction") String direction
     );
 
+
+
     /**
      * Geta list of books based on a search clause from the database using pagination and sorting.
-     * The search clause is represented by column and operator, where the operator is one of:
-     *
-     * <ul>
-     *     <li>=</li>
-     *     <li>!=</li>
-     *     <li>&lt;</li>
-     *     <li>&lt;=</li>
-     *     <li>&gt;</li>
-     *     <li>&gt;=</li>
-     *     <li>ILIKE</li>
-     *     <li>NOT ILIKE</li>
-     * </ul>
      *
      * @param value The integer used for searching
      * @param column The column used for searching
      * @param clause The search clause
      * @param limit Total number of books to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of books
      */

@@ -128,7 +128,7 @@ public class LanguagesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search for a language",
-        tags = {"API"},
+        tags = {"Bookshelf API"},
         description = "Search for a language",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -160,7 +160,7 @@ public class LanguagesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get language details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get language details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

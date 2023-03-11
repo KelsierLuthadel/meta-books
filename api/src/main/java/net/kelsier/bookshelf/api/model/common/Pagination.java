@@ -16,7 +16,7 @@ import java.util.Objects;
  * Pagination used to limit the number of rows returned in a database query
  */
 @Schema(name = "pagination", title = "Response pagination", description = "Restrict database query size")
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"start", "offset", "order"})
 public class Pagination {
 

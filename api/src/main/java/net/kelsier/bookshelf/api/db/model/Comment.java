@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  *Comment details as represented by the comments table
  */
 @JsonPropertyOrder({"id", "book", "text"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Comment implements Entity {
     /**
      * Unique id

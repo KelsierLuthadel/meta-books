@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 
 @JsonPropertyOrder({"id", "book", "type", "val"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Identifier implements Entity {
 
     @JsonProperty("id")

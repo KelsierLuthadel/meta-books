@@ -68,7 +68,7 @@ public interface DataDAO {
      *
      * @param limit Total number of data objects to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of data objects
      */
@@ -100,7 +100,7 @@ public interface DataDAO {
      * @param clause The search clause
      * @param limit Total number of data objects to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of data objects
      */
@@ -136,7 +136,7 @@ public interface DataDAO {
      * @param clause The search clause
      * @param limit Total number of data objects to return
      * @param offset Starting position
-     * @param order Tolumn used for ordering
+     * @param order Column used for ordering
      * @param direction sort direction applies
      * @return A list of data objects
      */

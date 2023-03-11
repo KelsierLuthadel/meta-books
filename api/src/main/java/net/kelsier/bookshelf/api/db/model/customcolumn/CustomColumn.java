@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
 
 
 @JsonPropertyOrder({"id", "value"})
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CustomColumn implements Entity {
     @JsonProperty("id")
     @NotNull

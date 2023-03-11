@@ -87,7 +87,7 @@ public final class CustomColumnResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get custom column details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get custom column details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
@@ -108,7 +108,7 @@ public final class CustomColumnResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get custom column details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get custom column details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),
@@ -130,7 +130,7 @@ public final class CustomColumnResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get custom column details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get custom column details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

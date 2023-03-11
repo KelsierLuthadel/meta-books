@@ -135,7 +135,7 @@ public class TagsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Search tags",
-        tags = {"API"},
+        tags = {"Bookshelf API"},
         description = "Search tags",
         responses = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -167,7 +167,7 @@ public class TagsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get tag details",
-            tags = {"API"},
+            tags = {"Bookshelf API"},
             description = "Get tag details",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK"),

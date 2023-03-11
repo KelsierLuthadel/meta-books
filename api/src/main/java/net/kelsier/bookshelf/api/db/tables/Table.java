@@ -28,6 +28,7 @@ package net.kelsier.bookshelf.api.db.tables;
  */
 public enum Table {
     AUTHORS,
+    AUTHORS_BOOKS,
     BOOKS,
     COMMENTS,
     DATA,

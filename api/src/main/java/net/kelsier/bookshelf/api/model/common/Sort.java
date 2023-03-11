@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * Sort parameters used when making a database query
  */
 @Schema(name = "sort", title = "Query sorting", description = "Sort database queries")
-@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = EmptyValueFilter.class)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"field", "direction"})
 public class Sort {
 
